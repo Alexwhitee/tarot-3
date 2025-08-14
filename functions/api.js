@@ -31,6 +31,14 @@ export async function onRequestPost({ request }) {
         "body": JSON.stringify(body),
         "method": "POST"
     });
+    // const res = await fetch("https://yunwu.ai/v1/chat/completions", {
+    //   "headers": {
+    //     "authorization": "sk-grjnxTvlBKkvMLNCoEUfdHAf4LtzCE74Vism3L3fbgdhFgqJ",
+    //     "content-type": "application/json"
+    //   },
+    //   "body": JSON.stringify(body),
+    //   "method": "POST"
+    // });
     const data = await res.json();
     return new Response(data.choices[0].message.content);
 }

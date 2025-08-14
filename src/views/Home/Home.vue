@@ -1,7 +1,7 @@
 <template>
   <section class="Home">
     <div class="text">
-      <h3>深呼吸，屏除雜念，開始你的塔羅占卜之旅</h3>
+      <h3>深呼吸，屏除杂念，集中注意力，默念你的问题，开始你的塔罗占卜之旅</h3>
       <Textarea v-model.trim="textValue" placeholder="你要占卜的问题（必须）" :disabled="loadingStatus" />
     </div>
     <template v-if="!loadingStatus">
@@ -68,13 +68,48 @@ const getRes = async () => {
   renderRES(resText)
 }
 
+// // 渲染后的 HTML 内容
+// const typedText = ref<HTMLParagraphElement>()
+// const renderRES = async (md: string) => {
+//   const renderedMarkdown = await marked.parse(md)
+//   new Typed(typedText.value, { strings: [renderedMarkdown], typeSpeed: 16, showCursor: false })
+// }
+//
+// // 重置
+// const resetFn = async () => {
+//   vh.showLoading()
+//   await new Promise((resolve) => setTimeout(resolve, 666))
+//   selectCardArr.value = []
+//   textValue.value = ''
+//   resStatus.value = false
+//   loadingStatus.value = false
+//   for (let i = randomCard.value.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1))
+//     ;[randomCard.value[i], randomCard.value[j]] = [randomCard.value[j], randomCard.value[i]]
+//   }
+//   vh.hideLoading()
+// }
+
+// ... existing code ...
 // 渲染后的 HTML 内容
 const typedText = ref<HTMLParagraphElement>()
+let typedInstance: Typed | null = null
 const renderRES = async (md: string) => {
   const renderedMarkdown = await marked.parse(md)
-  new Typed(typedText.value, { strings: [renderedMarkdown], typeSpeed: 16, showCursor: false })
-}
+  // 销毁之前的实例（如果存在）
+  if (typedInstance) {
+    typedInstance.destroy()
+  }
 
+  // 创建新的 Typed 实例，使用正确的配置格式
+  typedInstance = new Typed(typedText.value!, {
+    strings: [renderedMarkdown as string],
+    typeSpeed: 16,
+    showCursor: false,
+    contentType: 'html'
+  })
+}
+// ... existing code ...
 // 重置
 const resetFn = async () => {
   vh.showLoading()
@@ -87,8 +122,15 @@ const resetFn = async () => {
     const j = Math.floor(Math.random() * (i + 1))
     ;[randomCard.value[i], randomCard.value[j]] = [randomCard.value[j], randomCard.value[i]]
   }
+  // 销毁 Typed 实例
+  if (typedInstance) {
+    typedInstance.destroy()
+    typedInstance = null
+  }
   vh.hideLoading()
 }
+// ... existing code ...
+
 
 // 动态渲染卡牌
 const renderIMG = (url: string) => new URL(`../../assets/images/card/${url}`, import.meta.url).href
