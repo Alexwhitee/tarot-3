@@ -35,7 +35,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 // 随机卡牌
-const randomCard = ref<number[]>(Array.from({ length: 22 }, (_, i) => i))
+const randomCard = ref<number[]>(Array.from({ length: 78 }, (_, i) => i))
 // Fisher-Yates 洗牌算法
 for (let i = randomCard.value.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1))
