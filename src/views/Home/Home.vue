@@ -914,24 +914,35 @@ const resetFn = () => {
   if (typedInstance) { typedInstance.destroy(); typedInstance = null }
 }
 
-const renderBackImage = () => {
-  const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
-  return new URL(`${path}back.jpg`, import.meta.url).href
-}
-
-// const renderIMG = (no: number) => {
+// const renderBackImage = () => {
 //   const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
+//   return new URL(`${path}back.jpg`, import.meta.url).href
+// }
+//
+// // const renderIMG = (no: number) => {
+// //   const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
+// //   return new URL(`${path}${no}.jpg`, import.meta.url).href
+// // }
+//
+//
+// // ... (之前的代码保持不变)
+//
+// // 修正后的 renderIMG 函数，它返回一个同步的字符串
+// const renderIMG = (no: number): string => {
+//   const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
+//   // 使用 Vite 推荐的 new URL 方式
 //   return new URL(`${path}${no}.jpg`, import.meta.url).href
 // }
+const base = import.meta.env.BASE_URL // 一般是 '/'
 
+const renderBackImage = () => {
+  const path = selectedDeck.value?.imagePath ?? 'cards/card/'
+  return `${base}${path}back.jpg`
+}
 
-// ... (之前的代码保持不变)
-
-// 修正后的 renderIMG 函数，它返回一个同步的字符串
 const renderIMG = (no: number): string => {
-  const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
-  // 使用 Vite 推荐的 new URL 方式
-  return new URL(`${path}${no}.jpg`, import.meta.url).href
+  const path = selectedDeck.value?.imagePath ?? 'cards/card/'
+  return `${base}${path}${no}.jpg`
 }
 
 const getRes = async () => {

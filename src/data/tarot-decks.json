@@ -3,7 +3,7 @@
     "key": "classic",
     "name": "经典塔罗",
     "cardCount": 78,
-    "imagePath": "../../assets/images/card/",
+    "imagePath": "cards/card/",
     "spreads": [
       {
         "key": "one",
@@ -107,7 +107,7 @@
     "key": "modern",
     "name": "新塔罗牌",
     "cardCount": 78,
-    "imagePath": "../../assets/images/card2/",
+    "imagePath": "cards/card2/",
     "spreads": [
       { "key": "one", "name": "新单张指引", "count": 1, "positions": ["指引"], "desc": "快速指引", "usage": "日常问题" },
       { "key": "three", "name": "新三张牌阵", "count": 3, "positions": ["过去","现在","未来"], "desc": "经典三牌占卜", "usage": "了解事件发展脉络" },
