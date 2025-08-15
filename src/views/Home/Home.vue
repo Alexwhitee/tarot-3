@@ -713,19 +713,29 @@ type CardResult = {
 
 const typedText = ref<HTMLParagraphElement | null>(null)
 let typedInstance: Typed | null = null
-const renderRES = async (md: string) => {
-  if (!typedText.value) return
+// 原：const renderRES = (md: string) => { ... }
+// 改成 ↓↓↓
+const renderRES = (html: string) => {
+  if (!typedText.value) return;
 
-  const renderedMarkdown = marked.parse(md)
+  if (typedInstance) {
+    typedInstance.destroy();
+    typedInstance = null;
+  }
 
-  if (typedInstance) typedInstance.destroy()
   typedInstance = new Typed(typedText.value, {
-    strings: [renderedMarkdown],
+    strings: [html],
     typeSpeed: 16,
     showCursor: false,
     contentType: 'html',
-  })
-}
+  });
+};
+
+// 把可能是 string 或 Promise<string> 的结果，统一变成 string
+const parseMdToHtml = async (md: string): Promise<string> => {
+  const maybe = marked.parse(md);          // 类型：string | Promise<string>
+  return typeof maybe === 'string' ? maybe : await maybe; // 统一成 string
+};
 
 // 修改 decks 的定义，直接使用导入的数据
 const decks = ref<Deck[]>(tarotDecks as Deck[]); // 使用导入的数据并进行类型断言
@@ -861,34 +871,34 @@ const confirmSpread = async () => {
 }
 
 // 修正后的 getRes 函数
-const getRes = async () => {
-  loadingStatus.value = true
-  cardResult.value = selectCardArr.value.map(i => ({ no: i, isReversed: needReversed.value ? Math.random() > 0.5 : false }))
-  vh.showLoading()
-  const res = await fetch('/api', {
-    method: 'POST',
-    body: JSON.stringify({
-      text: textValue.value,
-      pms: cardResult.value,
-      spread: {
-        key: selectedSpread.value?.key ?? '',
-        name: selectedSpread.value?.name ?? '',
-        count: selectedSpread.value?.count ?? 0,
-        positions: selectedSpread.value?.positions ?? []
-      },
-      deck: {
-        key: selectedDeck.value?.key ?? '',
-        name: selectedDeck.value?.name ?? ''
-      }
-    })
-  })
-  vh.hideLoading()
-  resStatus.value = true
-  const resText = await res.text()
-  await nextTick()
-  // 在这里直接将纯字符串传给 renderRES，避免类型错误
-  renderRES(resText)
-}
+// const getRes = async () => {
+//   loadingStatus.value = true
+//   cardResult.value = selectCardArr.value.map(i => ({ no: i, isReversed: needReversed.value ? Math.random() > 0.5 : false }))
+//   vh.showLoading()
+//   const res = await fetch('/api', {
+//     method: 'POST',
+//     body: JSON.stringify({
+//       text: textValue.value,
+//       pms: cardResult.value,
+//       spread: {
+//         key: selectedSpread.value?.key ?? '',
+//         name: selectedSpread.value?.name ?? '',
+//         count: selectedSpread.value?.count ?? 0,
+//         positions: selectedSpread.value?.positions ?? []
+//       },
+//       deck: {
+//         key: selectedDeck.value?.key ?? '',
+//         name: selectedDeck.value?.name ?? ''
+//       }
+//     })
+//   })
+//   vh.hideLoading()
+//   resStatus.value = true
+//   const resText = await res.text()
+//   await nextTick()
+//   // 在这里直接将纯字符串传给 renderRES，避免类型错误
+//   renderRES(resText)
+// }
 const resetFn = () => {
   selectCardArr.value = []
   cardResult.value = []
@@ -909,11 +919,69 @@ const renderBackImage = () => {
   return new URL(`${path}back.jpg`, import.meta.url).href
 }
 
-const renderIMG = (no: number) => {
+// const renderIMG = (no: number) => {
+//   const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
+//   return new URL(`${path}${no}.jpg`, import.meta.url).href
+// }
+
+
+// ... (之前的代码保持不变)
+
+// 修正后的 renderIMG 函数，它返回一个同步的字符串
+const renderIMG = (no: number): string => {
   const path = selectedDeck.value?.imagePath ?? '../../assets/images/card/'
+  // 使用 Vite 推荐的 new URL 方式
   return new URL(`${path}${no}.jpg`, import.meta.url).href
 }
 
+const getRes = async () => {
+  loadingStatus.value = true;
+  cardResult.value = selectCardArr.value.map(i => ({ no: i, isReversed: needReversed.value ? Math.random() > 0.5 : false }));
+  vh.showLoading();
+
+  try {
+    const res = await fetch('/api', {
+      method: 'POST',
+      body: JSON.stringify({
+        text: textValue.value,
+        pms: cardResult.value,
+        spread: {
+          key: selectedSpread.value?.key ?? '',
+          name: selectedSpread.value?.name ?? '',
+          count: selectedSpread.value?.count ?? 0,
+          positions: selectedSpread.value?.positions ?? []
+        },
+        deck: {
+          key: selectedDeck.value?.key ?? '',
+          name: selectedDeck.value?.name ?? ''
+        }
+      })
+    });
+
+    // 确保 fetch 请求成功
+    if (!res.ok) {
+      throw new Error(`API response was not ok: ${res.statusText}`);
+    }
+
+    const resText = await res.text();
+
+// ❗不要再直接 await marked.parse(...) 了，让工具函数来“消联合”
+    const html = await parseMdToHtml(resText);
+
+    resStatus.value = true;
+    await nextTick();
+    renderRES(html); // 这里的 html 现在是 string，类型完全匹配
+
+
+
+
+  } catch (error) {
+    console.error('占卜请求失败:', error);
+    // 处理错误，例如显示错误信息给用户
+  } finally {
+    vh.hideLoading();
+  }
+};
 onMounted(() => {
   if (cardStripWrapper.value) {
     containerWidth.value = cardStripWrapper.value.clientWidth
