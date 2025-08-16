@@ -45,11 +45,46 @@ export async function onRequestPost({ request }) {
 
 
 
-
-
-
-
-
-
-
-
+//
+// export async function onRequestPost({ request }) {
+//   const { text, pms } = await request.json();
+//
+//   // 这里确保每张牌都有 name，如果前端已经传了 name，就直接用
+//   const cardResultWithName = pms.map(card => ({
+//     no: card.no,
+//     name: card.name ?? `第${card.no}张`,
+//     isReversed: card.isReversed ?? false
+//   }));
+//
+//   const body = {
+//     messages: [
+//       {
+//         role: "system",
+//         content: `现在你是塔罗牌大师，根据我所选的牌去解析问题。你会收到一个卡牌数组，每张牌包含no(0-77)、name(塔罗牌名称)和isReversed(是否逆位)。请根据name解析含义，并结合逆位情况给出解读，最后以百分比形式给出问题的概率，不要回答多余的话。`
+//       },
+//       {
+//         role: "user",
+//         content: `卡牌数组是：${JSON.stringify(cardResultWithName)}，问题是：'${text}？'，请帮我解析`
+//       }
+//     ],
+//     stream: false,
+//     model: "glm-4-flash",
+//     temperature: 0,
+//     presence_penalty: 0,
+//     frequency_penalty: 0,
+//     top_p: 1
+//   };
+//
+//   const res = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
+//     headers: {
+//       "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
+//       "content-type": "application/json"
+//     },
+//     body: JSON.stringify(body),
+//     method: "POST"
+//   });
+//
+//   const data = await res.json();
+//   return new Response(data.choices[0].message.content);
+// }
+//

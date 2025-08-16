@@ -31,6 +31,21 @@
         </label>
       </div>
 
+
+      <div class="mt-2" v-if="selectedSpreadKey">
+        <label>
+          <input type="checkbox" v-model="needGuideCards" /> 是否抽指示牌
+        </label>
+
+        <template v-if="needGuideCards">
+          <label>
+            抽取指示牌数量：
+            <input type="number" v-model.number="guideCardCount" min="1" max="10" style="width:50px;" />
+          </label>
+        </template>
+      </div>
+
+
       <div class="spread-selection" v-if="selectedDeckKey">
         <h3 class="section-title">3.选择牌阵（必须）</h3>
         <div class="spread-list flex flex-wrap gap-4">
@@ -68,9 +83,15 @@
         </div>
       </div>
 
-      <div class="selected-spread-info mt-4" v-if="isSpreadConfirmed">
-        当前牌阵：{{ selectedSpread?.name }}（需 {{ selectedCardCount }} 张） | 已选：{{ selectCardArr.length }} 张
+<!--      <div class="selected-spread-info mt-4" v-if="isSpreadConfirmed">-->
+<!--        当前牌阵：{{ selectedSpread?.name }}（需 {{ selectedCardCount }} 张） | 已选：{{ selectCardArr.length }} 张-->
+<!--      </div>-->
+
+      <div v-if="needGuideCards">
+        指示牌（需 {{ guideCardCount }} 张） | 已选：{{ Math.min(selectCardArr.length, guideCardCount) }} 张
       </div>
+      当前牌阵：{{ selectedSpread?.name }}（需 {{ selectedCardCount }} 张） | 已选：{{ Math.max(0, selectCardArr.length - guideCardCount) }} 张
+
 
       <div class="card-strip-wrapper" v-if="isSpreadConfirmed && !resStatus">
         <div
@@ -105,21 +126,76 @@
         />
       </div>
       <div class="btn mt-4">
-        <Button class="mt-4 w-full button-spacing" :disabled="selectCardArr.length !== selectedCardCount" @click="getRes">
+<!--        <Button class="mt-4 w-full button-spacing" :disabled="selectCardArr.length !== selectedCardCount" @click="getRes">-->
+<!--          开始占卜-->
+<!--        </Button>-->
+<!--      </div>-->
+        <Button class="mt-4 w-full button-spacing"
+                :disabled="selectCardArr.length !== totalCardCount"
+                @click="getRes">
           开始占卜
         </Button>
-      </div>
+      </div>-->
+
     </template>
 
+<!--    <div class="card-jx mt-4" v-else>-->
+<!--      <div class="show-card flex flex-wrap gap-4">-->
+<!--        <div class="card-item" v-for="(i, index) in cardResult" :key="i.no">-->
+<!--          <img :class="{ rever: i.isReversed }" :src="renderIMG(i.no)" />-->
+
+
+
+<!--&lt;!&ndash;          <div class="card-label">&ndash;&gt;-->
+<!--&lt;!&ndash;            （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ i.name }}&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--          <div class="card-label">-->
+<!--            （{{ index + 1 }}）-->
+<!--            {{ i.type === 'guide'-->
+<!--            ? `指示牌-${i.name}`-->
+<!--            : `${selectedSpread?.positions?.[index - (needGuideCards ? guideCardCount : 0)] ?? `第${index + 1}张`}-${i.name}`-->
+<!--            }}-->
+<!--          </div>-->
+
+
+
+
+
+
+
+<!--        </div>-->
+<!--      </div>-->
+
     <div class="card-jx mt-4" v-else>
-      <div class="show-card flex flex-wrap gap-4">
-        <div class="card-item" v-for="(i, index) in cardResult" :key="i.no">
-          <img :class="{ rever: i.isReversed }" :src="renderIMG(i.no)" />
-          <div class="card-label">
-            （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}
+      <!-- 指示牌行 -->
+      <div v-if="guideCards.length > 0" class="guide-cards-section mb-6">
+        <h4 class="cards-section-title">指示牌</h4>
+        <div class="show-card flex flex-wrap gap-4 justify-center">
+          <div class="card-item" v-for="(card, index) in guideCards" :key="card.no">
+            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />
+            <div class="card-label">
+              指示牌{{ index + 1 }} - {{ card.name }}
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- 牌阵牌行 -->
+      <div v-if="spreadCards.length > 0" class="spread-cards-section mb-6">
+        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>
+        <div class="show-card flex flex-wrap gap-4 justify-center">
+          <div class="card-item" v-for="(card, index) in spreadCards" :key="card.no">
+            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />
+            <div class="card-label">
+              （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ card.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
       <Alert class="mt-4" v-if="resStatus">
         <AlertTitle>塔罗牌解析：</AlertTitle>
         <AlertDescription>
@@ -128,6 +204,12 @@
       </Alert>
       <Button class="mt-4 ml-auto block w-max" @click="resetFn">重新开始</Button>
     </div>
+
+
+
+
+
+
   </section>
 </template>
 
@@ -156,6 +238,7 @@ type Deck = {
   imagePath: string
   start?: number
   spreads: Spread[]
+  cardNames?: Record<number, string>  // 新增字段
 }
 type CardResult = {
   no: number
@@ -181,6 +264,10 @@ const renderRES = (html: string) => {
     contentType: 'html',
   });
 };
+
+
+
+
 
 // 把可能是 string 或 Promise<string> 的结果，统一变成 string
 const parseMdToHtml = async (md: string): Promise<string> => {
@@ -241,6 +328,23 @@ const onWheelWithShift = (e: WheelEvent) => {
     viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
   }
 };
+
+
+
+// 是否启用抽指示牌（用户勾选）
+const needGuideCards = ref(false)
+
+// 指示牌数量（默认可以是3，可弹窗选择 1-10）
+const guideCardCount = ref(1)
+
+// 计算总抽牌数 = 指示牌数量 + 牌阵数量
+const totalCardCount = computed(() =>
+  (needGuideCards.value ? guideCardCount.value : 0) + (selectedSpread.value?.count ?? 0)
+)
+
+
+
+
 
 onMounted(() => {
   window.addEventListener('wheel', onWheelWithShift, { passive: false });
@@ -308,11 +412,37 @@ const selectDeck = (key: string) => {
   initShuffledDeck()
   recalcAfterDOMUpdate()
 }
+// const selectCard = (id: number) => {
+//   if (selectCardArr.value.includes(id)) { selectCardArr.value = selectCardArr.value.filter(i => i !== id); return }
+//   if (selectCardArr.value.length >= selectedCardCount.value) return
+//   selectCardArr.value.push(id)
+// }
+
 const selectCard = (id: number) => {
-  if (selectCardArr.value.includes(id)) { selectCardArr.value = selectCardArr.value.filter(i => i !== id); return }
-  if (selectCardArr.value.length >= selectedCardCount.value) return
-  selectCardArr.value.push(id)
+  // 如果已选过，再点击取消
+  if (selectCardArr.value.includes(id)) {
+    selectCardArr.value = selectCardArr.value.filter(i => i !== id)
+    return
+  }
+
+  // 超过总抽牌数，不允许再选
+  if (selectCardArr.value.length >= totalCardCount.value) return
+
+  selectCardArr.value.push(id) // 按顺序加入数组
 }
+
+
+// 在现有的计算属性后添加这两个新的计算属性
+const guideCards = computed(() => {
+  return cardResult.value.filter(card => card.type === 'guide')
+})
+
+const spreadCards = computed(() => {
+  return cardResult.value.filter(card => card.type === 'spread')
+})
+
+
+
 const confirmSpread = async () => {
   if (!selectedSpreadKey.value) return
   isSpreadConfirmed.value = true
@@ -406,11 +536,133 @@ const renderIMG = (no: number): string => {
   return `${base}${path}${fileNo}.jpg`
 }
 
-const getRes = async () => {
-  loadingStatus.value = true;
-  cardResult.value = selectCardArr.value.map(i => ({ no: i, isReversed: needReversed.value ? Math.random() > 0.5 : false }));
-  vh.showLoading();
+// const getRes = async () => {
+//   loadingStatus.value = true;
+//   cardResult.value = selectCardArr.value.map(i => ({ no: i, isReversed: needReversed.value ? Math.random() > 0.5 : false }));
+//   // const cardResultWithName = selectCardArr.value.map(i => {
+//   //   const name = selectedDeck.value?.cardNames?.[i] ?? `第${i}张`
+//   //   return {
+//   //     no: i,
+//   //     name,
+//   //     isReversed: needReversed.value ? Math.random() > 0.5 : false
+//   //   }
+//   // })
+//
+//   vh.showLoading();
+//
+//   try {
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         pms: cardResult.value,
+//         spread: {
+//           key: selectedSpread.value?.key ?? '',
+//           name: selectedSpread.value?.name ?? '',
+//           count: selectedSpread.value?.count ?? 0,
+//           positions: selectedSpread.value?.positions ?? []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key ?? '',
+//           name: selectedDeck.value?.name ?? ''
+//         }
+//       })
+//     });
+//
+//     // 确保 fetch 请求成功
+//     if (!res.ok) {
+//       throw new Error(`API response was not ok: ${res.statusText}`);
+//     }
+//
+//     const resText = await res.text();
+//
+// // 不要再直接 await marked.parse(...) 了，让工具函数来“消联合”
+//     const html = await parseMdToHtml(resText);
+//
+//     resStatus.value = true;
+//     await nextTick();
+//     renderRES(html); // 这里的 html 现在是 string，类型完全匹配
+//
+//
+//
+//
+//   } catch (error) {
+//     console.error('占卜请求失败:', error);
+//     // 处理错误，例如显示错误信息给用户
+//   } finally {
+//     vh.hideLoading();
+//   }
+// };
 
+
+// const getRes = async () => {
+//   if (!selectedSpread.value) return;
+//
+//   loadingStatus.value = true;
+//
+//   // 生成抽牌结果，同时携带牌名和逆位信息
+//   cardResult.value = selectCardArr.value.map(i => ({
+//     no: i,
+//     name: selectedDeck.value?.cardNames?.[i] ?? `第${i}张`,
+//     isReversed: needReversed.value ? Math.random() > 0.5 : false
+//   }));
+//
+//   vh.showLoading();
+//
+//   try {
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         pms: cardResult.value, // 传给后端的牌数组
+//         spread: {
+//           key: selectedSpread.value.key,
+//           name: selectedSpread.value.name,
+//           count: selectedSpread.value.count,
+//           positions: selectedSpread.value.positions ?? []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key ?? '',
+//           name: selectedDeck.value?.name ?? ''
+//         }
+//       })
+//     });
+//
+//     if (!res.ok) {
+//       throw new Error(`API response was not ok: ${res.statusText}`);
+//     }
+//
+//     const resText = await res.text();
+//     const html = await parseMdToHtml(resText);
+//
+//     resStatus.value = true;
+//     await nextTick();
+//
+//     // 渲染塔罗牌解析文本
+//     renderRES(html);
+//
+//   } catch (error) {
+//     console.error('占卜请求失败:', error);
+//   } finally {
+//     vh.hideLoading();
+//   }
+// };
+
+const getRes = async () => {
+  if (!selectedSpread.value) return
+  loadingStatus.value = true
+
+  // 生成抽牌结果，同时标记类型（guide / spread）
+  cardResult.value = selectCardArr.value.map((i, index) => ({
+    no: i,
+    type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+    name: selectedDeck.value?.cardNames?.[i] ?? `第${i}张`,
+    isReversed: needReversed.value ? Math.random() > 0.5 : false
+  }))
+
+
+
+  vh.showLoading()
   try {
     const res = await fetch('/api', {
       method: 'POST',
@@ -418,42 +670,35 @@ const getRes = async () => {
         text: textValue.value,
         pms: cardResult.value,
         spread: {
-          key: selectedSpread.value?.key ?? '',
-          name: selectedSpread.value?.name ?? '',
-          count: selectedSpread.value?.count ?? 0,
-          positions: selectedSpread.value?.positions ?? []
+          key: selectedSpread.value.key,
+          name: selectedSpread.value.name,
+          count: selectedSpread.value.count,
+          positions: selectedSpread.value.positions ?? []
         },
         deck: {
           key: selectedDeck.value?.key ?? '',
           name: selectedDeck.value?.name ?? ''
         }
       })
-    });
+    })
+    if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
 
-    // 确保 fetch 请求成功
-    if (!res.ok) {
-      throw new Error(`API response was not ok: ${res.statusText}`);
-    }
+    const resText = await res.text()
+    const html = await parseMdToHtml(resText)
 
-    const resText = await res.text();
-
-// ❗不要再直接 await marked.parse(...) 了，让工具函数来“消联合”
-    const html = await parseMdToHtml(resText);
-
-    resStatus.value = true;
-    await nextTick();
-    renderRES(html); // 这里的 html 现在是 string，类型完全匹配
-
-
-
-
+    resStatus.value = true
+    await nextTick()
+    renderRES(html)
   } catch (error) {
-    console.error('占卜请求失败:', error);
-    // 处理错误，例如显示错误信息给用户
+    console.error('占卜请求失败:', error)
   } finally {
-    vh.hideLoading();
+    vh.hideLoading()
   }
-};
+}
+
+
+
+
 onMounted(() => {
   if (cardStripWrapper.value) {
     containerWidth.value = cardStripWrapper.value.clientWidth
@@ -638,4 +883,37 @@ onBeforeUnmount(() => { if (typedInstance) { typedInstance.destroy(); typedInsta
 .button-spacing {
   margin-top: 40px; /* 增加上外边距，向下平移 */
 }
+
+
+
+// 在现有样式后添加
+.guide-cards-section, .spread-cards-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.cards-section-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #8b4513;
+  margin-bottom: 12px;
+  text-align: center;
+  border-bottom: 1px solid #deb887;
+  padding-bottom: 8px;
+}
+
+.guide-cards-section {
+  background: #f0f8ff; // 浅蓝色背景区分指示牌
+}
+
+.spread-cards-section {
+  background: #fff8f0; // 浅橙色背景区分牌阵牌
+}
+
+
+
 </style>
+
+
