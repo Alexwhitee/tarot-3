@@ -42,3 +42,14 @@ export async function onRequestPost({ request }) {
     const data = await res.json();
     return new Response(data.choices[0].message.content);
 }
+
+
+
+
+
+
+
+
+
+
+
