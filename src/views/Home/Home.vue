@@ -1527,6 +1527,28 @@
         </template>
       </div>
 
+<!--      <div class="spread-selection" v-if="selectedDeckKey">-->
+<!--        <h3 class="section-title">3.选择牌阵（必须）</h3>-->
+<!--        <div class="spread-list flex flex-wrap gap-4">-->
+<!--          <div-->
+<!--            v-for="s in spreads"-->
+<!--            :key="s.key"-->
+<!--            class="spread-card p-2 border rounded cursor-pointer"-->
+<!--            :class="{ active: selectedSpreadKey === s.key }"-->
+<!--            @click="() => { selectedSpreadKey = s.key; clickedSpread = s; }"-->
+<!--          >-->
+<!--            <div class="spread-header font-bold">-->
+<!--              <span class="spread-name">{{ s.name }}</span>-->
+<!--              <span class="spread-count">（{{ s.count }}张）</span>-->
+<!--            </div>-->
+<!--            <p class="spread-desc text-sm">{{ s.desc }}</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <Button class="mt-4 w-full" :disabled="!selectedSpreadKey || isSpreadConfirmed" @click="confirmSpread">-->
+<!--          确认牌阵-->
+<!--        </Button>-->
+<!--      </div>-->
+
       <div class="spread-selection" v-if="selectedDeckKey">
         <h3 class="section-title">3.选择牌阵（必须）</h3>
         <div class="spread-list flex flex-wrap gap-4">
@@ -1540,14 +1562,28 @@
             <div class="spread-header font-bold">
               <span class="spread-name">{{ s.name }}</span>
               <span class="spread-count">（{{ s.count }}张）</span>
+              <!-- 添加自定义标识 -->
+              <span v-if="'isCustom' in s && s.isCustom" class="custom-badge">自定义</span>
             </div>
             <p class="spread-desc text-sm">{{ s.desc }}</p>
           </div>
+
+          <!-- 添加自定义牌阵按钮 -->
+          <div class="spread-card custom-create-card p-2 border rounded cursor-pointer" @click="openCustomSpreadModal">
+            <div class="spread-header font-bold">
+              <span class="spread-name">+ 自定义牌阵</span>
+            </div>
+            <p class="spread-desc text-sm">创建您专属的塔罗牌阵</p>
+          </div>
         </div>
+
         <Button class="mt-4 w-full" :disabled="!selectedSpreadKey || isSpreadConfirmed" @click="confirmSpread">
           确认牌阵
         </Button>
       </div>
+
+
+
 
       <div class="hover-info-wrapper mt-4" v-if="clickedSpread">
         <div class="spread-info-bar">
@@ -1683,10 +1719,131 @@
         </div>
       </div>
 
+<!--      <Button class="mt-4 ml-auto block w-max" @click="resetFn">重新开始</Button>-->
+<!--    </div>-->
+<!--  </section>-->
+<!--</template>-->
+
+
       <Button class="mt-4 ml-auto block w-max" @click="resetFn">重新开始</Button>
     </div>
+
+    <!-- 自定义牌阵模态框 -->
+    <div v-if="showCustomSpreadModal" class="modal-overlay" @click.self="closeCustomSpreadModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>创建自定义牌阵</h3>
+          <button class="close-btn" @click="closeCustomSpreadModal">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="spread-name">牌阵名称 *</label>
+            <input
+              id="spread-name"
+              v-model="customSpreadForm.name"
+              type="text"
+              class="form-input"
+              :class="{ error: formErrors.name }"
+              placeholder="请输入牌阵名称"
+              maxlength="20"
+            />
+            <span v-if="formErrors.name" class="error-text">{{ formErrors.name }}</span>
+          </div>
+
+          <div class="form-group">
+            <label for="spread-count">牌数 *</label>
+            <input
+              id="spread-count"
+              v-model.number="customSpreadForm.count"
+              type="number"
+              class="form-input"
+              :class="{ error: formErrors.count }"
+              min="1"
+              max="20"
+            />
+            <span v-if="formErrors.count" class="error-text">{{ formErrors.count }}</span>
+          </div>
+
+          <div class="form-group">
+            <label>牌位名称 *</label>
+            <div class="positions-grid">
+              <div
+                v-for="(position, index) in customSpreadForm.positions"
+                :key="index"
+                class="position-input-group"
+              >
+                <label :for="`position-${index}`" class="position-label">第{{ index + 1 }}位</label>
+                <input
+                  :id="`position-${index}`"
+                  v-model="customSpreadForm.positions[index]"
+                  type="text"
+                  class="form-input position-input"
+                  :class="{ error: formErrors[`position_${index}`] }"
+                  :placeholder="`第${index + 1}位名称`"
+                  maxlength="10"
+                />
+                <span v-if="formErrors[`position_${index}`]" class="error-text">
+                  {{ formErrors[`position_${index}`] }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="spread-desc">牌阵描述</label>
+            <textarea
+              id="spread-desc"
+              v-model="customSpreadForm.desc"
+              class="form-textarea"
+              placeholder="请描述这个牌阵的特点"
+              maxlength="200"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="spread-usage">适用场景</label>
+            <input
+              id="spread-usage"
+              v-model="customSpreadForm.usage"
+              type="text"
+              class="form-input"
+              placeholder="例如：爱情、事业、综合运势等"
+              maxlength="50"
+            />
+          </div>
+
+          <!-- 预览区域 -->
+          <div class="preview-section">
+            <h4>牌阵预览</h4>
+            <div class="spread-preview">
+              <div class="preview-header">
+                <strong>{{ customSpreadForm.name }}</strong>
+                <span>（{{ customSpreadForm.count }}张）</span>
+              </div>
+              <p class="preview-desc">{{ customSpreadForm.desc }}</p>
+              <p class="preview-usage">适用场景：{{ customSpreadForm.usage }}</p>
+              <div class="preview-positions">
+                <strong>牌位含义：</strong>
+                <span v-for="(pos, index) in customSpreadForm.positions" :key="index">
+                  （{{ index + 1 }}）{{ pos }}
+                  <span v-if="index < customSpreadForm.positions.length - 1">，</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <Button class="cancel-btn" @click="closeCustomSpreadModal">取消</Button>
+          <Button class="create-btn" @click="createCustomSpread">创建牌阵</Button>
+        </div>
+      </div>
+    </div>
+
   </section>
 </template>
+
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
@@ -1730,6 +1887,27 @@ type ConversationMessage = {
   role: 'user' | 'assistant'
   content: string
 }
+
+
+// 在现有类型定义后添加
+type CustomSpread = Spread & {
+  isCustom: boolean
+  createdAt: string
+}
+
+// 添加自定义牌阵状态管理
+const customSpreads = ref<CustomSpread[]>([])
+const showCustomSpreadModal = ref(false)
+const customSpreadForm = ref({
+  name: '自定义牌阵',
+  count: 3,
+  positions: ['过去', '现在', '未来'],
+  desc: '自定义占卜牌阵',
+  usage: '通用场景'
+})
+const formErrors = ref<Record<string, string>>({})
+
+
 
 // 主题相关
 const isDarkMode = ref(false)
@@ -1786,7 +1964,13 @@ const parseMdToHtml = async (md: string): Promise<string> => {
 const decks = ref<Deck[]>(tarotDecks as Deck[]);
 const selectedDeckKey = ref('')
 const selectedDeck = computed(() => decks.value.find(d => d.key === selectedDeckKey.value))
-const spreads = computed(() => selectedDeck.value?.spreads ?? [])
+//const spreads = computed(() => selectedDeck.value?.spreads ?? [])
+// 修改现有的 spreads 计算属性
+const spreads = computed(() => {
+  const deckSpreads = selectedDeck.value?.spreads ?? []
+  return [...deckSpreads, ...customSpreads.value]
+})
+
 const selectedSpreadKey = ref<Spread['key']>('')
 const isSpreadConfirmed = ref(false)
 const clickedSpread = ref<Spread | null>(null)
@@ -1968,6 +2152,13 @@ const resetFn = () => {
   followUpQuestion.value = ''
   currentSessionId.value = null
   initShuffledDeck()
+
+  // 添加自定义牌阵重置
+  customSpreads.value = []
+  showCustomSpreadModal.value = false
+  formErrors.value = {}
+
+
   textValue.value = ''
   if (typedInstance) { typedInstance.destroy(); typedInstance = null }
 }
@@ -2177,6 +2368,100 @@ const sendFollowUpQuestion = async () => {
     isFollowUpLoading.value = false
   }
 }
+
+
+// 自定义牌阵相关方法
+const openCustomSpreadModal = () => {
+  showCustomSpreadModal.value = true
+  resetCustomForm()
+}
+
+const closeCustomSpreadModal = () => {
+  showCustomSpreadModal.value = false
+  formErrors.value = {}
+}
+
+const resetCustomForm = () => {
+  customSpreadForm.value = {
+    name: '自定义牌阵',
+    count: 1,
+    positions: ['现在'],
+    desc: '自定义占卜牌阵',
+    usage: '通用场景'
+  }
+}
+
+const validateCustomForm = (): boolean => {
+  formErrors.value = {}
+
+  // 验证牌阵名称
+  if (!customSpreadForm.value.name.trim()) {
+    formErrors.value.name = '牌阵名称不能为空'
+  } else if (customSpreadForm.value.name.length > 20) {
+    formErrors.value.name = '牌阵名称不能超过20个字符'
+  }
+
+  // 验证牌数
+  if (customSpreadForm.value.count < 1 || customSpreadForm.value.count > 20) {
+    formErrors.value.count = '牌数必须在1-20之间'
+  }
+
+  // 验证牌位名称
+  for (let i = 0; i < customSpreadForm.value.positions.length; i++) {
+    const position = customSpreadForm.value.positions[i]
+    if (!position.trim()) {
+      formErrors.value[`position_${i}`] = '牌位名称不能为空'
+    } else if (position.length > 10) {
+      formErrors.value[`position_${i}`] = '牌位名称不能超过10个字符'
+    }
+  }
+
+  return Object.keys(formErrors.value).length === 0
+}
+
+const updatePositions = () => {
+  const count = customSpreadForm.value.count
+  const positions = customSpreadForm.value.positions
+
+  if (count > positions.length) {
+    // 增加牌位
+    for (let i = positions.length; i < count; i++) {
+      positions.push(`第${i + 1}位`)
+    }
+  } else if (count < positions.length) {
+    // 减少牌位
+    customSpreadForm.value.positions = positions.slice(0, count)
+  }
+}
+
+const createCustomSpread = () => {
+  if (!validateCustomForm()) return
+
+  const newSpread: CustomSpread = {
+    key: `custom_${Date.now()}`,
+    name: customSpreadForm.value.name,
+    count: customSpreadForm.value.count,
+    positions: [...customSpreadForm.value.positions],
+    desc: customSpreadForm.value.desc,
+    usage: customSpreadForm.value.usage,
+    isCustom: true,
+    createdAt: new Date().toISOString()
+  }
+
+  customSpreads.value.push(newSpread)
+
+  // 自动选择新创建的牌阵
+  selectedSpreadKey.value = newSpread.key
+  clickedSpread.value = newSpread
+
+  closeCustomSpreadModal()
+}
+
+// 监听牌数变化，自动更新牌位数组
+watch(() => customSpreadForm.value.count, updatePositions)
+
+
+
 
 </script>
 
@@ -2707,4 +2992,310 @@ label {
   font-weight: 500;
   cursor: pointer;
 }
+
+.dark-mode .button-spacing,
+.dark-mode .w-full {
+  background-color: #f39c12 !important; /* 橙色背景 */
+  color: #1a1a1a !important;           /* 深色文字，保证对比度 */
+  border: none;
+}
+
+.dark-mode .button-spacing:hover,
+.dark-mode .w-full:hover {
+  background-color: #d35400 !important; /* hover 更深的橙色 */
+  color: #fff !important;               /* hover 时文字变白 */
+}
+
+
+/* 自定义牌阵相关样式 */
+.custom-create-card {
+  border: 2px dashed #f39c12 !important;
+  background: linear-gradient(135deg, #fff8f0 0%, #fdf6f0 100%);
+  color: #f39c12;
+  transition: all 0.3s ease;
+}
+
+.custom-create-card:hover {
+  border-color: #e67e22 !important;
+  background: linear-gradient(135deg, #fef9f3 0%, #fcf4ed 100%);
+  transform: translateY(-2px);
+}
+
+.custom-badge {
+  background: #f39c12;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+/* 模态框样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #8b4513;
+  font-size: 1.25rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #f39c12;
+  box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2);
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: #e74c3c;
+}
+
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.positions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.position-input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.position-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.position-input {
+  margin-bottom: 0;
+}
+
+.preview-section {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.preview-section h4 {
+  margin: 0 0 12px 0;
+  color: #8b4513;
+  font-size: 1rem;
+}
+
+.spread-preview {
+  font-size: 14px;
+}
+
+.preview-header {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.preview-desc,
+.preview-usage {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.preview-positions {
+  color: #333;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #5a6268;
+}
+
+.create-btn {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background: #e67e22;
+}
+
+/* 深色模式适配 */
+.dark-mode .modal-content {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: #444;
+}
+
+.dark-mode .modal-footer {
+  border-top-color: #444;
+}
+
+.dark-mode .form-input,
+.dark-mode .form-textarea {
+  background: #3d3d3d;
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+.dark-mode .form-input:focus,
+.dark-mode .form-textarea:focus {
+  border-color: #f39c12;
+}
+
+.dark-mode .preview-section {
+  background: #3d3d3d;
+  border-color: #555;
+}
+
+.dark-mode .close-btn:hover {
+  background: #444;
+  color: #e0e0e0;
+}
+
+.dark-mode .custom-create-card {
+  background: linear-gradient(135deg, #2d2a1f 0%, #3d3527 100%);
+  border-color: #f39c12 !important;
+}
+
+.dark-mode .custom-create-card:hover {
+  background: linear-gradient(135deg, #3d342a 0%, #4d422f 100%);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+  }
+
+  .positions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .create-btn {
+    width: 100%;
+  }
+}
+
 </style>
