@@ -2069,6 +2069,61 @@ const getRes = async () => {
 }
 
 // 发送后续问题
+// const sendFollowUpQuestion = async () => {
+//   if (!followUpQuestion.value.trim()) return
+//
+//   isFollowUpLoading.value = true
+//
+//   // 添加用户问题到对话历史
+//   conversationMessages.value.push({
+//     role: 'user',
+//     content: followUpQuestion.value
+//   } as ConversationMessage)
+//
+//   const userQuestion = followUpQuestion.value
+//   followUpQuestion.value = ''
+//
+//   try {
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         text: userQuestion,
+//         sessionId: currentSessionId.value,
+//         followUp: true
+//       })
+//     })
+//
+//     if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
+//
+//     const resText = await res.text()
+//     const jsonData = JSON.parse(resText)
+//
+//     // 处理回复内容
+//     const content = jsonData.content || resText
+//     const html = await parseMdToHtml(content)
+//
+//     conversationMessages.value.push({
+//       role: 'assistant',
+//       content: html
+//     } as ConversationMessage)
+//
+//     // 更新会话ID
+//     if (jsonData.sessionId) {
+//       currentSessionId.value = jsonData.sessionId
+//     }
+//
+//     scrollToBottom()
+//   } catch (error) {
+//     console.error('发送后续问题失败:', error)
+//     // 移除用户问题（因为发送失败）
+//     conversationMessages.value.pop()
+//   } finally {
+//     isFollowUpLoading.value = false
+//   }
+// }
 const sendFollowUpQuestion = async () => {
   if (!followUpQuestion.value.trim()) return
 
@@ -2099,10 +2154,9 @@ const sendFollowUpQuestion = async () => {
     if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
 
     const resText = await res.text()
-    const jsonData = JSON.parse(resText)
 
-    // 处理回复内容
-    const content = jsonData.content || resText
+    // 直接处理为纯文本，与getRes保持一致
+    const content = parseApiResponse(resText)
     const html = await parseMdToHtml(content)
 
     conversationMessages.value.push({
@@ -2110,20 +2164,20 @@ const sendFollowUpQuestion = async () => {
       content: html
     } as ConversationMessage)
 
-    // 更新会话ID
-    if (jsonData.sessionId) {
-      currentSessionId.value = jsonData.sessionId
-    }
-
     scrollToBottom()
   } catch (error) {
     console.error('发送后续问题失败:', error)
+    conversationMessages.value.push({
+      role: 'assistant',
+      content: '抱歉，发送消息时出现错误，请稍后重试。'
+    } as ConversationMessage)
     // 移除用户问题（因为发送失败）
-    conversationMessages.value.pop()
+    conversationMessages.value.splice(-2, 1)
   } finally {
     isFollowUpLoading.value = false
   }
 }
+
 </script>
 
 <style scoped>
@@ -2287,7 +2341,7 @@ const sendFollowUpQuestion = async () => {
 }
 
 .user-message {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #007bff;
   color: white;
   margin-left: auto;
   margin-right: 0;
@@ -2299,7 +2353,7 @@ const sendFollowUpQuestion = async () => {
    }
 
 .assistant-message {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: #0056b3;
   color: white;
   margin-left: 0;
   margin-right: auto;

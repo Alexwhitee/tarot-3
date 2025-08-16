@@ -216,7 +216,7 @@ app.post('/', async (req, res) => {
 
     // 智谱 API 请求体格式 - 修正变量名
     const apiRequestBody = {
-      "model": "glm-4-flash", // 根据文档使用 glm-4.5 或 glm-4-flash
+      "model": "glm-4.5-flash", // 根据文档使用 glm-4.5 或 glm-4-flash
       "messages": messages,
       "temperature": 0.6,
       "max_tokens": 2000
