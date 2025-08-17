@@ -17,7 +17,142 @@
       />
     </div>
 
-    <template v-if="!loadingStatus">
+
+    <!--    &lt;!&ndash; 简化的结果展示区域 &ndash;&gt;-->
+    <!--    <div v-if="resStatus" class="result-container">-->
+    <!--      &lt;!&ndash; 指示牌展示 &ndash;&gt;-->
+    <!--      <div v-if="guideCards.length > 0" class="guide-cards-section">-->
+    <!--        <h4 class="cards-section-title">指示牌</h4>-->
+    <!--        <div class="cards-display">-->
+    <!--          <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">-->
+    <!--            <div class="card-wrapper">-->
+    <!--              <img-->
+    <!--                :src="renderIMG(card.no)"-->
+    <!--                :class="{ 'card-reversed': card.isReversed }"-->
+    <!--                :alt="card.name"-->
+    <!--                class="result-card-image"-->
+    <!--              />-->
+    <!--            </div>-->
+    <!--            <div class="card-info-text">-->
+    <!--              <div class="card-position">指示牌{{ index + 1 }}</div>-->
+    <!--              <div class="card-name-text">{{ card.name }}</div>-->
+    <!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+
+    <!--      &lt;!&ndash; 牌阵牌展示 &ndash;&gt;-->
+    <!--      <div v-if="spreadCards.length > 0" class="spread-cards-section">-->
+    <!--        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>-->
+    <!--        <div class="cards-display">-->
+    <!--          <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">-->
+    <!--            <div class="card-wrapper">-->
+    <!--              <img-->
+    <!--                :src="renderIMG(card.no)"-->
+    <!--                :class="{ 'card-reversed': card.isReversed }"-->
+    <!--                :alt="card.name"-->
+    <!--                class="result-card-image"-->
+    <!--              />-->
+    <!--            </div>-->
+    <!--            <div class="card-info-text">-->
+    <!--              <div class="card-position">-->
+    <!--                （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}-->
+    <!--              </div>-->
+    <!--              <div class="card-name-text">{{ card.name }}</div>-->
+    <!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+
+    <!--      &lt;!&ndash; 占卜结果显示 &ndash;&gt;-->
+    <!--      <div class="divination-result" v-if="firstDivinationResult">-->
+    <!--        <h4 class="result-title">占卜解析</h4>-->
+    <!--        <div class="result-content" v-html="firstDivinationResult"></div>-->
+    <!--      </div>-->
+
+    <!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
+    <!--      <div class="result-actions">-->
+    <!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <!-- 结果展示区域 - 优先显示 -->
+    <div v-if="resStatus" class="result-container">
+      <!-- 指示牌展示 -->
+      <div v-if="guideCards.length > 0" class="guide-cards-section">
+        <h4 class="cards-section-title">指示牌</h4>
+        <div class="cards-display">
+          <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">
+            <div class="card-wrapper">
+              <img
+                :src="renderIMG(card.no)"
+                :class="{ 'card-reversed': card.isReversed }"
+                :alt="card.name"
+                class="result-card-image"
+              />
+            </div>
+            <div class="card-info-text">
+              <div class="card-position">指示牌{{ index + 1 }}</div>
+              <div class="card-name-text">{{ card.name }}</div>
+              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 牌阵牌展示 -->
+      <div v-if="spreadCards.length > 0" class="spread-cards-section">
+        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>
+        <div class="cards-display">
+          <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">
+            <div class="card-wrapper">
+              <img
+                :src="renderIMG(card.no)"
+                :class="{ 'card-reversed': card.isReversed }"
+                :alt="card.name"
+                class="result-card-image"
+              />
+            </div>
+            <div class="card-info-text">
+              <div class="card-position">
+                （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}
+              </div>
+              <div class="card-name-text">{{ card.name }}</div>
+              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 占卜结果显示区域 -->
+      <div class="divination-result">
+        <h4 class="result-title">占卜解析</h4>
+
+        <!-- 加载状态 - 只在文字区域显示 -->
+        <div v-if="isWaitingForAnalysis" class="analysis-loading">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">AI正在为您解析牌面含义，请稍候...</p>
+        </div>
+
+        <!-- 分析结果 -->
+        <div v-else-if="firstDivinationResult" class="result-content" v-html="firstDivinationResult"></div>
+
+        <!-- 无结果提示 -->
+        <div v-else class="no-result">
+          <p>暂无分析结果</p>
+        </div>
+      </div>
+
+      <!-- 重新开始按钮 -->
+      <div class="result-actions">
+        <Button class="restart-btn" @click="resetFn">重新开始</Button>
+      </div>
+    </div>
+
+    <!--    <template v-if="!loadingStatus">-->
+    <template v-else-if="!loadingStatus">
       <div class="deck-selection mb-4">
         <!-- 新增这个容器 -->
         <div class="flex justify-between items-center mb-3">
@@ -155,6 +290,7 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
             <div v-if="isOpenCardMode" class="card-info-overlay">
               <div class="card-name">{{ i.name }}</div>
               <div class="card-number">No.{{ i.no + 1 }}</div>
+
             </div>
 
             <!-- 选中卡牌的翻转控制按钮（仅明牌模式且已选中时显示） -->
@@ -180,9 +316,9 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
         />
 
         <!-- 明牌模式提示 -->
-<!--        <div v-if="isOpenCardMode" class="open-card-tip">-->
-<!--          💡 明牌模式：您可以看到所有牌面，选中后点击翻转按钮设置正逆位-->
-<!--        </div>-->
+        <!--        <div v-if="isOpenCardMode" class="open-card-tip">-->
+        <!--          💡 明牌模式：您可以看到所有牌面，选中后点击翻转按钮设置正逆位-->
+        <!--        </div>-->
       </div>
 
       <div class="btn mt-4" v-if="isSpreadConfirmed && !resStatus">
@@ -194,150 +330,12 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
       </div>
     </template>
 
-<!--    <div class="card-jx mt-4" v-else>-->
-<!--      &lt;!&ndash; 指示牌行 &ndash;&gt;-->
-<!--      <div v-if="guideCards.length > 0" class="guide-cards-section mb-6">-->
-<!--        <h4 class="cards-section-title">指示牌</h4>-->
-<!--        <div class="show-card flex flex-wrap gap-4 justify-center">-->
-<!--          <div class="card-item" v-for="(card, index) in guideCards" :key="card.no">-->
-<!--            <img-->
-<!--              :class="{-->
-<!--rever: card.isReversed,-->
-<!--'result-card': true,-->
-<!--'result-card-reversed': card.isReversed-->
-<!--}"-->
-<!--              :src="renderIMG(card.no)"-->
-<!--              :style="{ cursor: 'default' }"-->
-<!--            />-->
-<!--            <div class="card-label">-->
-<!--              指示牌{{ index + 1 }} - {{ card.name }}-->
-<!--              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; 牌阵牌行 &ndash;&gt;-->
-<!--      <div v-if="spreadCards.length > 0" class="spread-cards-section mb-6">-->
-<!--        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>-->
-<!--        <div class="show-card flex flex-wrap gap-4 justify-center">-->
-<!--          <div class="card-item" v-for="(card, index) in spreadCards" :key="card.no">-->
-<!--            <img-->
-<!--              :class="{-->
-<!--rever: card.isReversed,-->
-<!--'result-card': true,-->
-<!--'result-card-reversed': card.isReversed-->
-<!--}"-->
-<!--              :src="renderIMG(card.no)"-->
-<!--              :style="{ cursor: 'default' }"-->
-<!--            />-->
-<!--            <div class="card-label">-->
-<!--              （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ card.name }}-->
-<!--              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
-    <!-- 修改结果展示区域的卡牌部分 -->
-    <div class="card-jx mt-4" v-else>
-      <!-- 指示牌行 -->
-      <div v-if="guideCards.length > 0" class="guide-cards-section mb-6">
-        <h4 class="cards-section-title">指示牌</h4>
-        <div class="show-card-container">
-          <div class="show-card flex gap-4 justify-center">
-
-          <div class="card-item" v-for="(card, index) in guideCards" :key="card.no">
-            <div class="result-card-wrapper">
-              <img
-                :class="{
-                'result-card': true,
-                'result-card-reversed': card.isReversed
-              }"
-                :src="renderIMG(card.no)"
-              />
-            </div>
-            <div class="card-label">
-              指示牌{{ index + 1 }} - {{ card.name }}
-              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 牌阵牌行 -->
-    <div v-if="spreadCards.length > 0" class="spread-cards-section mb-6">
-      <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>
-      <div class="show-card-container">
-        <div class="show-card flex gap-4 justify-center">
-          <div class="card-item" v-for="(card, index) in spreadCards" :key="card.no">
-            <div class="result-card-wrapper">
-              <img
-                :class="{
-                'result-card': true,
-                'result-card-reversed': card.isReversed
-              }"
-                :src="renderIMG(card.no)"
-              />
-            </div>
-            <div class="card-label">
-              （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ card.name }}
-              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
 
 
-    <!-- 统一的对话显示区域 -->
-      <div class="conversation-container mt-4">
-        <div class="conversation-history" ref="conversationHistory">
-          <!-- 第一条占卜结果 -->
-          <div v-if="firstDivinationResult" class="message assistant-message">
-            <div class="message-header">
-              <span class="message-role">塔罗牌解析</span>
-            </div>
-            <div class="message-content" v-html="firstDivinationResult"></div>
-          </div>
 
-          <!-- 后续对话 -->
-          <div
-            v-for="(msg, index) in conversationMessages"
-            :key="index"
-            class="message"
-            :class="{ 'user-message': msg.role === 'user', 'assistant-message': msg.role === 'assistant' }"
-          >
-            <div class="message-header">
-              <span class="message-role">{{ msg.role === 'user' ? '你' : '塔罗师' }}</span>
-            </div>
-            <div class="message-content" v-html="msg.content"></div>
-          </div>
-        </div>
 
-        <!-- 多轮对话输入区域 -->
-        <div class="conversation-input" v-if="resStatus">
-<Textarea
-  v-model.trim="followUpQuestion"
-  placeholder="继续提问关于这次占卜的问题..."
-  :disabled="isFollowUpLoading"
-  @keydown.enter.ctrl="sendFollowUpQuestion"
-  class="follow-up-textarea"
-/>
-          <Button
-            @click="sendFollowUpQuestion"
-            :disabled="!followUpQuestion.trim() || isFollowUpLoading"
-            class="send-btn"
-          >
-            {{ isFollowUpLoading ? '发送中...' : '发送 (Ctrl+Enter)' }}
-          </Button>
-        </div>
-      </div>
 
-      <Button class="mt-4 ml-auto block w-max" @click="resetFn">重新开始</Button>
-    </div>
 
     <!-- 自定义牌阵模态框 -->
     <div v-if="showCustomSpreadModal" class="modal-overlay" @click.self="closeCustomSpreadModal">
@@ -530,9 +528,7 @@ import { marked } from 'marked'
 import Typed from 'typed.js'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import tarotDecks from '../../data/tarot-decks.json';
-import { provide } from 'vue'
 
 // 类型定义
 type Spread = {
@@ -593,6 +589,8 @@ const customSpreadForm = ref({
   usage: '通用场景'
 })
 const formErrors = ref<Record<string, string>>({})
+// 在现有的状态变量附近添加
+const isWaitingForAnalysis = ref(false) // 是否正在等待AI分析
 
 const showCardViewModal = ref(false)
 const selectedViewDeck = ref<string>('')
@@ -617,63 +615,11 @@ onMounted(() => {
   }
 })
 
-// onMounted(() => {
-//   // 现有代码保持不变
-//   const savedTheme = localStorage.getItem('tarot-theme')
-//   if (savedTheme) {
-//     isDarkMode.value = savedTheme === 'dark'
-//   } else {
-//     isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
-//   }
-//
-//   // 添加以下代码自动选择第一个牌种和牌阵
-//   if (decks.value.length > 0) {
-//     // 选择第一个牌组
-//     selectedDeckKey.value = decks.value[0].key
-//
-//     // 初始化洗牌
-//     initShuffledDeck()
-//
-//     // 当牌组加载后，选择第一个牌阵
-//     nextTick(() => {
-//       if (spreads.value.length > 0) {
-//         selectedSpreadKey.value = spreads.value[0].key
-//         clickedSpread.value = spreads.value[0]
-//       }
-//     })
-//   }
-
-//   // 窗口事件监听器相关代码保持不变
-//   window.addEventListener('wheel', onWheelWithShift, { passive: false });
-//   if (cardStripWrapper.value) {
-//     containerWidth.value = cardStripWrapper.value.clientWidth;
-//   }
-// });
 
 
-// 多轮对话相关
-const conversationMessages = ref<ConversationMessage[]>([])
-const followUpQuestion = ref('')
-const isFollowUpLoading = ref(false)
-const currentSessionId = ref<string | null>(null)
-const conversationHistory = ref<HTMLDivElement | null>(null)
-const firstDivinationResult = ref<string>('')
 
-const scrollToBottom = () => {
-  nextTick(() => {
-    if (conversationHistory.value) {
-      conversationHistory.value.scrollTop = conversationHistory.value.scrollHeight;
-    }
-  });
-};
 
-const typedText = ref<HTMLParagraphElement | null>(null)
 let typedInstance: Typed | null = null
-
-const renderRES = (html: string) => {
-  firstDivinationResult.value = html
-  scrollToBottom()
-};
 
 const parseMdToHtml = async (md: string): Promise<string> => {
   const maybe = marked.parse(md);
@@ -853,6 +799,10 @@ const loadingStatus = ref(false)
 const resStatus = ref(false)
 const cardResult = ref<CardResult[]>([])
 
+// 在其他 ref 定义附近添加这一行
+const firstDivinationResult = ref('')
+
+
 // 选择牌组
 const selectDeck = (key: string) => {
   selectedDeckKey.value = key
@@ -906,11 +856,37 @@ const confirmSpread = async () => {
 }
 
 // 重置功能
+// const resetFn = () => {
+//   selectCardArr.value = []
+//   cardResult.value = []
+//   resStatus.value = false
+//   loadingStatus.value = false
+//   isSpreadConfirmed.value = false
+//   clickedSpread.value = null
+//   needReversed.value = true
+//   selectedDeckKey.value = ''
+//   selectedSpreadKey.value = ''
+//   needGuideCards.value = false
+//   guideCardCount.value = 1
+//   isOpenCardMode.value = false
+//   cardReversedStates.value = {}
+//   customSpreads.value = []
+//   showCustomSpreadModal.value = false
+//   formErrors.value = {}
+//   textValue.value = ''
+//   if (typedInstance) {
+//     typedInstance.destroy();
+//     typedInstance = null
+//   }
+//   initShuffledDeck()
+// }
+
 const resetFn = () => {
   selectCardArr.value = []
   cardResult.value = []
   resStatus.value = false
   loadingStatus.value = false
+  isWaitingForAnalysis.value = false // 添加这一行
   isSpreadConfirmed.value = false
   clickedSpread.value = null
   needReversed.value = true
@@ -918,22 +894,20 @@ const resetFn = () => {
   selectedSpreadKey.value = ''
   needGuideCards.value = false
   guideCardCount.value = 1
-  conversationMessages.value = []
-  firstDivinationResult.value = ''
-  followUpQuestion.value = ''
-  currentSessionId.value = null
   isOpenCardMode.value = false
   cardReversedStates.value = {}
   customSpreads.value = []
   showCustomSpreadModal.value = false
   formErrors.value = {}
   textValue.value = ''
+  firstDivinationResult.value = '' // 添加这一行
   if (typedInstance) {
     typedInstance.destroy();
     typedInstance = null
   }
   initShuffledDeck()
 }
+
 
 // 图片渲染
 const base = import.meta.env.BASE_URL
@@ -950,44 +924,20 @@ const renderIMG = (no: number): string => {
   return `${base}${path}${fileNo}.jpg`
 }
 
-// API响应处理
-// const parseApiResponse = (responseText: string): string => {
-//   try {
-//     const jsonData = JSON.parse(responseText)
-//     if (jsonData.content) {
-//       return jsonData.content
-//     }
-//   } catch (e) {
-//     // 如果不是JSON，直接返回原文本
-//   }
-//   return responseText
-// }
-
-
-// const parseApiResponse = (responseText: string): string => {
-//   try {
-//     const jsonData = JSON.parse(responseText)
-//     // 先检查是否有直接的content属性（你自己API的格式）
-//     if (jsonData.content) {
-//       return jsonData.content
-//     }
-//     // 再检查智谱API的响应格式
-//     else if (jsonData.choices && jsonData.choices[0] && jsonData.choices[0].message) {
-//       return jsonData.choices[0].message.content || ''
-//     }
-//   } catch (e) {
-//     console.error('解析API响应失败:', e)
-//   }
-//   return responseText
-// }
-//
 
 const parseApiResponse = (responseText: string): string => {
+  console.log('=== parseApiResponse 开始 ===')
+  console.log('输入文本长度:', responseText.length)
+  console.log('输入文本前500字符:', responseText.substring(0, Math.min(responseText.length, 500))) // 打印前500字符
+
   try {
     const jsonData = JSON.parse(responseText)
+    console.log('JSON 解析成功')
+    console.log('数据结构键:', Object.keys(jsonData))
 
     // 直接返回content字段(如果存在)
     if (jsonData.content) {
+      console.log('找到直接 content 字段')
       return jsonData.content
     }
 
@@ -996,30 +946,142 @@ const parseApiResponse = (responseText: string): string => {
       jsonData.choices[0] &&
       jsonData.choices[0].message &&
       jsonData.choices[0].message.content) {
-      return jsonData.choices[0].message.content
+      console.log('找到智谱 API 嵌套结构的 content')
+      const content = jsonData.choices[0].message.content
+      console.log('提取的 content 长度:', content.length)
+      return content
     }
 
-    // 调试输出
-    console.log('解析后的数据结构:', JSON.stringify(jsonData, null, 2))
+    // 调试输出完整结构
+    console.log('未找到预期的 content 结构')
+    console.log('完整数据结构:', JSON.stringify(jsonData, null, 2))
+    console.warn('parseApiResponse: 未能提取到有效内容，返回空字符串。原始响应:', responseText); // 警告并打印原始响应
+    return '' // 明确返回空字符串
   } catch (e) {
-    console.error('解析API响应失败:', e)
+    console.error('JSON 解析失败:', e)
+    console.log('尝试作为纯文本处理')
+    console.warn('parseApiResponse: JSON 解析失败，返回原始文本。错误:', e, '原始响应:', responseText); // 警告并打印原始响应
   }
+
+  console.log('返回原始文本')
   return responseText
 }
 
 
 
-// 修改后的 getRes 函数
+
+// const getRes = async () => {
+//   if (!selectedSpread.value) return
+//
+//   console.log('=== 开始占卜流程 ===')
+//   loadingStatus.value = true
+//   //resStatus.value = false; // 确保在开始新占卜时隐藏旧结果
+//
+//   // 生成抽牌结果
+//   if (isOpenCardMode.value) {
+//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
+//       return {
+//         no: cardNo,
+//         name: String(cardInfo?.name || `第${cardNo + 1}张`),
+//         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+//         isReversed: Boolean(cardReversedStates.value[cardNo])
+//       } as CardResult
+//     })
+//   } else {
+//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+//       return {
+//         no: cardNo,
+//         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
+//         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+//         isReversed: needReversed.value ? Math.random() > 0.5 : false
+//       } as CardResult
+//     })
+//   }
+//
+//   vh.showLoading()
+//
+//   try {
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         pms: cardResult.value,
+//         spread: {
+//           key: selectedSpread.value.key,
+//           name: selectedSpread.value.name,
+//           count: selectedSpread.value.count,
+//           positions: selectedSpread.value.positions ?? []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key ?? '',
+//           name: selectedDeck.value?.name ?? ''
+//         }
+//       })
+//     })
+//
+//     if (!res.ok) {
+//       const errorData = await res.json(); // 尝试解析错误响应
+//       console.error('API 错误响应数据:', errorData);
+//       throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`);
+//     }
+//
+//     const resText = await res.text()
+//     console.log('API 原始响应文本:', resText); // 打印原始响应文本
+//     const content = parseApiResponse(resText)
+//     console.log('parseApiResponse 提取的内容:', content); // 打印提取的内容
+//
+//     if (!content || content.length === 0) {
+//       throw new Error('未能提取到有效内容');
+//     }
+//
+//     const html = await parseMdToHtml(content)
+//     console.log('Markdown 转换为 HTML:', html); // 打印转换后的HTML
+//
+//     // 先设置结果内容
+//     firstDivinationResult.value = html
+//     console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0);
+//
+//     // 确保 DOM 更新
+//     await nextTick();
+//     console.log('DOM 已更新 (nextTick 1)');
+//
+//     resStatus.value = true // 设置为true，显示结果页面
+//     console.log('resStatus.value 已设置为 true');
+//
+//     // 再次等待 DOM 更新，确保 v-else-if 渲染
+//     await nextTick();
+//     console.log('DOM 已更新 (nextTick 2)');
+//
+//     console.log('=== 占卜成功完成 ===')
+//
+//   } catch (error) {
+//     console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+//     resStatus.value = false
+//     firstDivinationResult.value = ''
+//   } finally {
+//     vh.hideLoading()
+//     loadingStatus.value = false
+//     console.log('=== 占卜流程结束，finally 块执行 ===')
+//     console.log('最终 loadingStatus:', loadingStatus.value, '最终 resStatus:', resStatus.value);
+//   }
+// }
+
 const getRes = async () => {
   if (!selectedSpread.value) return
-  loadingStatus.value = true
 
-  // 生成抽牌结果
+  console.log('=== 开始占卜流程 ===')
+  loadingStatus.value = true
+  isWaitingForAnalysis.value = true // 开始等待AI分析
+
+  // 生成抽牌结果 - 立即显示
   if (isOpenCardMode.value) {
-    // 明牌模式：使用用户设置的逆位状态
     cardResult.value = selectCardArr.value.map((cardNo, index) => {
       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
-
       return {
         no: cardNo,
         name: String(cardInfo?.name || `第${cardNo + 1}张`),
@@ -1028,10 +1090,8 @@ const getRes = async () => {
       } as CardResult
     })
   } else {
-    // 普通模式：随机生成逆位状态
     cardResult.value = selectCardArr.value.map((cardNo, index) => {
       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
-
       return {
         no: cardNo,
         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
@@ -1041,7 +1101,13 @@ const getRes = async () => {
     })
   }
 
-  vh.showLoading()
+  // 立即显示抽牌结果
+  resStatus.value = true
+  loadingStatus.value = false
+
+  // 清空之前的分析结果
+  firstDivinationResult.value = ''
+
   try {
     const res = await fetch('/api', {
       method: 'POST',
@@ -1064,82 +1130,43 @@ const getRes = async () => {
       })
     })
 
-    if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
-
-    const resText = await res.text()
-    const content = parseApiResponse(resText)
-    const html = await parseMdToHtml(content)
-
-    try {
-      const jsonData = JSON.parse(resText)
-      if (jsonData.sessionId) {
-        currentSessionId.value = jsonData.sessionId
-      }
-    } catch (e) {
-      // 忽略JSON解析错误
+    if (!res.ok) {
+      const errorData = await res.json()
+      console.error('API 错误响应数据:', errorData)
+      throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`)
     }
 
-    resStatus.value = true
-    await nextTick()
-    renderRES(html)
-  } catch (error) {
-    console.error('占卜请求失败:', error)
-  } finally {
-    vh.hideLoading()
-    loadingStatus.value = false
-  }
-}
-
-// 发送后续问题
-const sendFollowUpQuestion = async () => {
-  if (!followUpQuestion.value.trim()) return
-
-  isFollowUpLoading.value = true
-
-  conversationMessages.value.push({
-    role: 'user',
-    content: followUpQuestion.value
-  } as ConversationMessage)
-
-  const userQuestion = followUpQuestion.value
-  followUpQuestion.value = ''
-
-  try {
-    const res = await fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text: userQuestion,
-        sessionId: currentSessionId.value,
-        followUp: true
-      })
-    })
-
-    if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
-
     const resText = await res.text()
+    console.log('API 原始响应文本:', resText)
     const content = parseApiResponse(resText)
+    console.log('parseApiResponse 提取的内容:', content)
+
+    if (!content || content.length === 0) {
+      throw new Error('未能提取到有效内容')
+    }
+
     const html = await parseMdToHtml(content)
+    console.log('Markdown 转换为 HTML:', html)
 
-    conversationMessages.value.push({
-      role: 'assistant',
-      content: html
-    } as ConversationMessage)
+    // 设置分析结果
+    firstDivinationResult.value = html
+    console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0)
 
-    scrollToBottom()
+    await nextTick()
+    console.log('DOM 已更新')
+
+    console.log('=== 占卜成功完成 ===')
+
   } catch (error) {
-    console.error('发送后续问题失败:', error)
-    conversationMessages.value.push({
-      role: 'assistant',
-      content: '抱歉，发送消息时出现错误，请稍后重试。'
-    } as ConversationMessage)
-    conversationMessages.value.splice(-2, 1)
+    console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+    firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
   } finally {
-    isFollowUpLoading.value = false
+    isWaitingForAnalysis.value = false // 结束等待
+    console.log('=== 占卜流程结束，finally 块执行 ===')
+    console.log('最终 isWaitingForAnalysis:', isWaitingForAnalysis.value, '最终 resStatus:', resStatus.value)
   }
 }
+
 
 // 查看牌面相关
 const openCardViewModal = () => {
@@ -2181,7 +2208,7 @@ label {
 
 }
 
-   /* 现有样式保持不变，以下是新增和修改的样式 */
+/* 现有样式保持不变，以下是新增和修改的样式 */
 
 
 /* 强制明牌模式使用与普通模式相同的布局 */
@@ -2210,7 +2237,7 @@ label {
   left: 0;
   right: 0;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  color: white;
+  color: #3b6931;
   padding: 8px 4px 4px;
   font-size: 11px;
   text-align: center;
@@ -2220,6 +2247,7 @@ label {
 .card-name {
   font-weight: bold;
   margin-bottom: 2px;
+  font-size: 12px; /* 增大字体大小 */
   line-height: 1.2;
 }
 
@@ -3138,6 +3166,251 @@ label {
   .modal-footer {
     padding: 12px 16px !important;
   }
+}
+
+
+
+/* 结果容器样式 */
+.result-container {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+/* 重新定义指示牌和牌阵区域样式 */
+.result-container .guide-cards-section,
+.result-container .spread-cards-section {
+  margin-bottom: 32px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+}
+
+.result-container .guide-cards-section {
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+  border-color: #3498db;
+}
+
+.result-container .spread-cards-section {
+  background: linear-gradient(135deg, #fff8f0 0%, #ffe6d9 100%);
+  border-color: #f39c12;
+}
+
+.result-container .cards-section-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 卡牌展示网格 */
+.cards-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card-display-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 140px;
+  min-width: 120px;
+}
+
+.card-wrapper {
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.card-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.result-card-image {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  display: block;
+}
+
+.card-reversed {
+  transform: rotate(180deg);
+}
+
+.card-info-text {
+  text-align: center;
+  line-height: 1.4;
+}
+
+.card-position {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.card-name-text {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 2px;
+}
+
+.reverse-indicator {
+  font-size: 0.8rem;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* 占卜结果区域 */
+.divination-result {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid #f39c12;
+}
+
+.result-title {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.result-content {
+  line-height: 1.7;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+/* 重新开始按钮区域 */
+.result-actions {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.restart-btn {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.restart-btn:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* 深色模式适配 */
+.dark-mode .result-container {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .result-container .guide-cards-section {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border-color: #3b82f6;
+}
+
+.dark-mode .result-container .spread-cards-section {
+  background: linear-gradient(135deg, #92400e 0%, #a16207 100%);
+  border-color: #f59e0b;
+}
+
+.dark-mode .result-container .cards-section-title {
+  color: #f1f5f9;
+}
+
+.dark-mode .card-position {
+  color: #cbd5e1;
+}
+
+.dark-mode .card-name-text {
+  color: #f1f5f9;
+}
+
+.dark-mode .divination-result {
+  background: #374151;
+  border-left-color: #f59e0b;
+}
+
+.dark-mode .result-title {
+  color: #f1f5f9;
+}
+
+.dark-mode .result-content {
+  color: #d1d5db;
+}
+
+/* 分析加载状态样式 */
+.analysis-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #f39c12;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.no-result {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-style: italic;
+}
+
+/* 深色模式适配 */
+.dark-mode .loading-spinner {
+  border-color: #444;
+  border-top-color: #f39c12;
+}
+
+.dark-mode .loading-text {
+  color: #ccc;
+}
+
+.dark-mode .no-result {
+  color: #888;
 }
 
 
