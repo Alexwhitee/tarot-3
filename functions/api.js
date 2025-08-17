@@ -233,7 +233,7 @@ export async function onRequestPost({ request }) {
 
     console.log('解析成功:', { text, pmsLength: pms.length, spread: spread?.name, deck: deck?.name });
 
-    // 系统提示词（与Express版本完全一致）
+    // 系统提示词
     const systemPrompt = `[身份设定]
 你是资深赛博占卜师，精通塔罗牌78张、雷诺曼36张、易经64卦及各种牌阵/卦阵布局和象征体系。你的使命是为求问者提供深入、专业、可执行的占卜解读。
 
@@ -270,27 +270,7 @@ export async function onRequestPost({ request }) {
 - 门槛牌：正义/教皇/恶魔/宝剑八/死神/塔/节制/星星等，决定能否进入互动
 - 能量符号：推进（→）、阻断（×）、转折（↗/↘）、强突破（★）、中度突破（☆）、中度封闭（△）、强封闭（×）
 
-[动态解读流程（结构化五步，输出每步三层信息：概念描述→关键牌位→可执行结论）]
-1. 建立映射（Mapping）
-   - 明确S↔卦象主体、E↔卦象象征元素、N↔卦象故事中的互动
-   - 输出映射理由：说明为何该卦象元素对应现实主体/客体，以及互动成立依据
-2. 读内环境（C / Context）
-   - 分析主体心理、能力、资源、意愿，判定开放/封闭、主动/被动
-   - 结合卦象细节（表情、手势、逆位）判断内部状态对互动影响
-   - 输出结论：主体优势、限制及可调节杠杆
-3. 读外环境（E / Environment）
-   - 分析客体条件、外部局势、机会/门槛，判定支持度
-   - 输出结论：外部环境优势、限制及可操作杠杆
-4. 分析互动（N / Nexus）
-   - 分析主体与客体互动顺畅程度，判定主导/被动/协调模式
-   - 输出结论：互动是否成立及可操作干预点
-5. 趋势与结果（End）
-   - 综合S/C/E/N推演现实可能结果
-   - 指出阻力来源与能量瓶颈
-   - 输出最小可执行杠杆行动，指导如何将封闭转为突破
-   - 输出结论：最终趋势、成功/失败/不确定指标、行动方案
-
-[通用占卜推演模板示例（自动输出）]
+[通用占卜推演模板]
 **【占卜信息】**
 - 占卜主题：<填写问题>
 - 占卜主体（S）：<问卜者/行动者>
@@ -311,7 +291,6 @@ export async function onRequestPost({ request }) {
 [能量]: 突破/封闭判定，能量流向
 [推演]: 卦象故事退回现实结果，预测结果、阻力来源
 [行动]: 可执行杠杆点及干预建议
-
 
 **【牌阵/卦阵逐位解析】**
 - 每位牌/卦：主体状态/客体条件/互动趋势，正逆位及象征意义解析
@@ -381,15 +360,13 @@ ${spreadCards.map((card, index) => {
       }
     ];
 
-    // ===== 重要：打印传给AI的完整信息 =====
-    console.log('\n\n==================== 传给AI的完整信息 ====================');
+    // 打印传给AI的完整信息
+    console.log('\n==================== 传给AI的完整信息 ====================');
     console.log('【系统提示词】');
     console.log(systemPrompt);
     console.log('\n【用户消息】');
     console.log(userMessage);
-    console.log('\n【完整消息数组】');
-    console.log(JSON.stringify(messages, null, 2));
-    console.log('========================================================\n\n');
+    console.log('========================================================\n');
 
     // 智谱 API 请求
     const apiRequestBody = {
@@ -440,8 +417,23 @@ ${spreadCards.map((card, index) => {
     console.log(assistantMessage);
     console.log('=====================\n');
 
-    // 直接返回结果，不保存会话历史
+    // 直接返回结果
     return new Response(JSON.stringify({
       content: assistantMessage
     }), {
-      headers: { 'Content-Type': '
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+  } catch (error) {
+    console.error('处理请求时出错:', error);
+
+    return new Response(JSON.stringify({
+      error: '处理请求失败',
+      details: error.message,
+      success: false
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
