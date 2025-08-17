@@ -1492,9 +1492,26 @@
       />
     </div>
 
+<!--    // 在模板中添加查看牌面按钮-->
+<!--    <Button class="view-cards-btn" @click="openCardViewModal">-->
+<!--      查看牌面-->
+<!--    </Button>-->
+
+
     <template v-if="!loadingStatus">
       <div class="deck-selection mb-4">
-        <h3 class="section-title">2.选择塔罗牌种类（必须）</h3>
+
+        <!-- 新增这个容器 -->
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="section-title mb-0">2.选择塔罗牌种类（必须）</h3>
+          <Button class="view-cards-btn" @click="openCardViewModal">
+            查看牌面
+          </Button>
+        </div>
+
+
+
+<!--        <h3 class="section-title">2.选择塔罗牌种类（必须）</h3>-->
         <div class="deck-list flex gap-4">
           <div
             v-for="d in decks"
@@ -1580,6 +1597,16 @@
         <Button class="mt-4 w-full" :disabled="!selectedSpreadKey || isSpreadConfirmed" @click="confirmSpread">
           确认牌阵
         </Button>
+        <!-- 在抽牌按钮旁边添加 -->
+        <!-- 在确认牌阵按钮下方添加 -->
+        <div class="mt-2" v-if="isSpreadConfirmed">
+          <label class="open-card-option">
+            <input type="checkbox" v-model="isOpenCardMode"> 明牌选择
+          </label>
+        </div>
+
+
+
       </div>
 
 
@@ -1607,6 +1634,39 @@
         当前牌阵：{{ selectedSpread?.name }}（需 {{ selectedCardCount }} 张） | 已选：{{ Math.max(0, selectCardArr.length - (needGuideCards ? guideCardCount : 0)) }} 张
       </div>
 
+<!--      <div class="card-strip-wrapper" v-if="isSpreadConfirmed && !resStatus">-->
+<!--        <div-->
+<!--          class="card-strip"-->
+<!--          ref="cardStripWrapper"-->
+<!--          @mousedown="onDragStart"-->
+<!--          @touchstart.passive="onDragStart"-->
+<!--        >-->
+<!--          <div-->
+<!--            class="card"-->
+<!--            v-for="(i, index) in shuffledDeck"-->
+<!--            :key="i.no"-->
+<!--            :class="{ active: selectCardArr.includes(i.no) }"-->
+<!--            @click="selectCard(i.no)"-->
+<!--            :style="{-->
+<!--              transform: `translateX(${(index * cardPartialWidth) - viewOffset}px) ${selectCardArr.includes(i.no) ? 'translateY(-40px)' : ''}`,-->
+<!--              width: cardWidth + 'px',-->
+<!--              zIndex: selectCardArr.includes(i.no) ? 100 : index-->
+<!--            }"-->
+<!--          >-->
+<!--            <img :src="renderBackImage()" class="card-back" />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <input-->
+<!--          v-show="sliderMax > 0"-->
+<!--          class="card-strip-slider"-->
+<!--          style="width: 100%; margin-top: 10px;"-->
+<!--          type="range"-->
+<!--          min="0"-->
+<!--          :max="sliderMax"-->
+<!--          v-model.number="viewOffset"-->
+<!--        />-->
+<!--      </div>-->
+
       <div class="card-strip-wrapper" v-if="isSpreadConfirmed && !resStatus">
         <div
           class="card-strip"
@@ -1618,15 +1678,28 @@
             class="card"
             v-for="(i, index) in shuffledDeck"
             :key="i.no"
-            :class="{ active: selectCardArr.includes(i.no) }"
+            :class="{
+        active: selectCardArr.includes(i.no),
+        'open-card': isOpenCardMode
+      }"
             @click="selectCard(i.no)"
             :style="{
-              transform: `translateX(${(index * cardPartialWidth) - viewOffset}px) ${selectCardArr.includes(i.no) ? 'translateY(-40px)' : ''}`,
-              width: cardWidth + 'px',
-              zIndex: selectCardArr.includes(i.no) ? 100 : index
-            }"
+        transform: `translateX(${(index * cardPartialWidth) - viewOffset}px) ${selectCardArr.includes(i.no) ? 'translateY(-160px)' : ''}`,
+        width: cardWidth + 'px',
+        zIndex: selectCardArr.includes(i.no) ? 100 : index
+      }"
           >
-            <img :src="renderBackImage()" class="card-back" />
+            <!-- 根据明牌模式显示不同图片 -->
+            <img
+              :src="isOpenCardMode ? renderIMG(i.no) : renderBackImage()"
+              :class="isOpenCardMode ? 'card-front' : 'card-back'"
+              :alt="isOpenCardMode ? i.name : '塔罗牌背面'"
+            />
+
+            <!-- 明牌模式下显示牌名 -->
+            <div v-if="isOpenCardMode" class="card-name-overlay">
+              {{ i.name }}
+            </div>
           </div>
         </div>
         <input
@@ -1638,7 +1711,15 @@
           :max="sliderMax"
           v-model.number="viewOffset"
         />
+
+        <!-- 明牌模式提示 -->
+        <div v-if="isOpenCardMode" class="open-card-tip">
+          💡 明牌模式：您可以看到所有牌面，请有意识地选择您需要的牌
+        </div>
       </div>
+
+
+
       <div class="btn mt-4" v-if="isSpreadConfirmed && !resStatus">
         <Button class="mt-4 w-full button-spacing"
                 :disabled="selectCardArr.length !== totalCardCount"
@@ -1653,25 +1734,54 @@
       <div v-if="guideCards.length > 0" class="guide-cards-section mb-6">
         <h4 class="cards-section-title">指示牌</h4>
         <div class="show-card flex flex-wrap gap-4 justify-center">
+<!--          <div class="card-item" v-for="(card, index) in guideCards" :key="card.no">-->
+<!--            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />-->
+<!--            <div class="card-label">-->
+<!--              指示牌{{ index + 1 }} - {{ card.name }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
           <div class="card-item" v-for="(card, index) in guideCards" :key="card.no">
-            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />
+            <img
+              :class="{ rever: card.isReversed, 'tarot-card': isOpenCardMode }"
+              :src="renderIMG(card.no)"
+              @dblclick="isOpenCardMode ? toggleCardReverse($event, card.no) : null"
+              :style="{ cursor: isOpenCardMode ? 'pointer' : 'default' }"
+            />
             <div class="card-label">
               指示牌{{ index + 1 }} - {{ card.name }}
+              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>
             </div>
           </div>
         </div>
-      </div>
+        </div>
 
       <!-- 牌阵牌行 -->
       <div v-if="spreadCards.length > 0" class="spread-cards-section mb-6">
         <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>
         <div class="show-card flex flex-wrap gap-4 justify-center">
+<!--          <div class="card-item" v-for="(card, index) in spreadCards" :key="card.no">-->
+<!--            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />-->
+<!--            <div class="card-label">-->
+<!--              （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ card.name }}-->
+<!--            </div>-->
+<!--          </div>-->
+
+
           <div class="card-item" v-for="(card, index) in spreadCards" :key="card.no">
-            <img :class="{ rever: card.isReversed }" :src="renderIMG(card.no)" />
+            <img
+              :class="{ rever: card.isReversed, 'tarot-card': isOpenCardMode }"
+              :src="renderIMG(card.no)"
+              @dblclick="isOpenCardMode ? toggleCardReverse($event, card.no) : null"
+              :style="{ cursor: isOpenCardMode ? 'pointer' : 'default' }"
+            />
             <div class="card-label">
               （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }} - {{ card.name }}
+              <span v-if="card.isReversed" class="reverse-indicator">（逆位）</span>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -1841,11 +1951,80 @@
       </div>
     </div>
 
+
+
+    <!-- 查看牌面模态框 -->
+    <div v-if="showCardViewModal" class="card-view-modal-overlay" @click.self="closeCardViewModal">
+      <div class="card-view-modal-content">
+        <!-- 头部 -->
+        <div class="card-view-header">
+          <h3 v-if="showDeckSelector">选择要查看的塔罗牌</h3>
+          <h3 v-else>{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>
+          <button class="close-btn" @click="closeCardViewModal">×</button>
+        </div>
+
+        <!-- 牌组选择界面 -->
+        <div v-if="showDeckSelector" class="deck-selector">
+          <div class="deck-grid">
+            <div
+              v-for="deck in decks"
+              :key="deck.key"
+              class="deck-option"
+              @click="selectViewDeck(deck.key)"
+            >
+              <div class="deck-preview">
+                <img :src="`${base}${deck.imagePath}back.jpg`" alt="牌背" class="deck-back-image">
+              </div>
+              <div class="deck-info">
+                <h4>{{ deck.name }}</h4>
+                <p>{{ deck.cardCount }}张牌</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 牌面网格显示 -->
+        <div v-else class="cards-grid-container">
+          <!-- 返回按钮 -->
+          <div class="grid-header">
+            <Button class="back-btn" @click="showDeckSelector = true">
+              ← 返回选择
+            </Button>
+            <div class="card-count">
+              共 {{ getSelectedDeckCards.length }} 张牌
+            </div>
+          </div>
+
+          <!-- 牌面网格 -->
+          <div class="cards-grid" ref="cardsGridRef">
+            <div
+              v-for="card in getSelectedDeckCards"
+              :key="card.no"
+              class="card-grid-item"
+            >
+              <img
+                :src="card.imagePath"
+                :alt="card.name"
+                class="card-image"
+                @error="handleImageError"
+                loading="lazy"
+              />
+              <div class="card-info">
+                <span class="card-number">{{ card.no + 1 }}</span>
+                <span class="card-name">{{ card.name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
 </template>
 
 
 <script setup lang="ts">
+
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import vh from 'vh-plugin'
 import { marked } from 'marked'
@@ -1855,6 +2034,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 // 导入你的数据配置文件
 import tarotDecks from '../../data/tarot-decks.json';
+
+// 在 import 部分添加
+import { provide } from 'vue'
+
+
+
 
 // 类型定义 - 修正后的完整类型
 type Spread = {
@@ -1906,6 +2091,51 @@ const customSpreadForm = ref({
   usage: '通用场景'
 })
 const formErrors = ref<Record<string, string>>({})
+
+
+// 添加新的响应式状态
+const showCardViewModal = ref(false)
+const selectedViewDeck = ref<string>('')
+const showDeckSelector = ref(true) // 是否显示牌组选择
+
+// 打开查看牌面模态框
+const openCardViewModal = () => {
+  showCardViewModal.value = true
+  showDeckSelector.value = true
+  selectedViewDeck.value = ''
+}
+// 在 script setup 中添加
+//provide('openCardViewModal', openCardViewModal)
+// 在现有变量后添加
+const isOpenCardMode = ref(false)
+
+
+// 关闭模态框
+const closeCardViewModal = () => {
+  showCardViewModal.value = false
+  selectedViewDeck.value = ''
+  showDeckSelector.value = true
+}
+
+// 选择要查看的牌组
+const selectViewDeck = (deckKey: string) => {
+  selectedViewDeck.value = deckKey
+  showDeckSelector.value = false
+}
+
+// 获取选中牌组的所有牌
+const getSelectedDeckCards = computed(() => {
+  const deck = decks.value.find(d => d.key === selectedViewDeck.value)
+  if (!deck) return []
+
+  return Array.from({ length: deck.cardCount }, (_, i) => ({
+    no: i,
+    name: deck.cardNames?.[i] ?? `第${i + 1}张`,
+    imagePath: `${base}${deck.imagePath}${i + (deck.start ?? 0)}.jpg`
+  }))
+})
+
+
 
 
 
@@ -2152,7 +2382,7 @@ const resetFn = () => {
   followUpQuestion.value = ''
   currentSessionId.value = null
   initShuffledDeck()
-
+  isOpenCardMode.value = false  // 添加这行
   // 添加自定义牌阵重置
   customSpreads.value = []
   showCustomSpreadModal.value = false
@@ -2192,22 +2422,104 @@ const parseApiResponse = (responseText: string): string => {
 }
 
 // 修正 getRes 函数
+// const getRes = async () => {
+//   if (!selectedSpread.value) return
+//   loadingStatus.value = true
+//
+//   // 生成抽牌结果，同时标记类型（guide / spread）
+//   cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//     // 从 shuffledDeck 中找到对应的卡牌信息
+//     const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+//
+//     return {
+//       no: cardNo,
+//       name: cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo}张`,
+//       type: needGuideCards.value && index < guideCardCount.value ? 'guide' as const : 'spread' as const,
+//       isReversed: needReversed.value ? Math.random() > 0.5 : false
+//     }
+//   })
+//
+//   vh.showLoading()
+//   try {
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         pms: cardResult.value,
+//         spread: {
+//           key: selectedSpread.value.key,
+//           name: selectedSpread.value.name,
+//           count: selectedSpread.value.count,
+//           positions: selectedSpread.value.positions ?? []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key ?? '',
+//           name: selectedDeck.value?.name ?? ''
+//         }
+//       })
+//     })
+//
+//     if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
+//
+//     const resText = await res.text()
+//     // 处理API返回的数据
+//     const content = parseApiResponse(resText)
+//     const html = await parseMdToHtml(content)
+//
+//     // 保存会话ID（如果有的话）
+//     try {
+//       const jsonData = JSON.parse(resText)
+//       if (jsonData.sessionId) {
+//         currentSessionId.value = jsonData.sessionId
+//       }
+//     } catch (e) {
+//       // 忽略JSON解析错误
+//     }
+//
+//     resStatus.value = true
+//     await nextTick()
+//     renderRES(html)
+//   } catch (error) {
+//     console.error('占卜请求失败:', error)
+//   } finally {
+//     vh.hideLoading()
+//   }
+// }
+// 修改现有的 getRes 函数
 const getRes = async () => {
   if (!selectedSpread.value) return
   loadingStatus.value = true
 
   // 生成抽牌结果，同时标记类型（guide / spread）
-  cardResult.value = selectCardArr.value.map((cardNo, index) => {
-    // 从 shuffledDeck 中找到对应的卡牌信息
-    const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+  if (isOpenCardMode.value) {
+    // 明牌模式：直接按序号显示，而不是随机
+    cardResult.value = selectCardArr.value.map((cardNo, index) => {
+      // 使用实际选中的卡牌
+      const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
 
-    return {
-      no: cardNo,
-      name: cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo}张`,
-      type: needGuideCards.value && index < guideCardCount.value ? 'guide' as const : 'spread' as const,
-      isReversed: needReversed.value ? Math.random() > 0.5 : false
-    }
-  })
+      return {
+        no: cardNo,
+        name: cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo}张`,
+        type: needGuideCards.value && index < guideCardCount.value ? 'guide' as const : 'spread' as const,
+        isReversed: false // 明牌模式默认正位，用户可以双击改变
+      }
+    })
+  } else {
+    // 原有的随机抽牌逻辑
+    cardResult.value = selectCardArr.value.map((cardNo, index) => {
+      const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+
+      return {
+        no: cardNo,
+        name: cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo}张`,
+        type: needGuideCards.value && index < guideCardCount.value ? 'guide' as const : 'spread' as const,
+        isReversed: needReversed.value ? Math.random() > 0.5 : false
+      }
+    })
+  }
 
   vh.showLoading()
   try {
@@ -2235,11 +2547,9 @@ const getRes = async () => {
     if (!res.ok) throw new Error(`API response was not ok: ${res.statusText}`)
 
     const resText = await res.text()
-    // 处理API返回的数据
     const content = parseApiResponse(resText)
     const html = await parseMdToHtml(content)
 
-    // 保存会话ID（如果有的话）
     try {
       const jsonData = JSON.parse(resText)
       if (jsonData.sessionId) {
@@ -2258,6 +2568,21 @@ const getRes = async () => {
     vh.hideLoading()
   }
 }
+
+// 在现有变量后添加
+
+// 双击翻转正逆位函数
+const toggleCardReverse = (event: Event, cardIndex: number) => {
+  event.preventDefault()
+
+  // 找到对应的卡牌并切换逆位状态
+  const cardToToggle = cardResult.value.find(card => card.no === cardIndex)
+  if (cardToToggle) {
+    cardToToggle.isReversed = !cardToToggle.isReversed
+    console.log(`牌 ${cardToToggle.name} 切换到 ${cardToToggle.isReversed ? '逆位' : '正位'}`)
+  }
+}
+
 
 // 发送后续问题
 // const sendFollowUpQuestion = async () => {
@@ -2459,6 +2784,15 @@ const createCustomSpread = () => {
 
 // 监听牌数变化，自动更新牌位数组
 watch(() => customSpreadForm.value.count, updatePositions)
+
+
+// 图片加载错误处理
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement
+  img.src = `${base}cards/placeholder.jpg` // 备用图片
+}
+
+
 
 
 
@@ -2784,7 +3118,7 @@ watch(() => customSpreadForm.value.count, updatePositions)
   position: relative;
   width: 100%;
   overflow-x: visible;
-  height: 200px;
+  height: 320px;
   margin-top: 12px;
 }
 
@@ -3295,6 +3629,342 @@ label {
   .cancel-btn,
   .create-btn {
     width: 100%;
+  }
+}
+
+
+/* 查看牌面模态框样式 */
+.card-view-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.card-view-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1200px;
+  height: 90%;
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.card-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.card-view-header h3 {
+  margin: 0;
+  color: #8b4513;
+  font-size: 1.3rem;
+}
+
+/* 牌组选择器样式 */
+.deck-selector {
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.deck-option {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  background: #fafafa;
+}
+
+.deck-option:hover {
+  border-color: #f39c12;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.deck-preview {
+  margin-bottom: 16px;
+}
+
+.deck-back-image {
+  width: 80px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.deck-info h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.deck-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* 牌面网格样式 */
+.cards-grid-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.back-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #5a6268;
+}
+
+.card-count {
+  color: #666;
+  font-size: 14px;
+}
+
+.cards-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+
+.card-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  transition: transform 0.2s;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+}
+
+.card-grid-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 8px;
+}
+
+.card-info {
+  text-align: center;
+  font-size: 12px;
+}
+
+.card-number {
+  color: #f39c12;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.card-name {
+  color: #333;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+/* 滚动条样式 */
+.cards-grid::-webkit-scrollbar,
+.deck-selector::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cards-grid::-webkit-scrollbar-track,
+.deck-selector::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.cards-grid::-webkit-scrollbar-thumb,
+.deck-selector::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.cards-grid::-webkit-scrollbar-thumb:hover,
+.deck-selector::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 深色模式适配 */
+.dark-mode .card-view-modal-content {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .card-view-header {
+  background: #3d3d3d;
+  border-bottom-color: #555;
+}
+
+.dark-mode .grid-header {
+  background: #3d3d3d;
+  border-bottom-color: #555;
+}
+
+.dark-mode .deck-option {
+  background: #3d3d3d;
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+.dark-mode .deck-option:hover {
+  border-color: #f39c12;
+}
+
+.dark-mode .card-grid-item {
+  background: #3d3d3d;
+  border-color: #555;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .card-view-modal-overlay {
+    padding: 10px;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .deck-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .grid-header {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .card-image {
+    max-width: 80px;
+  }
+}
+.open-card-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.tarot-card {
+  transition: transform 0.3s ease;
+  user-select: none;
+}
+
+.tarot-card:hover {
+  transform: scale(1.05);
+}
+
+.reverse-indicator {
+  color: #e74c3c;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.rever {
+  transform: rotate(180deg);
+}
+
+/* 深色模式适配 */
+.dark-mode .reverse-indicator {
+  color: #ff6b6b;
+}
+
+/* 添加双击提示 */
+.tarot-card::before {
+  content: "双击翻转";
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.tarot-card:hover::before {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .tarot-card::before {
+    content: "双击翻转";
+    font-size: 10px;
   }
 }
 
