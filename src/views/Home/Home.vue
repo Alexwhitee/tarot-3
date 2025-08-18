@@ -85,38 +85,84 @@
 
 
       <!-- 指示牌展示 -->
+<!--      <div v-if="guideCards.length > 0" class="guide-cards-section">-->
+<!--        <h4 class="cards-section-title">指示牌</h4>-->
+<!--        <div class="cards-display">-->
+<!--          <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">-->
+<!--            <div class="card-wrapper">-->
+<!--              <img-->
+<!--                :src="renderIMG(card.no)"-->
+<!--                :class="{ 'card-reversed': card.isReversed }"-->
+<!--                :alt="card.name"-->
+<!--                class="result-card-image"-->
+<!--              />-->
+<!--            </div>-->
+<!--            <div class="card-info-text">-->
+<!--              <div class="card-position">指示牌{{ index + 1 }}</div>-->
+<!--              <div class="card-name-text">{{ card.name }}</div>-->
+<!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <!-- 找到这个区域并修改 -->
       <div v-if="guideCards.length > 0" class="guide-cards-section">
         <h4 class="cards-section-title">指示牌</h4>
         <div class="cards-display">
           <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">
-            <div class="card-wrapper">
+            <div class="card-wrapper clickable-card-wrapper" @click="showDrawnCardDetail(card)">
               <img
                 :src="renderIMG(card.no)"
                 :class="{ 'card-reversed': card.isReversed }"
                 :alt="card.name"
-                class="result-card-image"
+                class="result-card-image clickable-card"
               />
             </div>
             <div class="card-info-text">
               <div class="card-position">指示牌{{ index + 1 }}</div>
               <div class="card-name-text">{{ card.name }}</div>
               <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>
+              <div class="click-hint">点击查看详情</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- 牌阵牌展示 -->
+<!--      <div v-if="spreadCards.length > 0" class="spread-cards-section">-->
+<!--        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>-->
+<!--        <div class="cards-display">-->
+<!--          <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">-->
+<!--            <div class="card-wrapper">-->
+<!--              <img-->
+<!--                :src="renderIMG(card.no)"-->
+<!--                :class="{ 'card-reversed': card.isReversed }"-->
+<!--                :alt="card.name"-->
+<!--                class="result-card-image"-->
+<!--              />-->
+<!--            </div>-->
+<!--            <div class="card-info-text">-->
+<!--              <div class="card-position">-->
+<!--                （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}-->
+<!--              </div>-->
+<!--              <div class="card-name-text">{{ card.name }}</div>-->
+<!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <!-- 找到这个区域并修改 -->
       <div v-if="spreadCards.length > 0" class="spread-cards-section">
         <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>
         <div class="cards-display">
           <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">
-            <div class="card-wrapper">
+            <div class="card-wrapper clickable-card-wrapper" @click="showDrawnCardDetail(card)">
               <img
                 :src="renderIMG(card.no)"
                 :class="{ 'card-reversed': card.isReversed }"
                 :alt="card.name"
-                class="result-card-image"
+                class="result-card-image clickable-card"
               />
             </div>
             <div class="card-info-text">
@@ -125,6 +171,7 @@
               </div>
               <div class="card-name-text">{{ card.name }}</div>
               <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>
+              <div class="click-hint">点击查看详情</div>
             </div>
           </div>
         </div>
@@ -794,6 +841,115 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
     </div>
 
 
+    <!-- 抽牌结果详情模态框 -->
+    <div v-if="showDrawnCardDetailModal" class="card-view-modal-overlay" @click.self="closeDrawnCardDetail">
+      <div class="card-view-modal-content drawn-card-detail-modal">
+        <!-- 头部 -->
+        <div class="card-view-header">
+          <h3 v-if="selectedCardDetail">
+            {{ selectedCardDetail.name }} - {{ selectedCardDetail.english }}
+          </h3>
+          <button class="close-btn" @click="closeDrawnCardDetail">×</button>
+        </div>
+
+        <!-- 详情内容 -->
+        <div class="card-view-body" v-if="selectedCardDetail">
+          <div class="card-detail-panel drawn-card-detail-panel">
+            <div class="detail-panel-content">
+              <!-- 卡牌基本信息 -->
+              <div class="card-basic-info">
+                <div class="card-image-large">
+                  <img
+                    :src="renderIMG(selectedCardDetail.id)"
+                    :alt="selectedCardDetail.name"
+                    class="detail-card-image"
+                  />
+                </div>
+                <div class="card-names">
+                  <h2 class="card-name-cn">{{ selectedCardDetail.name }}</h2>
+                  <h3 class="card-name-en">{{ selectedCardDetail.english }}</h3>
+                </div>
+              </div>
+
+              <!-- 核心含义 -->
+              <div class="meaning-section">
+                <h4 class="section-title">核心含义</h4>
+                <p class="core-meaning">{{ selectedCardDetail.core_meaning }}</p>
+              </div>
+
+              <!-- 正位含义 -->
+              <div class="meaning-section upright-section">
+                <h4 class="section-title">正位含义</h4>
+                <div class="keywords">
+              <span v-for="keyword in selectedCardDetail.upright.keywords" :key="keyword" class="keyword">
+                {{ keyword }}
+              </span>
+                </div>
+                <p class="description">{{ selectedCardDetail.upright.description }}</p>
+              </div>
+
+              <!-- 逆位含义 -->
+              <div class="meaning-section reversed-section">
+                <h4 class="section-title">逆位含义</h4>
+                <div class="keywords">
+              <span v-for="keyword in selectedCardDetail.reversed.keywords" :key="keyword" class="keyword reversed-keyword">
+                {{ keyword }}
+              </span>
+                </div>
+                <p class="description">{{ selectedCardDetail.reversed.description }}</p>
+              </div>
+
+              <!-- 故事背景 -->
+              <div class="meaning-section">
+                <h4 class="section-title">故事背景</h4>
+                <p class="story-text">{{ selectedCardDetail.story }}</p>
+              </div>
+
+              <!-- 现实映射 -->
+              <div class="meaning-section">
+                <h4 class="section-title">现实映射</h4>
+                <p class="mapping-text">{{ selectedCardDetail.possible_real_world_mapping }}</p>
+              </div>
+
+              <!-- 潜在风险 -->
+              <div class="meaning-section risk-section">
+                <h4 class="section-title">潜在风险</h4>
+                <p class="risk-text">{{ selectedCardDetail.potential_risks }}</p>
+              </div>
+
+              <!-- 象征元素 -->
+              <div class="meaning-section">
+                <h4 class="section-title">象征元素</h4>
+                <div class="symbolic-elements">
+                  <div class="element-group">
+                    <span class="element-label">人物：</span>
+                    <span class="element-content">{{ selectedCardDetail.symbolic_elements.characters.join('、') }}</span>
+                  </div>
+                  <div class="element-group">
+                    <span class="element-label">道具：</span>
+                    <span class="element-content">{{ selectedCardDetail.symbolic_elements.props.join('、') }}</span>
+                  </div>
+                  <div class="element-group">
+                    <span class="element-label">环境：</span>
+                    <span class="element-content">{{ selectedCardDetail.symbolic_elements.environment.join('、') }}</span>
+                  </div>
+                  <div class="element-group">
+                    <span class="element-label">时间：</span>
+                    <span class="element-content">{{ selectedCardDetail.symbolic_elements.time_hint }}</span>
+                  </div>
+                  <div class="element-group">
+                    <span class="element-label">方向：</span>
+                    <span class="element-content">{{ selectedCardDetail.symbolic_elements.direction }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </section>
 </template>
 
@@ -1383,6 +1539,21 @@ const resetFn = () => {
   showCustomSpreadModal.value = false
   formErrors.value = {}
   textValue.value = ''
+
+
+  // 重置查看牌面相关状态
+  showCardViewModal.value = false
+  selectedViewDeck.value = ''
+  showDeckSelector.value = true
+  showCardDetail.value = false
+  selectedCardDetail.value = null
+
+  // 重置抽牌详情模态框状态
+  showDrawnCardDetailModal.value = false
+
+
+
+
   firstDivinationResult.value = '' // 添加这一行
   if (typedInstance) {
     typedInstance.destroy();
@@ -1717,6 +1888,80 @@ const selectedCardDetail = ref<CardDetail | null>(null)
 const showCardDetail = ref(false)
 
 
+// 在 selectCardDetail 函数后面添加（大约在第1800行左右）
+
+// 显示抽中卡牌的详情
+// const showDrawnCardDetail = (drawnCard: CardResult) => {
+//   console.log('查看抽中卡牌详情:', drawnCard)
+//
+//   // 获取当前使用的牌组key
+//   const currentDeckKey = selectedDeck.value?.key
+//
+//   if (!currentDeckKey) {
+//     console.error('无法确定当前牌组')
+//     return
+//   }
+//
+//   // 从 pai.json 中查找详细信息
+//   const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+//
+//   if (!deckDetails) {
+//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+//     return
+//   }
+//
+//   // 查找对应的卡牌详情
+//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
+//
+//   if (cardDetail) {
+//     selectedCardDetail.value = cardDetail
+//     showDrawnCardDetailModal.value = true
+//   } else {
+//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
+//   }
+// }
+
+// 关闭抽牌详情模态框
+// const closeDrawnCardDetail = () => {
+//   showDrawnCardDetailModal.value = false
+//   selectedCardDetail.value = null
+// }
+// 显示抽中卡牌的详情（保持不变）
+const showDrawnCardDetail = (drawnCard: CardResult) => {
+  console.log('查看抽中卡牌详情:', drawnCard)
+
+  const currentDeckKey = selectedDeck.value?.key
+
+  if (!currentDeckKey) {
+    console.error('无法确定当前牌组')
+    return
+  }
+
+  const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+
+  if (!deckDetails) {
+    console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+    return
+  }
+
+  const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
+
+  if (cardDetail) {
+    selectedCardDetail.value = cardDetail
+    showDrawnCardDetailModal.value = true // 只使用新的模态框状态
+  } else {
+    console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
+  }
+}
+
+// 关闭抽牌详情模态框（修改版）
+const closeDrawnCardDetail = () => {
+  showDrawnCardDetailModal.value = false
+  // 注意：不要重置 selectedCardDetail.value，因为查看牌面功能可能还在使用
+  // selectedCardDetail.value = null // 删除这行
+}
+
+
 // 选择卡牌详情
 // const selectCardDetail = (cardNo: number) => {
 //   const detail = cardDetails.find(card => card.id === cardNo)
@@ -1753,6 +1998,14 @@ const selectCardDetail = (cardNo: number) => {
     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
   }
 }
+
+
+// // 在现有的 ref 声明附近添加（大约在第85行左右，showCardDetail 附近）
+// const showCardDetail = ref(false)
+// const selectedCardDetail = ref<CardDetail | null>(null)
+
+// 新增：抽牌结果详情模态框状态
+const showDrawnCardDetailModal = ref(false)
 
 
 // 关闭卡牌详情
@@ -4422,6 +4675,101 @@ label {
     width: 80px;
   }
 }
+
+
+/* ===========================================
+   抽牌结果详情样式
+   =========================================== */
+
+/* 可点击卡牌样式 */
+.clickable-card-wrapper {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.clickable-card-wrapper:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.clickable-card {
+  transition: all 0.3s ease;
+}
+
+.clickable-card:hover {
+  filter: brightness(1.1);
+}
+
+/* 点击提示 */
+.click-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 6px;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.clickable-card-wrapper:hover .click-hint {
+  opacity: 1;
+  color: #f39c12;
+  transform: translateY(-1px);
+}
+
+/* 抽牌详情模态框特殊样式 */
+.drawn-card-detail-modal {
+  max-width: 800px;
+  width: 90vw;
+  max-height: 85vh;
+}
+
+.drawn-card-detail-panel {
+  flex: 1;
+  border-left: none;
+  background: #f8f9fa;
+}
+
+/* 深色模式适配 */
+.dark-mode .click-hint {
+  color: #ccc;
+}
+
+.dark-mode .clickable-card-wrapper:hover .click-hint {
+  color: #f39c12;
+}
+
+.dark-mode .drawn-card-detail-panel {
+  background: #1a1a1a;
+}
+
+.dark-mode .clickable-card-wrapper:hover {
+  box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .drawn-card-detail-modal {
+    width: 95vw;
+    max-height: 90vh;
+  }
+
+  .clickable-card-wrapper:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+
+@media (max-width: 480px) {
+  .click-hint {
+    font-size: 0.7rem;
+  }
+
+  .drawn-card-detail-modal {
+    width: 98vw;
+  }
+}
+
 
 
 </style>
