@@ -355,6 +355,133 @@
 // }
 
 
+// export async function onRequestPost({ request }) {
+//   console.log('收到占卜请求');
+//
+//   try {
+//     const { text, pms, spread, deck } = await request.json();
+//
+//     // 验证必要字段
+//     if (!pms || !Array.isArray(pms)) {
+//       console.error('缺少必要的 pms 字段或格式不正确');
+//       return new Response(JSON.stringify({ error: 'pms 字段是必需的且必须是数组' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     // 只取牌阵牌，忽略指示牌
+//     const spreadCards = pms.filter(card => card.type === 'spread');
+//
+//     console.log('=== 处理数据 ===');
+//     console.log('总牌数:', pms.length);
+//     console.log('牌阵牌数量:', spreadCards.length);
+//     console.log('牌阵信息:', spread?.name);
+//
+//     if (spreadCards.length === 0) {
+//       return new Response(JSON.stringify({ error: '没有找到牌阵牌' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     console.log('解析成功:', { text, pmsLength: pms.length, spread: spread?.name, deck: deck?.name });
+//
+//     // 系统提示词
+//     const systemPrompt =`你是塔罗师`;
+//     // 构建用户消息
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
+//     }).join('\n')}
+//
+// 【解析要求】
+// 请严格按照上述牌阵布局进行解析：
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       return `${index + 1}. ${positionName} - ${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
+//     }).join('\n')}
+//
+// 请为我提供详细的占卜解析。`;
+//
+//     // 构建请求体 —— 改成第二段 API 格式
+//     const apiRequestBody = {
+//       "messages": [
+//         { "role": "system", "content": systemPrompt },
+//         { "role": "user", "content": userMessage }
+//       ],
+//       "stream": false,
+//       "model": "glm-4-flash",
+//       "temperature": 0,
+//       "presence_penalty": 0,
+//       "frequency_penalty": 0,
+//       "top_p": 1
+//     };
+//
+//     console.log('=== API请求体信息 ===');
+//     console.log(JSON.stringify(apiRequestBody, null, 2));
+//
+//     console.log('正在调用 NAS API（单次对话）...');
+//
+//     const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
+//       method: "POST",
+//       headers: {
+//         "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
+//         "content-type": "application/json"
+//       },
+//       body: JSON.stringify(apiRequestBody)
+//     });
+//
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.error('NAS API 错误响应:', errorText);
+//       throw new Error(`NAS API 错误! status: ${response.status}, response: ${errorText}`);
+//     }
+//
+//     const data = await response.json();
+//     console.log('NAS API 调用成功');
+//
+//     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+//       throw new Error('NAS API 响应格式异常');
+//     }
+//
+//     const assistantMessage = data.choices[0].message.content;
+//
+//     console.log('\n=== AI回复内容 ===');
+//     console.log(assistantMessage);
+//
+//     return new Response(JSON.stringify({
+//       content: assistantMessage
+//     }), {
+//       headers: { 'Content-Type': 'application/json' }
+//     });
+//
+//   } catch (error) {
+//     console.error('处理请求时出错:', error);
+//
+//     return new Response(JSON.stringify({
+//       error: '处理请求失败',
+//       details: error.message,
+//       success: false
+//     }), {
+//       status: 500,
+//       headers: { 'Content-Type': 'application/json' }
+//     });
+//   }
+// }
+
+
 export async function onRequestPost({ request }) {
   console.log('收到占卜请求');
 
@@ -523,45 +650,43 @@ ${spreadCards.map((card, index) => {
 
 请为我提供详细的占卜解析。`;
 
-    // 构建请求体 —— 改成第二段 API 格式
+    // 构建智谱API请求体
     const apiRequestBody = {
+      "model": "glm-4.5-flash",
       "messages": [
         { "role": "system", "content": systemPrompt },
         { "role": "user", "content": userMessage }
       ],
-      "stream": false,
-      "model": "glm-4-flash",
-      "temperature": 0,
-      "presence_penalty": 0,
-      "frequency_penalty": 0,
-      "top_p": 1
+      "temperature": 0.6,
+      "max_tokens": 9000
     };
 
-    console.log('=== API请求体信息 ===');
+    console.log('=== 智谱API请求体信息 ===');
     console.log(JSON.stringify(apiRequestBody, null, 2));
 
-    console.log('正在调用 NAS API（单次对话）...');
+    console.log('正在调用智谱AI API...');
 
-    const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
+    // 调用智谱AI API
+    const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
       method: "POST",
       headers: {
-        "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
-        "content-type": "application/json"
+        "Authorization": "Bearer 71417eea1e2e423e8da537452dfb7a21.kCF5Hgqhr40Rp9va", // 请替换为您的智谱AI API Key
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(apiRequestBody)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('NAS API 错误响应:', errorText);
-      throw new Error(`NAS API 错误! status: ${response.status}, response: ${errorText}`);
+      console.error('智谱AI API 错误响应:', errorText);
+      throw new Error(`智谱AI API 错误! status: ${response.status}, response: ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('NAS API 调用成功');
+    console.log('智谱AI API 调用成功');
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('NAS API 响应格式异常');
+      throw new Error('智谱AI API 响应格式异常');
     }
 
     const assistantMessage = data.choices[0].message.content;
