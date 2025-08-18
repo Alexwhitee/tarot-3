@@ -1,0 +1,4051 @@
+{
+  "classic": [
+
+      {
+        "id": 0,
+        "name": "愚者",
+        "english": "The Fool",
+        "upright": {
+          "keywords": [
+            "旅程开端",
+            "信念之跃",
+            "可能性"
+          ],
+          "description": "愚者象征人生旅程的开端，一扇门可能为你打开，请勇敢地迈出信念之跃。虽然可以有点鲁莽，但也要注意你前进的方向。"
+        },
+        "reversed": {
+          "keywords": [
+            "鲁莽行事",
+            "停滞不前",
+            "恐惧"
+          ],
+          "description": "信念之跃的能量受阻，表现为因恐惧而不敢开始新的旅程，或是不计后果地鲁莽行事，导致不必要的风险和延误。"
+        },
+        "story": "权杖侍者匆匆穿过机场，没有注意到前方的警示标志，心中唯一的念头就是赶上她的航班。",
+        "core_meaning": "象征着人生旅程的开端和勇敢迈出第一步的信念。",
+        "potential_risks": "鲁莽、忽视警告可能导致意外和延误。",
+        "possible_real_world_mapping": "开始新工作、搬家、开启新恋情、一次说走就走的旅行。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖侍者"
+          ],
+          "props": [
+            "警示标志",
+            "航班"
+          ],
+          "environment": [
+            "机场"
+          ],
+          "time_hint": "开端",
+          "direction": "前方"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "匆匆穿过",
+            "未注意警示标志"
+          ],
+          "potential_branches": [
+            "勇敢地迈出第一步",
+            "因忽视警告而遭遇延误"
+          ]
+        }
+      },
+      {
+        "id": 1,
+        "name": "魔术师",
+        "english": "The Magician",
+        "upright": {
+          "keywords": [
+            "创造",
+            "同步",
+            "机遇"
+          ],
+          "description": "人群很享受魔术师演奏的音乐，他拥有了一切，可以创造出声音的协同效应。现在是施展魔法的时刻，设定远大期望，结果会让你惊喜。"
+        },
+        "reversed": {
+          "keywords": [
+            "机会错失",
+            "潜能受限",
+            "欺骗"
+          ],
+          "description": "创造的能量被抑制或滥用。可能表现为未能有效利用现有资源，导致机会错失，或使用技巧进行欺骗和操纵。"
+        },
+        "story": "魔术师在表演音乐，他整合所有元素创造出协同效应，并吸引了人群的注意力。",
+        "core_meaning": "利用可用的资源、技巧和机遇来显化意愿，展现全部潜能。",
+        "potential_risks": "期望过高或资源管理不善，可能导致华而不实。",
+        "possible_real_world_mapping": "项目启动、技能展示、创业、发挥创造力。",
+        "symbolic_elements": {
+          "characters": [
+            "魔术师",
+            "人群"
+          ],
+          "props": [
+            "乐器",
+            "声音节拍"
+          ],
+          "environment": [
+            "表演场所"
+          ],
+          "time_hint": "现在",
+          "direction": "向外放大"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "魔术师演奏音乐",
+            "人群享受音乐"
+          ],
+          "potential_branches": [
+            "成功解锁潜能",
+            "因管理不善而失败"
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "name": "女祭司",
+        "english": "The High Priestess",
+        "upright": {
+          "keywords": [
+            "直觉",
+            "潜意识",
+            "揭示秘密"
+          ],
+          "description": "女祭司提醒我们要连接高我，相信内心的声音。在此期间，你可能会发现关键信息，帮助你做出更明智的决定。倾听并留意来自你指导者的信息或符号。"
+        },
+        "reversed": {
+          "keywords": [
+            "直觉失灵",
+            "信息隐藏",
+            "迷茫"
+          ],
+          "description": "与内在智慧的连接被抑制。表现为忽视直觉、信息被隐藏或误解，导致决策失误和内心的迷茫与困惑。"
+        },
+        "story": "宝剑侍者拿着塔罗牌，借助水晶和笔记本电脑来引导她的直觉，并思考它如何应用于生活。",
+        "core_meaning": "相信直觉，探索潜意识，并关注内在智慧以获得启示。",
+        "potential_risks": "过度依赖逻辑而忽视直觉，或沉溺于玄想而脱离现实。",
+        "possible_real_world_mapping": "心理咨询、冥想、研究深奥知识、信任自己的预感。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍者"
+          ],
+          "props": [
+            "塔罗牌",
+            "水晶",
+            "笔记本电脑"
+          ],
+          "environment": [
+            "安静的思考空间"
+          ],
+          "time_hint": "内省期",
+          "direction": "向内"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "思考牌意",
+            "借助道具引导直觉"
+          ],
+          "potential_branches": [
+            "获得关键信息",
+            "串联起线索解开谜题"
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "name": "皇后",
+        "english": "The Empress",
+        "upright": {
+          "keywords": [
+            "母性",
+            "创造力",
+            "丰饶",
+            "滋养"
+          ],
+          "description": "皇后牌代表着母性和女性能量，关乎美丽、滋养、创造和美学。你由内而外地散发着光芒，并渴望与他人分享你的魅力。"
+        },
+        "reversed": {
+          "keywords": [
+            "创造力受阻",
+            "依赖",
+            "失衡"
+          ],
+          "description": "丰饶和滋养的能量失衡。可能表现为创造力被压抑、过度依赖他人、占有欲过强或忽视自我照顾。"
+        },
+        "story": "宝剑侍者的母亲（皇后）正在教导女儿要对自己的皮肤感到自信，展现出滋养和引导的能量。",
+        "core_meaning": "体现创造、滋养、丰饶和感官享受的女性能量。",
+        "potential_risks": "过度放纵、占有欲，或将自己的价值观强加于人。",
+        "possible_real_world_mapping": "怀孕、艺术创作、照顾他人、享受生活、园艺。",
+        "symbolic_elements": {
+          "characters": [
+            "母亲（皇后）",
+            "女儿（宝剑侍者）"
+          ],
+          "props": [
+            "妆容",
+            "整洁的发型"
+          ],
+          "environment": [
+            "舒适的家庭环境"
+          ],
+          "time_hint": "成长期",
+          "direction": "向外散发"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "母亲教导女儿"
+          ],
+          "potential_branches": [
+            "成为灵感之光",
+            "分享自身魅力"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "name": "皇帝",
+        "english": "The Emperor",
+        "upright": {
+          "keywords": [
+            "权威",
+            "结构",
+            "领导力",
+            "责任"
+          ],
+          "description": "皇帝执行规则并提供奖赏。他体现了男性能量，需要努力工作和领导力。坚持你的立场，对你的决定要坚定，清晰、直接地表达。"
+        },
+        "reversed": {
+          "keywords": [
+            "独裁",
+            "失控",
+            "逃避责任"
+          ],
+          "description": "权威和结构的能量失衡。表现为滥用权力、变得专制和僵化，或是逃避责任、缺乏自律，导致混乱和失控。"
+        },
+        "story": "权杖国王（皇帝）带女儿吃冰淇淋作为奖励，即使在休息时，他仍在管理自己的事业，展现了权威与关爱并存的形象。",
+        "core_meaning": "建立秩序、结构和权威，通过领导力和自律来掌控局面。",
+        "potential_risks": "过于严苛、缺乏弹性、控制欲过强。",
+        "possible_real_world_mapping": "管理公司、担任领导、建立规则、成为父亲。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖国王（皇帝）",
+            "女儿"
+          ],
+          "props": [
+            "冰淇淋",
+            "事业（抽象）"
+          ],
+          "environment": [
+            "公共场所"
+          ],
+          "time_hint": "执行期",
+          "direction": "向下建立根基"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "奖励女儿",
+            "管理事业"
+          ],
+          "potential_branches": [
+            "坚定立场",
+            "承担责任"
+          ]
+        }
+      },
+      {
+        "id": 5,
+        "name": "教皇",
+        "english": "The Hierophant",
+        "upright": {
+          "keywords": [
+            "传统",
+            "导师",
+            "信仰",
+            "社会结构"
+          ],
+          "description": "教皇提醒我们要寻求一位导师或向导，他们可以提供宝贵的见解和建议。这张牌关乎人们的价值观、传统、精神信仰和宗教，以及社会结构。"
+        },
+        "reversed": {
+          "keywords": [
+            "挑战传统",
+            "思想僵化",
+            "叛逆"
+          ],
+          "description": "与传统和结构的连接被抑制或挑战。表现为挑战既定规则、感觉受到束缚，或盲目遵从传统而失去个人判断力。"
+        },
+        "story": "三张图片展示了宝剑国王、圣杯女王和星币侍者正在通过祈祷和冥想来寻求指引和内心的平静。",
+        "core_meaning": "在既定的传统、信仰体系或社会结构中寻求指导和智慧。",
+        "potential_risks": "盲从、教条主义、限制个人自由。",
+        "possible_real_world_mapping": "加入组织、接受教育、寻求导师指导、参加宗教仪式。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑国王",
+            "圣杯女王",
+            "星币侍者"
+          ],
+          "props": [
+            "祈祷的姿势",
+            "冥想的状态"
+          ],
+          "environment": [
+            "精神追求的场所"
+          ],
+          "time_hint": "学习期",
+          "direction": "向上寻求指引"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "祈祷和冥想以寻求指引"
+          ],
+          "potential_branches": [
+            "找到导师",
+            "获得宝贵见解"
+          ]
+        }
+      },
+      {
+        "id": 6,
+        "name": "恋人",
+        "english": "The Lovers",
+        "upright": {
+          "keywords": [
+            "和谐",
+            "连结",
+            "选择",
+            "灵魂伴侣"
+          ],
+          "description": "恋人牌关乎我们与伴侣或重要他人的和谐关系，每个人都做出了平衡且平等的贡献。一个灵魂伴侣可能在你不久的将来出现，这种连接将是戏剧性的。"
+        },
+        "reversed": {
+          "keywords": [
+            "关系失和",
+            "错误选择",
+            "失衡"
+          ],
+          "description": "和谐与连接的能量失衡。表现为关系冲突、沟通不畅、价值观不合，或在重要的选择上犹豫不决，导致关系破裂。"
+        },
+        "story": "在明亮整洁的房间里，星币侍者正在安慰圣杯骑士，他们的连接放下了彼此的防备，成为了彼此的避风港。",
+        "core_meaning": "代表深刻的人际关系、价值观的对齐以及基于爱与和谐的选择。",
+        "potential_risks": "关系中的不平衡，或因感情影响做出不理智的决定。",
+        "possible_real_world_mapping": "建立恋爱关系、重要的合作、面临价值观相关的重大抉择。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍者",
+            "圣杯骑士"
+          ],
+          "props": [
+            "避风港（概念）"
+          ],
+          "environment": [
+            "明亮整洁的房间"
+          ],
+          "time_hint": "不久的将来",
+          "direction": "相互连接"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "安慰",
+            "产生共鸣",
+            "放下防备"
+          ],
+          "potential_branches": [
+            "建立和谐关系",
+            "灵魂伴侣出现"
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "name": "战车",
+        "english": "The Chariot",
+        "upright": {
+          "keywords": [
+            "意志力",
+            "行动",
+            "掌控",
+            "成功"
+          ],
+          "description": "战车是一张行动之牌，你周围的能量正在推动你采取行动。这可能意味着巨大的进步，或一条新的道路刚刚开启。点火钥匙现在就在你手中。"
+        },
+        "reversed": {
+          "keywords": [
+            "失控",
+            "缺乏方向",
+            "延误"
+          ],
+          "description": "前进的动力和意志力失衡或受阻。表现为行动缺乏方向、失控，或因内外冲突而停滞不前，导致计划延误。"
+        },
+        "story": "宝剑骑士得到了他梦寐以求的汽车，这辆车为他解锁了新的机会，并给了他更多的时间与重要的人共度。",
+        "core_meaning": "运用坚定的意志力和决心，克服障碍，朝着明确的目标前进并取得成功。",
+        "potential_risks": "行动鲁莽，不计后果，或因过于强势而与人冲突。",
+        "possible_real_world_mapping": "赢得竞争、完成一个有挑战的项目、公路旅行、掌控自己的生活方向。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑骑士"
+          ],
+          "props": [
+            "梦寐以求的汽车",
+            "点火钥匙"
+          ],
+          "environment": [
+            "平坦的道路"
+          ],
+          "time_hint": "现在",
+          "direction": "前进"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "驾驶汽车"
+          ],
+          "potential_branches": [
+            "解锁新机会",
+            "取得巨大进步"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "name": "力量",
+        "english": "Strength",
+        "upright": {
+          "keywords": [
+            "内在力量",
+            "勇气",
+            "耐心",
+            "同情"
+          ],
+          "description": "力量牌关乎我们克服生活困难的内在精神。一个艰难的局面会考验你的决心，而你的耐心和韧性将是必需的。坚持到底，你会惊讶于自己原来如此强大。"
+        },
+        "reversed": {
+          "keywords": [
+            "软弱",
+            "失衡",
+            "自我怀疑"
+          ],
+          "description": "内在力量的能量被抑制。表现为自我怀疑、缺乏自信、感到软弱无力，或被本能和恐惧所控制，导致能量失衡。"
+        },
+        "story": "星币骑士将他的事故视为可以康复的障碍，他勇敢的精神激励着他重新行走。",
+        "core_meaning": "通过内心的勇气、同情和耐心来驾驭原始本能和外部挑战。",
+        "potential_risks": "压抑本能而非引导本能，或因缺乏耐心而失败。",
+        "possible_real_world_mapping": "克服瘾症、处理棘手人际关系、从疾病中康复、展现强大的自制力。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士"
+          ],
+          "props": [
+            "事故（过去的事件）"
+          ],
+          "environment": [
+            "康复过程"
+          ],
+          "time_hint": "持续期",
+          "direction": "由内而外"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "激励自己重新行走"
+          ],
+          "potential_branches": [
+            "克服困难",
+            "重新站立"
+          ]
+        }
+      },
+      {
+        "id": 9,
+        "name": "隐士",
+        "english": "The Hermit",
+        "upright": {
+          "keywords": [
+            "内省",
+            "独处",
+            "寻求智慧",
+            "引导"
+          ],
+          "description": "隐士牌意味着独处和暂时放下一切。通过抽离自己，你开始注意到以前可能没有注意到的事情。这是一个需要静心、屏蔽周围环境的时期。"
+        },
+        "reversed": {
+          "keywords": [
+            "孤立",
+            "疏离",
+            "延迟回归"
+          ],
+          "description": "内省的能量失衡。表现为被迫的孤立或自我封闭，感到孤独和与社会脱节，或是在独处后难以重新融入集体。"
+        },
+        "story": "星币侍者戴着兜帽，放下手机在读书，暂时远离社会，利用这段时间来充电和思考问题。",
+        "core_meaning": "暂时脱离外部世界进行深刻的内省，以寻求内在的真理和指引。",
+        "potential_risks": "过度孤立，与社会脱节，逃避现实问题。",
+        "possible_real_world_mapping": "独自旅行、休假、学术研究、戒断社交媒体。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍者"
+          ],
+          "props": [
+            "书",
+            "兜帽",
+            "手机（已放下）"
+          ],
+          "environment": [
+            "远离社会的地方"
+          ],
+          "time_hint": "一段时期",
+          "direction": "向内探索"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "读书",
+            "远离社会",
+            "充电思考"
+          ],
+          "potential_branches": [
+            "注意到以前未注意之事",
+            "获得内心平静"
+          ]
+        }
+      },
+      {
+        "id": 10,
+        "name": "命运之轮",
+        "english": "Wheel of Fortune",
+        "upright": {
+          "keywords": [
+            "命运",
+            "转折点",
+            "机遇",
+            "业力"
+          ],
+          "description": "循环和模式会不断重复，直到你学到了你的业力功课。当抽到这张牌时，意味着旧的循环即将结束，一个新的变化时期即将到来。"
+        },
+        "reversed": {
+          "keywords": [
+            "厄运",
+            "停滞",
+            "不可控",
+            "延迟"
+          ],
+          "description": "命运的转动受阻或带来负面影响。表现为持续的厄运、事情停滞不前、抗拒改变，或感觉自己被不可控的负面力量所困。"
+        },
+        "story": "一直感到被困在不幸循环中的圣杯侍者，运气突然改变，赢得了将改变她人生的黄金门票。",
+        "core_meaning": "生命中不可预测的转折、循环和命运的变化，机遇与业力并存。",
+        "potential_risks": "无法掌控外部变化，或因坏运气而感到无力。",
+        "possible_real_world_mapping": "突然的机会或挫折、人生阶段的转换、中奖。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍者"
+          ],
+          "props": [
+            "不幸的循环",
+            "黄金门票"
+          ],
+          "environment": [
+            "人生的十字路口"
+          ],
+          "time_hint": "转折期",
+          "direction": "循环与转变"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "赢得黄金门票"
+          ],
+          "potential_branches": [
+            "结束旧循环",
+            "改变命运"
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "name": "正义",
+        "english": "Justice",
+        "upright": {
+          "keywords": [
+            "公平",
+            "真理",
+            "因果",
+            "责任"
+          ],
+          "description": "正义牌提醒我们要以开放的心态和理性的思考来处理事情。正义是盲目的，但它知道真相。当这张牌出现时，有人将需要为他们的行为负责。"
+        },
+        "reversed": {
+          "keywords": [
+            "不公",
+            "偏见",
+            "逃避责任",
+            "失衡"
+          ],
+          "description": "公平和真理的能量失衡。表现为遭遇不公正的待遇、持有偏见、推卸责任或法律纠纷中的不利局面。"
+        },
+        "story": "从律师转变为法官的宝剑女王，必须听取双方意见，并掌握决定如何伸张正义的权力。",
+        "core_meaning": "基于事实和真理做出公平、理性的决定，并承担行为的后果。",
+        "potential_risks": "冷酷无情，过于教条，或陷入法律纠纷。",
+        "possible_real_world_mapping": "签订合同、法律诉讼、做出重要而公正的决定、为行为承担后果。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑女王（法官）"
+          ],
+          "props": [
+            "权力（抽象）"
+          ],
+          "environment": [
+            "法庭（象征性）"
+          ],
+          "time_hint": "裁决时刻",
+          "direction": "平衡"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "听取双方意见",
+            "掌握决定权"
+          ],
+          "potential_branches": [
+            "伸张正义",
+            "让某人负责"
+          ]
+        }
+      },
+      {
+        "id": 12,
+        "name": "倒吊人",
+        "english": "The Hanged Man",
+        "upright": {
+          "keywords": [
+            "新视角",
+            "暂停",
+            "顺从",
+            "牺牲"
+          ],
+          "description": "倒吊人看到的是一个不同的视角。当它在你的占卜中出现时，是提醒你从一个不同的角度看待一个情况。我们问题的解决方案往往就在我们眼前。"
+        },
+        "reversed": {
+          "keywords": [
+            "停滞",
+            "无谓的牺牲",
+            "延迟",
+            "抗拒"
+          ],
+          "description": "暂停的能量被抑制或滥用。表现为毫无进展的停滞、不必要的牺牲、抗拒新的视角，导致时间或精力的浪费。"
+        },
+        "story": "权杖骑士在攀岩中途休息，叼着香烟凝视日落，他暂停了行动，进入一个沉思和观察的状态。",
+        "core_meaning": "通过暂停、牺牲或转换视角来获得新的启示和解决方案。",
+        "potential_risks": "长时间的停滞不前，或为了不值得的目标而牺牲。",
+        "possible_real_world_mapping": "等待一个决定、重新思考一个问题、静修、以退为进。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖骑士"
+          ],
+          "props": [
+            "香烟",
+            "日落"
+          ],
+          "environment": [
+            "攀岩途中"
+          ],
+          "time_hint": "暂时",
+          "direction": "倒置/不同视角"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "看日落",
+            "从攀岩中休息"
+          ],
+          "potential_branches": [
+            "获得不同视角",
+            "找到被忽略的解决方案"
+          ]
+        }
+      },
+      {
+        "id": 13,
+        "name": "死神",
+        "english": "Death",
+        "upright": {
+          "keywords": [
+            "结束",
+            "转变",
+            "重生",
+            "放下"
+          ],
+          "description": "我们会在人格、关系等方面经历多次“死亡”。放下那些不再服务于我们的东西，为重生腾出空间。是时候告别旧的你，将痛苦化为动力。"
+        },
+        "reversed": {
+          "keywords": [
+            "抗拒改变",
+            "停滞",
+            "恐惧结束",
+            "抑制"
+          ],
+          "description": "转变的能量受阻。表现为抗拒必要的结束、紧抓着过去不放、害怕改变，导致痛苦的延长和新生的延迟。"
+        },
+        "story": "权杖侍者感觉与自己失去联系，当她剪掉头发时，她开始摆脱旧的人格，象征着结束与重生。",
+        "core_meaning": "一个重要阶段的结束，以及随之而来的深刻转变和重生。",
+        "potential_risks": "结束带来的痛苦和失落感。",
+        "possible_real_world_mapping": "分手、辞职、搬家、戒除坏习惯、彻底改变生活方式。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖侍者"
+          ],
+          "props": [
+            "阴沉的镜子",
+            "剪掉的头发"
+          ],
+          "environment": [
+            "内心转变的空间"
+          ],
+          "time_hint": "结束与开始",
+          "direction": "向下终结"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "剪掉头发",
+            "摆脱旧我"
+          ],
+          "potential_branches": [
+            "告别旧我",
+            "蜕变成更好的人"
+          ]
+        }
+      },
+      {
+        "id": 14,
+        "name": "节制",
+        "english": "Temperance",
+        "upright": {
+          "keywords": [
+            "平衡",
+            "和谐",
+            "耐心",
+            "整合"
+          ],
+          "description": "节制牌提醒你要注意身体和生活中的不平衡。放慢脚步，开始养成健康的生活习惯。身体、精神和心灵应在和谐地共同运作。"
+        },
+        "reversed": {
+          "keywords": [
+            "失衡",
+            "极端",
+            "冲突",
+            "延迟"
+          ],
+          "description": "平衡的能量被打破。表现为生活中的极端行为、内在冲突、缺乏耐心，导致不和谐与焦虑，事情进展被延迟。"
+        },
+        "story": "住在喧闹市中心的宝剑侍者，去工作室调整她的脉轮，以寻求内心的平静与和谐。",
+        "core_meaning": "通过耐心和有意识的努力，将对立的元素融合，以达到和谐与平衡。",
+        "potential_risks": "在寻求平衡的过程中变得犹豫不决，或对生活失去热情。",
+        "possible_real_world_mapping": "调解冲突、寻找工作与生活的平衡、混合不同想法、养成健康习惯。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍者"
+          ],
+          "props": [
+            "汽车鸣笛声",
+            "脉轮"
+          ],
+          "environment": [
+            "市中心",
+            "工作室"
+          ],
+          "time_hint": "调整期",
+          "direction": "流动与融合"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "去工作室调整脉轮"
+          ],
+          "potential_branches": [
+            "找到平衡",
+            "养成健康习惯"
+          ]
+        }
+      },
+      {
+        "id": 15,
+        "name": "恶魔",
+        "english": "The Devil",
+        "upright": {
+          "keywords": [
+            "束缚",
+            "成瘾",
+            "物质主义",
+            "负面模式"
+          ],
+          "description": "恶魔牌关乎人们显化的负面能量，如自私、虐待或自恋。当这张牌出现时，要警惕你的恶习，避免它们变成瘾。"
+        },
+        "reversed": {
+          "keywords": [
+            "解放",
+            "挣脱束缚",
+            "觉醒"
+          ],
+          "description": "束缚的能量出现转机。代表着意识到自己所处的负面模式，开始挣脱束缚，打破成瘾，重获自由和控制权。"
+        },
+        "story": "恶魔享受着折磨喝醉的星币侍者，弄乱了她的房间，而她感到无能为力，象征着被负面能量和恶习所束缚。",
+        "core_meaning": "被物质欲望、成瘾、负面思维模式或不健康的关系所束缚。",
+        "potential_risks": "失去自由意志，沉溺于有害行为，被他人操纵。",
+        "possible_real_world_mapping": "成瘾问题（赌博、药物）、有毒的关系、债务、被工作奴役。",
+        "symbolic_elements": {
+          "characters": [
+            "恶魔",
+            "喝醉的星币侍者"
+          ],
+          "props": [
+            "床",
+            "凌乱的房间"
+          ],
+          "environment": [
+            "受困的卧室"
+          ],
+          "time_hint": "受困期",
+          "direction": "向下沉沦"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "恶魔折磨侍者",
+            "侍者感到无能为力"
+          ],
+          "potential_branches": [
+            "警惕恶习",
+            "避免成瘾"
+          ]
+        }
+      },
+      {
+        "id": 16,
+        "name": "塔",
+        "english": "The Tower",
+        "upright": {
+          "keywords": [
+            "突变",
+            "毁灭",
+            "颠覆",
+            "启示"
+          ],
+          "description": "毁灭是生活的一部分，塔的能量会带来令人震惊和巨大的破坏，抵抗是徒劳的。它会影响你的关系、财务、安全感等，但结构可以重建。"
+        },
+        "reversed": {
+          "keywords": [
+            "逃避灾难",
+            "恐惧改变",
+            "延迟的危机"
+          ],
+          "description": "颠覆的能量被抑制或延迟。表现为抗拒不可避免的改变，试图维持虚假的稳定，但这只会让最终的崩溃更加痛苦。"
+        },
+        "story": "一场大火突然烧毁了宝剑国王和女王的家，他们为之奋斗的一切都化为乌有，但所有人都安然无恙。",
+        "core_meaning": "突发且颠覆性的事件，摧毁了旧有的结构、信念或安全感，从而带来真相的启示。",
+        "potential_risks": "巨大的损失和混乱，感到生活崩塌。",
+        "possible_real_world_mapping": "突然被解雇、分手、事故、财务崩溃、信念崩塌。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑国王",
+            "宝剑女王",
+            "猫"
+          ],
+          "props": [
+            "家",
+            "大火"
+          ],
+          "environment": [
+            "燃烧的房屋"
+          ],
+          "time_hint": "突然",
+          "direction": "崩溃"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "逃离火灾"
+          ],
+          "potential_branches": [
+            "接受毁灭",
+            "规划重建"
+          ]
+        }
+      },
+      {
+        "id": 17,
+        "name": "星星",
+        "english": "The Star",
+        "upright": {
+          "keywords": [
+            "希望",
+            "信念",
+            "灵感",
+            "显化"
+          ],
+          "description": "星星的能量被称为“许愿牌”，是你的显化正在路上的标志。明智地选择你的思想，因为宇宙正在调谐你的能量。是你闪耀的时候了！"
+        },
+        "reversed": {
+          "keywords": [
+            "绝望",
+            "信念丧失",
+            "灵感枯竭",
+            "失衡"
+          ],
+          "description": "希望与信念的能量被抑制。表现为感到绝望、对未来失去信心、灵感枯竭，与宇宙的连接变得微弱。"
+        },
+        "story": "圣杯侍者在流星下许愿，她从远处看着，相信宇宙聆听了她的愿望。",
+        "core_meaning": "在经历困难之后，重新燃起希望、信念和灵感，并相信愿望可以实现。",
+        "potential_risks": "空想而不行动，脱离现实的乐观。",
+        "possible_real_world_mapping": "从危机中恢复、获得新的灵感、对未来充满希望、实现愿望。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍者"
+          ],
+          "props": [
+            "流星",
+            "愿望"
+          ],
+          "environment": [
+            "夜空下"
+          ],
+          "time_hint": "显化中",
+          "direction": "向上仰望"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "许愿",
+            "观看流星"
+          ],
+          "potential_branches": [
+            "思想变成现实",
+            "开始闪耀"
+          ]
+        }
+      },
+      {
+        "id": 18,
+        "name": "月亮",
+        "english": "The Moon",
+        "upright": {
+          "keywords": [
+            "幻觉",
+            "恐惧",
+            "潜意识",
+            "秘密"
+          ],
+          "description": "月亮牌关乎秘密和我们不想让别人看到的事情。月亮的能量会揭穿假象，你可以开始看穿人们的伪装，或者他们也可以看穿你的。"
+        },
+        "reversed": {
+          "keywords": [
+            "真相大白",
+            "困惑解除",
+            "恐惧消退"
+          ],
+          "description": "幻觉的能量正在消散。表现为隐藏的秘密被揭露、困惑和误解得到澄清，恐惧逐渐消退，你看清了事物的真相。"
+        },
+        "story": "宝剑侍者必须保守她与圣杯侍者的关系这个秘密。她想在了解自己后才公开，但秘密有提前泄露的风险。",
+        "core_meaning": "探索潜意识深处的恐惧、幻觉和未知，事情并非表面看到的那样。",
+        "potential_risks": "被恐惧和焦虑吞噬，被假象欺骗，迷失方向。",
+        "possible_real_world_mapping": "处理内心的焦虑、揭露谎言、梦境分析、面对不确定的情况。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍者",
+            "圣杯侍者",
+            "狗"
+          ],
+          "props": [
+            "秘密",
+            "面具（假象）"
+          ],
+          "environment": [
+            "模糊不清的场景"
+          ],
+          "time_hint": "潜伏期",
+          "direction": "深入潜意识"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "保守秘密",
+            "了解自己"
+          ],
+          "potential_branches": [
+            "看穿假象",
+            "秘密被揭露"
+          ]
+        }
+      },
+      {
+        "id": 19,
+        "name": "太阳",
+        "english": "The Sun",
+        "upright": {
+          "keywords": [
+            "幸福",
+            "清晰",
+            "成功",
+            "活力"
+          ],
+          "description": "太阳代表着幸福、清晰和积极。在黑暗阴沉的夜晚之后，日出提醒我们总有希望。它会为你照亮通往幸福的道路。"
+        },
+        "reversed": {
+          "keywords": [
+            "短暂的快乐",
+            "缺乏热情",
+            "延迟的成功"
+          ],
+          "description": "幸福和清晰的能量被抑制或延迟。表现为感到缺乏热情、对成功感到悲观，或快乐只是暂时的，无法真正感受到内在的光明。"
+        },
+        "story": "太阳明亮地照耀着，圣杯侍者漫步在向日葵花田中，她细细品味这份情感并拍照留念。",
+        "core_meaning": "代表着纯粹的喜悦、成功、清晰和活力，事物都清晰可见。",
+        "potential_risks": "过分乐观，忽视潜在问题。",
+        "possible_real_world_mapping": "度假、取得巨大成功、庆祝活动、感到充满活力和快乐。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍者"
+          ],
+          "props": [
+            "向日葵花田",
+            "照片"
+          ],
+          "environment": [
+            "阳光普照的田野"
+          ],
+          "time_hint": "光明时刻",
+          "direction": "全然展现"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "漫步",
+            "品味情感",
+            "拍照"
+          ],
+          "potential_branches": [
+            "照亮通往幸福的道路",
+            "体验清晰与积极"
+          ]
+        }
+      },
+      {
+        "id": 20,
+        "name": "审判",
+        "english": "Judgement",
+        "upright": {
+          "keywords": [
+            "评判",
+            "重生",
+            "转折点",
+            "召唤"
+          ],
+          "description": "审判牌关乎你生命中的一个关键时刻，你的行为将决定你的人生。既然你已经为自己开辟了一条道路，是时候做出谨慎的选择，决定如何最大化你的才能了。"
+        },
+        "reversed": {
+          "keywords": [
+            "自我怀疑",
+            "逃避评判",
+            "错失良机"
+          ],
+          "description": "重生的召唤被抑制或忽略。表现为严厉的自我批判、逃避重要的决定、因犹豫不决而错失良机，无法进入人生的新篇章。"
+        },
+        "story": "毕业对于权杖侍者是一个转折点，她生命的一部分已经结束，即将开始成年生活，如何发展取决于她自己。",
+        "core_meaning": "在人生的一个关键转折点上，进行自我评估，并响应更高层次的召唤，从而获得重生。",
+        "potential_risks": "对自己或他人过于苛刻，或因害怕评判而不敢行动。",
+        "possible_real_world_mapping": "毕业、职业生涯的重大抉择、对自己的人生进行深刻反思。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖侍者"
+          ],
+          "props": [
+            "毕业（事件）"
+          ],
+          "environment": [
+            "人生的转折点"
+          ],
+          "time_hint": "关键时刻",
+          "direction": "向上提升"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "结束学业",
+            "开始成年生活"
+          ],
+          "potential_branches": [
+            "做出谨慎选择",
+            "最大化自身才能"
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "name": "世界",
+        "english": "The World",
+        "upright": {
+          "keywords": [
+            "完成",
+            "整合",
+            "成就",
+            "满足"
+          ],
+          "description": "世界牌是大阿尔克那的最后一张牌，关乎反思你的成功和成就。这是你感到满足，拥有你想要和需要的一切的时候。旅行也可能在计划之中。"
+        },
+        "reversed": {
+          "keywords": [
+            "未完成",
+            "缺乏闭环",
+            "停滞",
+            "延迟"
+          ],
+          "description": "完成的能量受阻。表现为事情半途而废、缺乏成就感、感觉离目标总差一步，导致项目或人生阶段的延迟结束。"
+        },
+        "story": "在度过一个充满问题的时期后，每个人都松了一口气，他们努力解决了问题，改善了处境，并为眼前的景色和自己的幸运感到幸福。",
+        "core_meaning": "一个重要旅程或周期的成功完成，达到整合、满足和成就的顶点。",
+        "potential_risks": "在成功后停滞不前，不愿开始新的周期。",
+        "possible_real_world_mapping": "完成一个重大项目、环球旅行、实现一个长期目标、感到人生圆满。",
+        "symbolic_elements": {
+          "characters": [
+            "每个人"
+          ],
+          "props": [
+            "壮丽的景色"
+          ],
+          "environment": [
+            "问题解决后的放松场景"
+          ],
+          "time_hint": "终点/完成时",
+          "direction": "圆满"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "松一口气",
+            "放松",
+            "欣赏景色"
+          ],
+          "potential_branches": [
+            "反思成功与成就",
+            "开始新的旅程（旅行）"
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "name": "权杖王牌",
+        "english": "Ace of Wands",
+        "upright": {
+          "keywords": [
+            "开端",
+            "灵感",
+            "热情",
+            "潜力"
+          ],
+          "description": "权杖王牌是追求你所热爱事物的开端，它可能是一个新爱好的兴趣火花。这张牌是一个循环的开始，鼓励你勇敢行动。"
+        },
+        "reversed": {
+          "keywords": [
+            "延迟",
+            "灵感枯竭",
+            "缺乏动力",
+            "抑制"
+          ],
+          "description": "创造的火花被抑制或延迟。表现为缺乏开始新事物的动力、灵感枯竭或热情消退，导致计划停滞不前。"
+        },
+        "story": "美丽的天空和城市景观启发了星币侍者开始作画。她开始想象最终成品的样子，并提前规划她的笔触。",
+        "core_meaning": "代表新热情、新项目或新想法的萌芽，是创造力和行动力的潜力火花。",
+        "potential_risks": "初始的热情如果缺乏后续行动，可能会转瞬即逝。",
+        "possible_real_world_mapping": "开始一个新爱好、一个创意项目、一个新的职业方向。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍者"
+          ],
+          "props": [
+            "画作（想象中）",
+            "笔触（规划中）"
+          ],
+          "environment": [
+            "美丽的城市景观"
+          ],
+          "time_hint": "开端，萌芽期",
+          "direction": "向外迸发"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "受启发",
+            "作画",
+            "想象",
+            "规划"
+          ],
+          "potential_branches": [
+            "追求热爱的事物",
+            "新循环的开始"
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "name": "权杖二",
+        "english": "Two of Wands",
+        "upright": {
+          "keywords": [
+            "规划",
+            "选择",
+            "展望",
+            "决策"
+          ],
+          "description": "权杖二关乎有机会选择想要的人生方向。这是一个开始看得更远、去往新地方的机会。在出发前应做好周全计划，看清前方的道路。"
+        },
+        "reversed": {
+          "keywords": [
+            "计划不周",
+            "恐惧未知",
+            "犹豫不决",
+            "停滞"
+          ],
+          "description": "规划阶段的能量失衡。表现为因恐惧未知而犹豫不决，无法做出选择，或是计划不周导致行动停滞。可能过于局限于眼前，不敢追求更有潜力的目标。"
+        },
+        "story": "权杖骑士被困在两个目的地之间做选择，较近的岛屿似乎稳妥，但较远的看起来更有希望。他有望远镜看清前方，也有一艘坚固的船可以出航。",
+        "core_meaning": "在行动前的规划和决策阶段，评估不同的可能性并勇敢地选择未来的方向。",
+        "potential_risks": "因害怕做出错误选择而导致“分析瘫痪”，或因计划不周导致失败。",
+        "possible_real_world_mapping": "在两个工作机会间选择、规划一次长途旅行、决定是否搬家或深造。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖骑士"
+          ],
+          "props": [
+            "望远镜",
+            "坚固的船",
+            "两个岛屿"
+          ],
+          "environment": [
+            "岸边",
+            "海上"
+          ],
+          "time_hint": "规划期",
+          "direction": "向前展望"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "在两地间选择",
+            "用望远镜观察",
+            "准备出发"
+          ],
+          "potential_branches": [
+            "选择稳妥的道路",
+            "选择更有潜力的道路"
+          ]
+        }
+      },
+      {
+        "id": 24,
+        "name": "权杖三",
+        "english": "Three of Wands",
+        "upright": {
+          "keywords": [
+            "扩展",
+            "远见",
+            "初步成果",
+            "等待"
+          ],
+          "description": "权杖三是在规划和准备之后，终于到达你的目的地并看到了初步成果。是时候安顿下来，寻找资源，并扩展你的人脉了。你可能会发现能帮助你前行的新事物。"
+        },
+        "reversed": {
+          "keywords": [
+            "延迟",
+            "计划受挫",
+            "缺乏远见",
+            "回头"
+          ],
+          "description": "扩展的能量受阻，期望落空。计划的初步成果未能显现，或因意外障碍而导致延误。可能因缺乏远见而感到迷茫，甚至想放弃原计划回头。"
+        },
+        "story": "权杖骑士为他划到更远岛屿所付出的精力感到值得。他停好船开始探索，他的仔细规划和勘察带来了相当丰硕的成果。",
+        "core_meaning": "行动的初步成果已经显现，代表着已踏上征途并期待着未来的进一步发展与扩张。",
+        "potential_risks": "遇到的初步成果不如预期，或是在新环境中未能有效扩展。",
+        "possible_real_world_mapping": "启动小型业务后初见成效、海外项目取得初步进展、等待某个投资的回报。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖骑士"
+          ],
+          "props": [
+            "船（已停靠）",
+            "更远的岛屿"
+          ],
+          "environment": [
+            "新的目的地"
+          ],
+          "time_hint": "行动初期",
+          "direction": "向远方扩展"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "探索新地区",
+            "寻找资源",
+            "扩展人脉"
+          ],
+          "potential_branches": [
+            "安顿下来继续前进",
+            "完成此行的使命"
+          ]
+        }
+      },
+      {
+        "id": 25,
+        "name": "权杖四",
+        "english": "Four of Wands",
+        "upright": {
+          "keywords": [
+            "庆祝",
+            "和谐",
+            "社群",
+            "稳定"
+          ],
+          "description": "权杖四象征着与所关心的人之间关系的基石，是构筑温馨家园和健康关系的关键。在此期间，你可能会经历重逢、家庭聚会和各种庆典。"
+        },
+        "reversed": {
+          "keywords": [
+            "关系不和",
+            "不稳定",
+            "聚会取消",
+            "失衡"
+          ],
+          "description": "和谐与稳定的能量失衡。代表着社群或家庭关系出现裂痕，缺乏支持。原定的庆祝活动可能被推迟或取消，难以感受到归属感。"
+        },
+        "story": "星币侍女为换个环境去拜访多年未见的朋友，两人重逢后意识到彼此的陪伴是多么重要。",
+        "core_meaning": "在一个安全和支持性的环境中，庆祝成就、和谐的人际关系和稳定。",
+        "potential_risks": "社区或家庭的压力，稳定但也可能缺乏变化。",
+        "possible_real_world_mapping": "婚礼、乔迁派对、毕业典礼、家庭团聚、项目成功的庆功会。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍女",
+            "朋友"
+          ],
+          "props": [
+            "友情",
+            "家园（概念）"
+          ],
+          "environment": [
+            "舒适、能提供陪伴的环境"
+          ],
+          "time_hint": "庆祝期/重逢期",
+          "direction": "内部的和谐"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "重逢",
+            "意识到陪伴的重要性",
+            "互通近况"
+          ],
+          "potential_branches": [
+            "体验重逢与聚会",
+            "巩固人际关系"
+          ]
+        }
+      },
+      {
+        "id": 26,
+        "name": "权杖五",
+        "english": "Five of Wands",
+        "upright": {
+          "keywords": [
+            "冲突",
+            "竞争",
+            "分歧",
+            "混乱"
+          ],
+          "description": "这支团队因内部持续的分歧和自尊心作祟而忘记了主要目标，导致紧张升级。各方拒绝倾听，围绕同一问题争吵不休。"
+        },
+        "reversed": {
+          "keywords": [
+            "解决冲突",
+            "达成共识",
+            "避免斗争",
+            "压抑"
+          ],
+          "description": "冲突的能量得到缓和或被压抑。可能代表着找到解决分歧的方法、达成共识，但也可能指因害怕冲突而一味回避问题，导致内在紧张累积。"
+        },
+        "story": "一支团队因只关注自己的自尊心而忘记了比赛的主要目标——前方的宝箱，成员们陷入了全面的争吵。",
+        "core_meaning": "代表着冲突、竞争和意见不合。虽然混乱，但也是一个让不同观点碰撞的机会。",
+        "potential_risks": "内耗导致忘记了共同目标，伤害团队合作。",
+        "possible_real_world_mapping": "团队项目中的激烈讨论、体育竞赛、市场竞争、与多人意见不合。",
+        "symbolic_elements": {
+          "characters": [
+            "团队队员"
+          ],
+          "props": [
+            "宝箱（被忽略的目标）",
+            "自尊心"
+          ],
+          "environment": [
+            "比赛场地"
+          ],
+          "time_hint": "冲突期",
+          "direction": "混乱发散"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "争吵",
+            "只关注自己",
+            "拒绝倾听"
+          ],
+          "potential_branches": [
+            "因冲突影响努力成果",
+            "共同达成共识"
+          ]
+        }
+      },
+      {
+        "id": 27,
+        "name": "权杖六",
+        "english": "Six of Wands",
+        "upright": {
+          "keywords": [
+            "胜利",
+            "认可",
+            "成功",
+            "公开赞誉"
+          ],
+          "description": "你的想法和事业得到了社区的支持和认可。这张牌的出现意味着你的努力得到了赞赏，你离完成目标又近了一步。"
+        },
+        "reversed": {
+          "keywords": [
+            "失败",
+            "缺乏认可",
+            "虚荣",
+            "延迟的成功"
+          ],
+          "description": "胜利与认可的能量失衡或延迟。表现为努力未能得到应有的赞赏、成功迟迟不来，或者所取得的成就是空洞的，缺乏他人的支持和真正的满足感。"
+        },
+        "story": "一场由宝剑侍女和圣杯侍女引领的游行，因其事业和贡献而得到了社区民众的支持和掌声。",
+        "core_meaning": "公开的成功、胜利和来自社群的认可与赞赏。",
+        "potential_risks": "成功后的骄傲自满，或过于在意他人的眼光。",
+        "possible_real_world_mapping": "在工作中获得晋升或奖励、赢得比赛、一个项目获得公众好评。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍女",
+            "圣杯侍女",
+            "社区民众"
+          ],
+          "props": [
+            "游行"
+          ],
+          "environment": [
+            "社区"
+          ],
+          "time_hint": "胜利时刻",
+          "direction": "积极向前（游行）"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "引领游行",
+            "接受民众掌声和支持",
+            "倾听喝彩"
+          ],
+          "potential_branches": [
+            "因成就被认可",
+            "离最终目标更近一步"
+          ]
+        }
+      },
+      {
+        "id": 28,
+        "name": "权杖七",
+        "english": "Seven of Wands",
+        "upright": {
+          "keywords": [
+            "防御",
+            "挑战",
+            "坚持立场",
+            "竞争"
+          ],
+          "description": "权杖七涉及因他人觊觎你的位置而产生的挑战。并非每个人都欣赏你的成功，你必须坚持自己的立场，拒绝忍受不敬。"
+        },
+        "reversed": {
+          "keywords": [
+            "放弃",
+            "不堪重负",
+            "妥协",
+            "失势"
+          ],
+          "description": "防御的能量失衡，难以坚持。可能是在巨大的压力或四面楚歌的境地下选择放弃、做出不必要的妥协，或者感到疲于应对、失去自己的优势地位。"
+        },
+        "story": "媒体要求星币国王给出一个解释，但他无意忍受这种不敬和质疑，并坚定地拒绝了他们。",
+        "core_meaning": "面对挑战和反对时，勇敢地捍卫自己的立场、成就和信念。",
+        "potential_risks": "变得过于好斗和偏执，将所有人都视为敌人。",
+        "possible_real_world_mapping": "捍卫自己的工作成果、在争论中坚守观点、应对市场竞争对手的挑战。",
+        "symbolic_elements": {
+          "characters": [
+            "星币国王",
+            "媒体（对手）"
+          ],
+          "props": [
+            "位置（成就的象征）"
+          ],
+          "environment": [
+            "被挑战的公开场合"
+          ],
+          "time_hint": "对峙期",
+          "direction": "坚守阵地"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "被质问",
+            "拒绝忍受不敬",
+            "坚持立场"
+          ],
+          "potential_branches": [
+            "成功捍卫自己",
+            "因处理负面情绪而感到压力"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "name": "权杖八",
+        "english": "Eight of Wands",
+        "upright": {
+          "keywords": [
+            "迅速的行动",
+            "消息",
+            "进展",
+            "加速"
+          ],
+          "description": "权杖八代表着可能让你措手不及的快速变动。这种能量会冲破延误，提前达成目标，所以要做好加倍工作的准备，并利用这股能量快速行动。"
+        },
+        "reversed": {
+          "keywords": [
+            "延误",
+            "停滞",
+            "阻碍",
+            "混乱"
+          ],
+          "description": "快速前进的能量受到阻碍或变得混乱。预期的消息迟迟不来，计划因意外而延误或停滞。快速的变动可能带来的是混乱而非进展。"
+        },
+        "story": "骑士们登上了最快的过山车，车厢即将垂直下坠，从他们脸上的表情来看，大多数人并不享受这趟被动的、突如其来的加速旅程。",
+        "core_meaning": "快速的进展、沟通和运动，通常指事件的快速发生或信息的迅速传递。",
+        "potential_risks": "事情发展太快来不及反应，或是在忙乱中做出草率的决定。",
+        "possible_real_world_mapping": "收到重要紧急的消息、项目突然加速推进、一次快速的旅行。",
+        "symbolic_elements": {
+          "characters": [
+            "骑士们"
+          ],
+          "props": [
+            "最快的过山车",
+            "垂直下坠的轨道"
+          ],
+          "environment": [
+            "游乐园"
+          ],
+          "time_hint": "即刻，突如其来",
+          "direction": "快速向前/向下"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "共同乘坐过山车",
+            "措手不及"
+          ],
+          "potential_branches": [
+            "利用能量推动项目",
+            "启动新项目"
+          ]
+        }
+      },
+      {
+        "id": 30,
+        "name": "权杖九",
+        "english": "Nine of Wands",
+        "upright": {
+          "keywords": [
+            "坚韧",
+            "毅力",
+            "警惕",
+            "防御"
+          ],
+          "description": "战斗即将结束，但权杖九带来了一个最后的挑战。你可能已筋疲力尽、濒临放弃，但必须找到可以依靠的东西，再坚持一下就能到达终点。"
+        },
+        "reversed": {
+          "keywords": [
+            "精疲力尽",
+            "放弃",
+            "偏执",
+            "防线崩溃"
+          ],
+          "description": "坚韧的能量失衡。表现为再也无法坚持下去，最终选择放弃。或是因过去的创伤而变得过度警惕和偏执，不愿再接受任何挑战。"
+        },
+        "story": "宝剑骑士在漫长疲惫的工作后，面对被大雪覆盖的漆黑道路，他几乎筋疲力尽，但仍必须依靠手电筒找到回家的路。",
+        "core_meaning": "在经历了一系列斗争后，需要以坚韧的毅力和警惕的态度来面对最后的考验。",
+        "potential_risks": "筋疲力尽，因过去的斗争而变得多疑和不信任。",
+        "possible_real_world_mapping": "项目收尾阶段遇到最后一个难题、长跑的最后冲刺、大病初愈后的持续警惕。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑骑士"
+          ],
+          "props": [
+            "漆黑的道路",
+            "厚厚的积雪",
+            "手电筒"
+          ],
+          "environment": [
+            "归家途中"
+          ],
+          "time_hint": "接近终点时",
+          "direction": "苦苦支撑"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "拖着疲憊的身体前行",
+            "依靠手电筒照明"
+          ],
+          "potential_branches": [
+            "坚持到底通过挑战",
+            "因焦虑而濒临放弃"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "name": "权杖十",
+        "english": "Ten of Wands",
+        "upright": {
+          "keywords": [
+            "负担",
+            "责任过重",
+            "压力",
+            "不堪重负"
+          ],
+          "description": "权杖十探讨压力如何迅速转变为负担。你可能正试图以一己之力承担过多的责任。寻求帮助来减轻重担，把包袱留到日后再说，是明智的。"
+        },
+        "reversed": {
+          "keywords": [
+            "放下负担",
+            "委派任务",
+            "崩溃",
+            "解脱"
+          ],
+          "description": "负担过重的能量达到临界点。可能是终于将责任分担出去或完全放下，从而感解脱；也可能是被重担彻底压垮，导致崩溃。"
+        },
+        "story": "在工人都回家后，权杖女王仍在加班搬运，沉重的负担让她背部不堪重负，而且工作效果甚微。",
+        "core_meaning": "因承担过多的责任、工作或压力而感到不堪重负。",
+        "potential_risks": "被责任压垮，效率低下，忽略了更重要的事情（如家庭）。",
+        "possible_real_world_mapping": "工作过度以致身心俱疲、独自承担所有家务和责任、被债务压得喘不过气。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖女王",
+            "已回家的工人们"
+          ],
+          "props": [
+            "沉重的搬运物",
+            "家庭（目标）"
+          ],
+          "environment": [
+            "下班后的工作场所"
+          ],
+          "time_hint": "超负荷期",
+          "direction": "被重压"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "加班",
+            "不必要的搬运",
+            "背部不堪重负"
+          ],
+          "potential_branches": [
+            "寻求帮助减轻负担",
+            "独自承担导致效率低下"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "name": "权杖侍者",
+        "english": "Page of Wands",
+        "upright": {
+          "keywords": [
+            "创造力",
+            "好奇心",
+            "探索",
+            "热情"
+          ],
+          "description": "权杖侍从是富有创造力、自信且充满好奇心的探索者，她热衷于构想并开启新的项目和创意冒险。 она决定登顶，寻找值得探索的地方。"
+        },
+        "reversed": {
+          "keywords": [
+            "精力分散",
+            "有始无终",
+            "不确定",
+            "延迟"
+          ],
+          "description": "其充沛的创造力由于静不下心而变得分散，容易开启过多项目但都浅尝辄止，导致犹豫不决，有始无终。"
+        },
+        "story": "在这张牌中，权杖侍从正在攀爬一棵树，以期获得更高的鸟瞰视野，并从中找到值得探索的新目的地方。",
+        "core_meaning": "代表探索新可能性的纯粹能量，是创意的萌芽和开启新旅程的冲动。",
+        "potential_risks": "因目标不明确或缺乏专注力而浪费精力，对新事物的热情三分钟热度。",
+        "possible_real_world_mapping": "开启一个新的爱好、计划一次探索性的旅行、展现一个很有前景的初步想法。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖侍者"
+          ],
+          "props": [
+            "树"
+          ],
+          "environment": [
+            "可供攀登以获得新视野的地方"
+          ],
+          "time_hint": "起点，探索初期",
+          "direction": "向上攀爬"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "攀爬",
+            "获得视野",
+            "寻找地点"
+          ],
+          "potential_branches": [
+            "找到值得探索之处",
+            "因分心而放弃"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "name": "权杖骑士",
+        "english": "Knight of Wands",
+        "upright": {
+          "keywords": [
+            "行动",
+            "活力",
+            "热情",
+            "目标明确"
+          ],
+          "description": "权杖骑士是充满活力的行动派，专注于完成既定任务。他敢于挑战极限，将强烈的决心付诸实践，只为夺得胜利。"
+        },
+        "reversed": {
+          "keywords": [
+            "鲁莽",
+            "急躁",
+            "过度劳累",
+            "延误"
+          ],
+          "description": "其充沛的行动力因缺乏耐心而变为鲁莽冲动，可能会因过度劳累而透支身体，或因急于求成而导致挫折和延误。"
+        },
+        "story": "他脸上写满了强烈的决心和必胜的信念，正奋力跃向空中。为了夺得第一，他经历了无数次失败也毫不在意。",
+        "core_meaning": "将激情和明确目标转化为实际行动，充满活力不达目的不罢休的实践精神。",
+        "potential_risks": "急于求成，行动不计后果，或因过度好胜而筋疲力尽。",
+        "possible_real_world_mapping": "全力以赴地执行一个项目、一次有挑战性的搬家或旅行、在运动比赛中拼搏。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖骑士"
+          ],
+          "props": [
+            "能量饮料（人工动力）"
+          ],
+          "environment": [
+            "极限运动场",
+            "竞技场"
+          ],
+          "time_hint": "加速行动期",
+          "direction": "快速向前"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "挑战极限",
+            "奋力跳跃",
+            "精进技艺"
+          ],
+          "potential_branches": [
+            "夺得胜利",
+            "因鲁莽而失败"
+          ]
+        }
+      },
+      {
+        "id": 34,
+        "name": "权杖王后",
+        "english": "Queen of Wands",
+        "upright": {
+          "keywords": [
+            "自信",
+            "领导力",
+            "创造力",
+            "鼓舞人心"
+          ],
+          "description": "权杖王后是社区中活跃的声音，是热情、无所畏惧的倡导者。她清楚自己的能力，天生善于取悦和激励他人，并巧妙地将创意想法转化为实际的设计。"
+        },
+        "reversed": {
+          "keywords": [
+            "易怒",
+            "强势",
+            "嫉妒",
+            "创作瓶颈"
+          ],
+          "description": "她的领导力和自信变得失衡，转化为过于强烈的控制欲和易怒的脾气。创造力可能会因受阻而无法显现，导致创作瓶颈。"
+        },
+        "story": "牌面描绘了权杖王后一边向支持她的丈夫下达指示，一边仔细核对设计图，渴望按时完成项目以便与家人团聚。",
+        "core_meaning": "运用自信和社交魅力来引领和启发他人，将内在热情转化为有影响力的创造性工作。",
+        "potential_risks": "可能因过于强势而使他人感到压力，或因公忘私。",
+        "possible_real_world_mapping": "担任团队领导、活动组织者、公关经理、成功的家居设计师。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖王后",
+            "丈夫"
+          ],
+          "props": [
+            "计划表",
+            "设计图"
+          ],
+          "environment": [
+            "工作现场",
+            "家与公司"
+          ],
+          "time_hint": "执行与引领期",
+          "direction": "向外辐射影响力"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "下达指示",
+            "核对设计",
+            "激励他人"
+          ],
+          "potential_branches": [
+            "成功完成项目",
+            "与家人团聚"
+          ]
+        }
+      },
+      {
+        "id": 35,
+        "name": "权杖国王",
+        "english": "King of Wands",
+        "upright": {
+          "keywords": [
+            "远见",
+            "领导艺术",
+            "激励",
+            "技艺精湛"
+          ],
+          "description": "权杖国王天生具有领导才能，他擅长激励他人，能够用富有远见的计划应对各种局面。作为父亲般的领袖，他知道如何引导众人投入工作。"
+        },
+        "reversed": {
+          "keywords": [
+            "固执",
+            "脾气暴躁",
+            "专断",
+            "不切实际"
+          ],
+          "description": "其卓越的领导力和远见变得失衡，转化为固执己见和专横的脾气。可能会过于理想化而不切实际，期望过高导致对下属严苛残酷。"
+        },
+        "story": "牌面中，权杖国王正在向学徒们展示制作糕点的技巧和添加风味的秘方，并告诉他们，热情对于任何菜肴都至关重要。",
+        "core_meaning": "是成熟的领导者，通过自身的愿景和丰富的经验来激励和引导一个社区走向成功。",
+        "potential_risks": "不愿意听取他人意见，或者为了愿景而忽略了实际操作中的困难。",
+        "possible_real_world_mapping": "公司的CEO、成功的企业家、社区领袖、经验丰富的大厨或导师。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖国王",
+            "徒弟"
+          ],
+          "props": [
+            "糕点",
+            "香料",
+            "食谱"
+          ],
+          "environment": [
+            "厨房",
+            "领导岗位"
+          ],
+          "time_hint": "指导与领导期",
+          "direction": "向下引导"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "展示技巧",
+            "指导他人",
+            "准备餐食"
+          ],
+          "potential_branches": [
+            "激励他人投入工作",
+            "家人关系紧密"
+          ]
+        }
+      },
+      {
+        "id": 36,
+        "name": "圣杯王牌",
+        "english": "Ace of Cups",
+        "upright": {
+          "keywords": [
+            "新的爱",
+            "情感开启",
+            "同情心",
+            "创造力"
+          ],
+          "description": "圣杯王牌代表流动的能量冲破了墙壁，让你的情感得以奔流。你现在准备好接受和接纳爱了，心中充满了爱，并渴望与人分享。"
+        },
+        "reversed": {
+          "keywords": [
+            "情感压抑",
+            "关系封闭",
+            "创意受阻",
+            "抑制"
+          ],
+          "description": "情感流动的能量被压抑或堵塞。你可能在情感上封闭自我，害怕表达爱或接受爱，导致内心情感无法自由流动。"
+        },
+        "story": "隐居多年的圣杯国王，现在终于准备好敞开心扉，接纳他人进入他的世界。",
+        "core_meaning": "代表一个新的情感周期的开始，是爱、关系和创造力的萌芽。",
+        "potential_risks": "过度情绪化，或是新萌生的感情太脆弱。",
+        "possible_real_world_mapping": "开始一段新恋情、建立一段深刻的友谊、情绪上的宣泄和疗愈。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯国王"
+          ],
+          "props": [
+            "被冲破的墙（情感障碍）",
+            "流动的水流（情感）"
+          ],
+          "environment": [
+            "曾经的隐居地"
+          ],
+          "time_hint": "情感的开端",
+          "direction": "由内而外涌出"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "敞开心扉",
+            "接纳他人",
+            "分享爱"
+          ],
+          "potential_branches": [
+            "开始新的承诺",
+            "找到分享爱的人"
+          ]
+        }
+      },
+      {
+        "id": 37,
+        "name": "圣杯二",
+        "english": "Two of Cups",
+        "upright": {
+          "keywords": [
+            "结合",
+            "伙伴关系",
+            "互相吸引",
+            "和谐"
+          ],
+          "description": "空气中弥漫着爱的气息，一次约会开启了一段新的关系。这段新的伙伴关系是命中注定的，充满了火花和共鸣。"
+        },
+        "reversed": {
+          "keywords": [
+            "关系失和",
+            "不平衡",
+            "连接断裂",
+            "误解"
+          ],
+          "description": "和谐的伙伴关系出现失衡或断裂。代表着沟通不畅、价值观冲突或单方面付出，美好的开始受到抑制，或是合作出现裂痕。"
+        },
+        "story": "圣杯侍女和宝剑侍女正在进行他们的第一次约会，他们听着同样的音乐，开启了一段新的关系。",
+        "core_meaning": "代表两个人之间深刻的情感连接、相互尊重和平衡的伙伴关系。",
+        "potential_risks": "关系过于理想化，忽视了潜在差异。",
+        "possible_real_world_mapping": "浪漫的约会、建立商业合作、签订协议、心灵伴侣的相遇。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍女",
+            "宝剑侍女"
+          ],
+          "props": [
+            "音乐"
+          ],
+          "environment": [
+            "约会场所"
+          ],
+          "time_hint": "伙伴关系的开始",
+          "direction": "相互"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "约会",
+            "听同样的音乐",
+            "建立联系"
+          ],
+          "potential_branches": [
+            "开启新关系",
+            "缔结正式协议"
+          ]
+        }
+      },
+      {
+        "id": 38,
+        "name": "圣杯三",
+        "english": "Three of Cups",
+        "upright": {
+          "keywords": [
+            "友谊",
+            "庆祝",
+            "社群",
+            "合作"
+          ],
+          "description": "圣杯三鼓励你主动联系朋友并与他们见面。通过叙旧和分享，你可以学习、产生共鸣并加强彼此的纽带。这是一个属于玩乐和庆祝的时刻。"
+        },
+        "reversed": {
+          "keywords": [
+            "孤立",
+            "过度纵情",
+            "流言蜚语",
+            "团体失和"
+          ],
+          "description": "社群的欢乐能量出现失衡。可能指向过度沉溺于玩乐而忽略正事，或是小团体中的排挤和流言蜚语导致关系失和；也可能指庆祝被延迟。"
+        },
+        "story": "圣杯侍女和宝剑侍女带着他们的新朋友——权杖侍女游览城镇，三人玩得很开心并互相了解。",
+        "core_meaning": "代表社群的欢乐、庆祝、友谊和创造性的合作。",
+        "potential_risks": "三人行中的小团体排挤，或仅仅是逃避现实的玩乐。",
+        "possible_real_world_mapping": "参加派对、与朋友聚会、团队项目庆祝、婚礼或生日庆典。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍女",
+            "宝剑侍女",
+            "权杖侍女"
+          ],
+          "props": [
+            "规划好的行程"
+          ],
+          "environment": [
+            "城镇"
+          ],
+          "time_hint": "庆祝和交往",
+          "direction": "共同分享"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "游览城镇",
+            "玩得开心",
+            "互相了解"
+          ],
+          "potential_branches": [
+            "加强友谊纽带",
+            "主动联系朋友"
+          ]
+        }
+      },
+      {
+        "id": 39,
+        "name": "圣杯四",
+        "english": "Four of Cups",
+        "upright": {
+          "keywords": [
+            "冷漠",
+            "沉思",
+            "错失良机",
+            "不满"
+          ],
+          "description": "圣杯四代表拒绝一份提议，也许是因为太忙或对现状满足。它提醒你要考虑眼前的机会，因为它可能不会再来。"
+        },
+        "reversed": {
+          "keywords": [
+            "接受机会",
+            "结束停滞",
+            "重燃兴趣",
+            "觉醒"
+          ],
+          "description": "冷漠和拒绝的状态被打破，情感的抑制得到释放。你开始注意到被忽略的机会，走出自我的世界，对新事物重燃兴趣和热情。"
+        },
+        "story": "一个年轻的星币侍女撅着嘴，太生气了，以至于没有注意到她的老师正给她一个重新开始的机会。",
+        "core_meaning": "因内心的不满、冷漠或沉思而与外部世界脱节，忽视了新的机会。",
+        "potential_risks": "因固守现状或负面情绪而错失重要机会。",
+        "possible_real_world_mapping": "对新工作机会不感兴趣、在关系中变得冷淡、对生活感到倦怠。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍女",
+            "老师"
+          ],
+          "props": [
+            "噘着嘴的表情",
+            "错过的机会"
+          ],
+          "environment": [
+            "一个可以提供新机会的场合"
+          ],
+          "time_hint": "一个提议被呈现时",
+          "direction": "向内收缩"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "撅嘴",
+            "闭眼",
+            "忽略提议"
+          ],
+          "potential_branches": [
+            "错失良机",
+            "冷静后接受提议"
+          ]
+        }
+      },
+      {
+        "id": 40,
+        "name": "圣杯五",
+        "english": "Five of Cups",
+        "upright": {
+          "keywords": [
+            "失落",
+            "悲伤",
+            "后悔",
+            "失望"
+          ],
+          "description": "圣杯五代表因失败而产生的悲伤和失落，但它提醒你背后仍有支持。这是一个关乎原谅、放下，并去修复那些还能挽回的东西的时刻。"
+        },
+        "reversed": {
+          "keywords": [
+            "向前看",
+            "接受现实",
+            "原谅",
+            "找到希望"
+          ],
+          "description": "悲伤和失落的能量开始消退。你停止专注于失去的东西，转而正视那些仍然拥有的，并从中找到希望，开始真正的原谅和治愈过程。"
+        },
+        "story": "宝剑骑士为他的兄弟和爱犬哭泣，并在他们的精神支持下，为自己的失败感到歉意。",
+        "core_meaning": "专注于失去和失望，而忽视了仍然拥有的美好事物。",
+        "potential_risks": "沉浸在悲伤中无法自拔，忽略了补救的机会。",
+        "possible_real_world_mapping": "经历分手、投资失败、某个项目未达预期。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑骑士"
+          ],
+          "props": [
+            "逝去的兄弟和爱犬（精神体的象征）",
+            "未能挽回的事物"
+          ],
+          "environment": [
+            "悲伤的内心世界"
+          ],
+          "time_hint": "失败之后",
+          "direction": "关注倒下的"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "哭泣",
+            "道歉",
+            "感到孤独"
+          ],
+          "potential_branches": [
+            "原谅并放下",
+            "修复可挽回之物",
+            "向亲人求助"
+          ]
+        }
+      },
+      {
+        "id": 41,
+        "name": "圣杯六",
+        "english": "Six of Cups",
+        "upright": {
+          "keywords": [
+            "怀旧",
+            "童年回忆",
+            "纯真",
+            "重逢"
+          ],
+          "description": "圣杯六通过某些触发点带你踏上一段旅程，重温童年回忆。这可能是一个与老朋友重聚、翻看相册，并记起你曾经是谁的时刻。"
+        },
+        "reversed": {
+          "keywords": [
+            "沉浸过去",
+            "不愿长大",
+            "不现实",
+            "脱离当下"
+          ],
+          "description": "和谐的怀旧能量变得失衡。这表现为过度沉溺于过去，不愿面对现实和未来。对童年的依恋抑制了个人的成长和成熟。"
+        },
+        "story": "圣杯侍女回想起过去母亲回家的时光，她们会花上一整天享受彼此的陪伴。",
+        "core_meaning": "与过去的美好回忆、纯真和喜悦重新建立连接。",
+        "potential_risks": "用对过去的美化来逃避现在的责任。",
+        "possible_real_world_mapping": "拜访故乡、同学聚会、找到童年的玩具、与儿时好友联系。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍女",
+            "母亲（在回忆中）"
+          ],
+          "props": [
+            "回忆",
+            "触发回忆的物件（气味、地点等）"
+          ],
+          "environment": [
+            "过去的美好时光"
+          ],
+          "time_hint": "回顾过去时",
+          "direction": "向后看"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "回想",
+            "享受陪伴"
+          ],
+          "potential_branches": [
+            "与老朋友重聚",
+            "翻看相册",
+            "记起曾经的自己"
+          ]
+        }
+      },
+      {
+        "id": 42,
+        "name": "圣杯七",
+        "english": "Seven of Cups",
+        "upright": {
+          "keywords": [
+            "选择",
+            "幻想",
+            "白日梦",
+            "诱惑"
+          ],
+          "description": "圣杯七讲的是有太多的选择让人难以决定，很容易将想要和需要混淆。它提醒你要专注于一个选定的目标，而不是被其他所有事物分心。"
+        },
+        "reversed": {
+          "keywords": [
+            "看清现实",
+            "决心",
+            "做出选择",
+            "避免诱惑"
+          ],
+          "description": "幻想的能量被打破，变得清晰。你从混乱的白日梦中清醒过来，看清了现实，最终能够做出一个果断而务实的选择，不再被各种诱惑所抑制。"
+        },
+        "story": "圣杯侍女面对太多的冰淇淋口味和配料选择，被困在思考中难以做出决定。",
+        "core_meaning": "面对充满诱惑的众多选择，但其中许多可能只是不切实际的幻想。",
+        "potential_risks": "因三心二意而一事无成，或是被虚幻的承诺所欺骗。",
+        "possible_real_world_mapping": "上网浏览时被各种商品分心、面对多个职业发展方向的诱惑、构思不切实际的计划。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍女"
+          ],
+          "props": [
+            "太多的选择（口味、配料）"
+          ],
+          "environment": [
+            "一个充满选择和诱惑的地方"
+          ],
+          "time_hint": "决策困难时",
+          "direction": "发散、无目标"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "难以决定",
+            "思考各种组合"
+          ],
+          "potential_branches": [
+            "选择一件事并专注",
+            "因分心而一事无成"
+          ]
+        }
+      },
+      {
+        "id": 43,
+        "name": "圣杯八",
+        "english": "Eight of Cups",
+        "upright": {
+          "keywords": [
+            "离开",
+            "追寻",
+            "情感抽离",
+            "失望"
+          ],
+          "description": "圣杯八代表即使现有状况舒适，但你仍感到有必要离开，去追寻一些精神上或情感上更有成就感的事物。这是一个为了更好的未来而选择放手。"
+        },
+        "reversed": {
+          "keywords": [
+            "害怕离开",
+            "犹豫不决",
+            "停滞不前",
+            "回归"
+          ],
+          "description": "离开的能量受到抑制。你可能因为害怕未知或舍不得现有的一切而犹豫不决，宁愿停留在不满意的现状中。也可能指离开后又选择回归。"
+        },
+        "story": "权杖女王选择离开家人去追求她的事业，这是一个伤透了她丈夫的心的决定，也让孩子只能与单亲生活。",
+        "core_meaning": "主动地从一个虽然安稳但已无法满足自己情感或精神需求的环境中离开。",
+        "potential_risks": "离开可能会伤害到留下的人，新的追寻也未必能保证成功。",
+        "possible_real_world_mapping": "辞去安稳的工作去创业、结束一段不再有爱的关系、离开家乡去远方追梦。",
+        "symbolic_elements": {
+          "characters": [
+            "权杖女王",
+            "丈夫",
+            "孩子"
+          ],
+          "props": [
+            "事业（目标）",
+            "家庭（被离开的地方）"
+          ],
+          "environment": [
+            "家庭"
+          ],
+          "time_hint": "转折点",
+          "direction": "向前离开"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "离开家人",
+            "追求事业"
+          ],
+          "potential_branches": [
+            "找到更有成就感的事",
+            "让留下的人伤心"
+          ]
+        }
+      },
+      {
+        "id": 44,
+        "name": "圣杯九",
+        "english": "Nine of Cups",
+        "upright": {
+          "keywords": [
+            "满足",
+            "愿望成真",
+            "享受",
+            "感恩"
+          ],
+          "description": "圣杯九代表着对生活感到满足，不是物质上的拥有，而是欣赏已有的事物。此时你可能会觉得生活很完美，并在充分享受它。"
+        },
+        "reversed": {
+          "keywords": [
+            "不满",
+            "失望",
+            "贪得无厌",
+            "虚荣"
+          ],
+          "description": "满足和感恩的能量失衡。这代表着愿望未能成真带来的失望，或是物质上虽满足但内心空虚，被贪婪和虚荣所驱动。"
+        },
+        "story": "一次不幸的事故后，星币骑士放弃了篮球，但他最终接受了处境，并学会了欣赏自己的成就和一直支持他的人。",
+        "core_meaning": "身心灵愉悦，对现状感到心满意足，愿望得以实现。",
+        "potential_risks": "变得自满和停滞不前，或过度沉溺于感官享受。",
+        "possible_real_world_mapping": "享受一次奢华的假期、实现一个个人目标后感到非常快乐、和朋友们惬意聚餐。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士",
+            "支持他的人"
+          ],
+          "props": [
+            "放弃的篮球",
+            "成就"
+          ],
+          "environment": [
+            "满足的内心世界"
+          ],
+          "time_hint": "愿望实现時",
+          "direction": "向内感受满足"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "接受处境",
+            "欣赏成就",
+            "珍惜支持者"
+          ],
+          "potential_branches": [
+            "感觉生活完美",
+            "奢侈一天享受生活"
+          ]
+        }
+      },
+      {
+        "id": 45,
+        "name": "圣杯十",
+        "english": "Ten of Cups",
+        "upright": {
+          "keywords": [
+            "家庭幸福",
+            "和谐",
+            "情感圆满",
+            "长久关系"
+          ],
+          "description": "圣杯十代表着长久的联结与情感上的最终圆满。你的家庭纽带随着时间加强，每个人都被珍视并一起见证彼此的成长、成功和幸福。"
+        },
+        "reversed": {
+          "keywords": [
+            "家庭不和",
+            "关系破裂",
+            "无法实现",
+            "失衡"
+          ],
+          "description": "圆满和谐的能量被打破或难以实现。这代表着家庭内部的冲突，关系变得疏离。看似美满的生活底下，缺乏真诚的情感连接。"
+        },
+        "story": "多年后，圣杯骑士和星币侍女在朋友们面前喜结连理。他们一直保持联系并相互支持，最终走向圆满。",
+        "core_meaning": "代表家庭或社群中持久的爱、和谐与幸福，梦想中的情感生活成真。",
+        "potential_risks": "过于理想化家庭生活，忽略了现实中必然存在的小摩擦。",
+        "possible_real_world_mapping": "美满的婚姻、融洽的家庭关系、庆祝家庭成员的成就、子孙满堂。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯骑士",
+            "星币侍女",
+            "朋友们"
+          ],
+          "props": [
+            "婚礼",
+            "长久的联系"
+          ],
+          "environment": [
+            "庆祝的场合"
+          ],
+          "time_hint": "成就和圆满的时刻",
+          "direction": "共同创造和谐"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "喜结连理",
+            "保持联系",
+            "相互支持"
+          ],
+          "potential_branches": [
+            "见证彼此成长",
+            "庆祝每个人的成功"
+          ]
+        }
+      },
+      {
+        "id": 46,
+        "name": "圣杯侍者",
+        "english": "Page of Cups",
+        "upright": {
+          "keywords": [
+            "创意",
+            "直觉信息",
+            "善于表达",
+            "体贴"
+          ],
+          "description": "圣杯侍者是一位心地善良的创造力使者，她喜欢用手工礼物和好消息点亮他人。她的想象力丰富，并通过艺术创作（如陶艺）来表达她多样的自我。"
+        },
+        "reversed": {
+          "keywords": [
+            "情感不成熟",
+            "敏感多疑",
+            "逃避",
+            "创意受阻"
+          ],
+          "description": "其慷慨和创新的能量由于情感的不成熟而失衡，容易闹情绪、为琐事不快，或是因为过度敏感而压抑自己的创造力。"
+        },
+        "story": "牌面中，她正在转动驱动的轮盘，为最近认识的人制作一个新的杯子。她通过陶艺这种媒介表达她的思想与情感。",
+        "core_meaning": "倾听你的内心和直觉，以孩童般的纯真去探索自己的情感和创造性表达。",
+        "potential_risks": "容易因幼稚和追求关注而引起他人不适，或因过于情绪化而影响判断。",
+        "possible_real_world_mapping": "收到一份意外的情感信息、参加一个手工艺课程、探索自己艺术天赋的开始。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯侍者"
+          ],
+          "props": [
+            "轮盘",
+            "杯子"
+          ],
+          "environment": [
+            "陶艺工作室"
+          ],
+          "time_hint": "情感萌芽或创意表达初期",
+          "direction": "通过创造力向外表达内心"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "制作杯子",
+            "表达思想情感",
+            "倾注关爱"
+          ],
+          "potential_branches": [
+            "点亮他人的一天",
+            "展现不同的自我"
+          ]
+        }
+      },
+      {
+        "id": 47,
+        "name": "圣杯骑士",
+        "english": "Knight of Cups",
+        "upright": {
+          "keywords": [
+            "浪漫",
+            "魅力",
+            "行动中的爱",
+            "友善"
+          ],
+          "description": "圣杯骑士是如童话王子般富有魅力和诗意的人，凭借其幽默感和流畅的谈吐追寻并实践内心的情感。他是一个提供饮品与建议的追求者。"
+        },
+        "reversed": {
+          "keywords": [
+            "过度依赖",
+            "情感操纵",
+            "幻想",
+            "不现实的追求"
+          ],
+          "description": "过于理想化的追求使得骑士的行为失去分寸，他可能显得过于强势令人感到不适。他总想拯救每个人，这可能是一种情感上的依赖或不切实际的幻想所致。"
+        },
+        "story": "在这张牌面展示的情景下，圣杯骑士正为一位他想打动的游客奉上他特制的饮品。虽然是萍水相逢，在他认定她就是他要找的人。",
+        "core_meaning": "遵循内心与情感的指引，主动去追求爱与理想。",
+        "potential_risks": "可能因追求浪漫而变得不切实际，或是错误解读信号，对别人造成困扰。",
+        "possible_real_world_mapping": "一场浪漫求爱、一次艺术性的提议、开始一段新恋情或创作。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯骑士"
+          ],
+          "props": [
+            "饮料",
+            "吉他"
+          ],
+          "environment": [
+            "酒吧"
+          ],
+          "time_hint": "追求期间",
+          "direction": "向着认定的目标"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "献上饮品",
+            "演奏几曲",
+            "认定对方"
+          ],
+          "potential_branches": [
+            "打动意中人",
+            "因为强势给人添麻烦"
+          ]
+        }
+      },
+      {
+        "id": 48,
+        "name": "圣杯王后",
+        "english": "Queen of Cups",
+        "upright": {
+          "keywords": [
+            "同理心",
+            "母性",
+            "善于倾听",
+            "滋养"
+          ],
+          "description": "圣杯王后内心充满爱与母性的支持。她是一位充满爱与关怀、善于倾听的幼儿园教师，学生们因她美好的气场和温暖的笑容而乐于向她敞开心扉。"
+        },
+        "reversed": {
+          "keywords": [
+            "过度无私",
+            "情感压抑",
+            "情绪化",
+            "依赖"
+          ],
+          "description": "其滋养的能量因过于无私而失衡。她可能因过度照顾他人而忘记自己，压抑了自身的需求；或者变得情绪化、依赖性强，难以设立健康的边界。"
+        },
+        "story": "牌面中，圣杯王后坐在她的办公室里，为她的全班同学们粘贴象征鼓励的皇冠。她的房间整洁有序，摆满了各种艺术手工材料。",
+        "core_meaning": "运用深刻的共情能力和母性的爱去滋养、治愈和支持身边的人。",
+        "potential_risks": "因过度付出而被耗尽精力，或将自己的价值观强加于被照顾者身上。",
+        "possible_real_world_mapping": "一位受尊敬的老师、一名心理咨询师、一个充满爱心和耐心的家长。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯王后",
+            "学生们"
+          ],
+          "props": [
+            "皇冠",
+            "艺术手工材料"
+          ],
+          "environment": [
+            "整洁有序的幼儿园教室或办公室"
+          ],
+          "time_hint": "养育与支持的时期",
+          "direction": "向外辐射关爱"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "粘贴皇冠",
+            "策划项目",
+            "用心培育"
+          ],
+          "potential_branches": [
+            "让学生积极成长",
+            "成为有品格、有价值观的人"
+          ]
+        }
+      },
+      {
+        "id": 49,
+        "name": "圣杯国王",
+        "english": "King of Cups",
+        "upright": {
+          "keywords": [
+            "情绪稳定",
+            "可靠",
+            "敏锐",
+            "自控"
+          ],
+          "description": "圣杯国王是自己情绪的真正主人，对外始终保持着放松与平静。作为一名咨询师，他能处理他人的创伤同时有意识地不让自己被情绪淹没。"
+        },
+        "reversed": {
+          "keywords": [
+            "情感操纵",
+            "情绪化",
+            "疏离",
+            "压抑"
+          ],
+          "description": "其情绪控制力出现失衡。可能为了自身平静而变得冷漠疏离，或者隐藏在平静外表下进行情感操纵。也可能代表无法控制情绪，变得喜怒无常。"
+        },
+        "story": "在这张牌中，圣杯国王利用休息时间在整洁明亮的办公室内进行冥想和呼吸，以平静的心态等待他的下一位患者。",
+        "core_meaning": "代表通过成熟的智慧理解并掌控自身与他人的情感，从而达到的一种平静可控的状态。",
+        "potential_risks": "因为看得太透而难以建立深层的情感连接，或用冷静的外表掩盖真实的情绪。",
+        "possible_real_world_mapping": "称职的心理治疗师、成功的调解员、一个冷静且情绪稳定的成熟伴侣或领导。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯国王",
+            "患者"
+          ],
+          "props": [
+            "办公室",
+            "冥想的状态"
+          ],
+          "environment": [
+            "一个平静、可以独立思考的空间"
+          ],
+          "time_hint": "咨询期间或自我反思时",
+          "direction": "由内而外的平静"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "冥想和呼吸",
+            "处理他人创伤",
+            "屏蔽情绪"
+          ],
+          "potential_branches": [
+            "让人们感到舒适并愿意倾诉",
+            "管理自身压力得以平衡"
+          ]
+        }
+      },
+      {
+        "id": 50,
+        "name": "宝剑王牌",
+        "english": "Ace of Swords",
+        "upright": {
+          "keywords": [
+            "思维突破",
+            "清晰",
+            "真相",
+            "新想法"
+          ],
+          "description": "宝剑王牌邀请你接受一个需要逻辑和思考的挑战。挥舞这把剑，你将找到答案，凭借这股集中的能量化解任何误解。"
+        },
+        "reversed": {
+          "keywords": [
+            "思绪混乱",
+            "判断失误",
+            "创意受阻",
+            "沟通不畅"
+          ],
+          "description": "清晰的思维能力被抑制或延迟。此时做出决策可能导致错误的后果，思绪一团乱麻，难以抓住核心问题，带来了沟通上的混乱。"
+        },
+        "story": "宝剑侍女长大后不再玩玩具，被风筝吸引，并立刻就想明白了让它飞行的机械原理和技巧。",
+        "core_meaning": "一个新的想法、真理或思维模式的诞生，带来了前所未有的清晰和突破。",
+        "potential_risks": "真相可能是冷酷的，或新想法过于理性而缺乏人情味。",
+        "possible_real_world_mapping": "茅塞顿开地解决一个难题、构思出一个绝妙的计划、发现一个隐藏的真相。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍女"
+          ],
+          "props": [
+            "风筝（新的挑战）",
+            "玩具（过去）"
+          ],
+          "environment": [
+            "需要智力的地方"
+          ],
+          "time_hint": "灵光一闪的时刻",
+          "direction": "向上，刺破迷雾"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "接受新挑战",
+            "思考机械原理"
+          ],
+          "potential_branches": [
+            "找到一直在寻找的答案",
+            "化解误解"
+          ]
+        }
+      },
+      {
+        "id": 51,
+        "name": "宝剑侍者",
+        "english": "Page of Swords",
+        "upright": {
+          "keywords": [
+            "思维开放",
+            "好奇心",
+            "辩论",
+            "新想法"
+          ],
+          "description": "宝剑侍从拥有充满好奇心的头脑，她热衷于进行有意义的对话和激动人心的辩论。她不怕打破沉默，并通过开放的思考来精进自己的技巧。"
+        },
+        "reversed": {
+          "keywords": [
+            "固执己见",
+            "鲁莽",
+            "说闲话",
+            "强迫性"
+          ],
+          "description": "其开放的思维和好奇心变得失衡，转化为固执己见与好斗。高速运转的思维也容易让她变得言辞鲁莽，或者散播一些未经证实的信息。"
+        },
+        "story": "牌面中，宝剑侍从（一位花滑选手）正在脑海中回忆动作序列，她的冰刀已为此刻磨得锋利，准备完成下一个动作。",
+        "core_meaning": "代表对知识、真理和沟通的新渴望，并热衷于用清晰的逻辑去分析周围的世界。",
+        "potential_risks": "挑战权威但不分场合，只想争论而不解决问题。",
+        "possible_real_world_mapping": "加入辩论队、学习一门新知识或技能、思路清晰地写一份报告。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍者"
+          ],
+          "props": [
+            "冰刀",
+            "舞步序列（在脑中）"
+          ],
+          "environment": [
+            "冰场"
+          ],
+          "time_hint": "思考和准备期间",
+          "direction": "快速的思维转动"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "回忆动作",
+            "准备完成",
+            "精进技巧"
+          ],
+          "potential_branches": [
+            "想出新动作加入表演",
+            "打破常规思维"
+          ]
+        }
+      },
+      {
+        "id": 52,
+        "name": "宝剑二",
+        "english": "Two of Swords",
+        "upright": {
+          "keywords": [
+            "僵局",
+            "逃避抉择",
+            "平衡",
+            "冷处理"
+          ],
+          "description": "宝剑二讲的是因为纠结于后果而拒绝做出决定。你可能选择视而不见，但这只会让情况变得更糟。需要撕掉眼罩，权衡利弊。"
+        },
+        "reversed": {
+          "keywords": [
+            "被迫选择",
+            "进退两难",
+            "信息不全",
+            "混乱"
+          ],
+          "description": "僵局被打破，但做出决定的能量是失衡的。你可能是在信息不全或压力下做出选择，导致更多的困惑和混乱。逃避变得无法持续。"
+        },
+        "story": "宝剑侍女站在聚光灯下，她的父母逼她选边站，因为两个选择都有太多弊端，她难以决定。",
+        "core_meaning": "试图通过暂时保持中立或不作反应来维持和平，处于一个艰难的、需要平衡的僵局中。",
+        "potential_risks": "无限期地拖延重要决定，导致问题恶化。",
+        "possible_real_world_mapping": "在两个都很差的选择中犹豫不决、在伴侣和家庭的争执中保持中立、不敢正视问题。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑侍女",
+            "父母（对立双方）"
+          ],
+          "props": [
+            "聚光灯（压力来源）"
+          ],
+          "environment": [
+            "决策交锋的现场"
+          ],
+          "time_hint": "僵持不下时",
+          "direction": "相互制衡"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "被迫选边",
+            "拒绝做决定",
+            "视而不见"
+          ],
+          "potential_branches": [
+            "拖延导致情况恶化",
+            "发现隐藏的双赢局面"
+          ]
+        }
+      },
+      {
+        "id": 53,
+        "name": "宝剑三",
+        "english": "Three of Swords",
+        "upright": {
+          "keywords": [
+            "心碎",
+            "悲伤",
+            "痛苦的真相",
+            "失落"
+          ],
+          "description": "宝剑三是痛苦和苦难的提醒，源于被背叛或被伤人的话语。经历心碎是治愈的必要过程，拔出剑能让情绪慢慢沉淀并最终痊愈。"
+        },
+        "reversed": {
+          "keywords": [
+            "疗愈",
+            "原谅",
+            "释放痛苦",
+            "否认"
+          ],
+          "description": "心碎的痛苦开始减退，疗愈的进程开始。你正在慢慢释放悲伤和怨恨，并趋向于原谅。但有时也代表拒绝承认痛苦，刻意压抑它。"
+        },
+        "story": "因心碎而痛苦难忍的圣杯骑士写了一首歌，但这首歌却让他重新回忆起痛苦和苦涩。",
+        "core_meaning": "必然经历的，由真相带来的心碎、分离和悲伤，是智识上的清晰造成的痛苦。",
+        "potential_risks": "沉浸在悲痛中，任由痛苦的思绪反复折磨自己。",
+        "possible_real_world_mapping": "分手、被朋友背叛、被告知识产权地揭露出残酷的事实、得知坏消息。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯骑士"
+          ],
+          "props": [
+            "歌曲",
+            "歌词",
+            "苦涩的话语"
+          ],
+          "environment": [
+            "内心痛苦的空间"
+          ],
+          "time_hint": "悲痛发生时",
+          "direction": "被刺穿"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "创作歌曲",
+            "回忆痛苦"
+          ],
+          "potential_branches": [
+            "经历痛苦以期治愈",
+            "选择不听以摆脱伤害"
+          ]
+        }
+      },
+      {
+        "id": 54,
+        "name": "宝剑四",
+        "english": "Four of Swords",
+        "upright": {
+          "keywords": [
+            "休息",
+            "疗养",
+            "沉思",
+            "休战"
+          ],
+          "description": "当念头过载、心力交瘁时，宝剑四提醒你，该停下来休息了。避免做出重大决定，用睡眠和静休来理清思绪，为下一步行动做准备。"
+        },
+        "reversed": {
+          "keywords": [
+            "倦怠",
+            "崩溃",
+            "拒绝休息",
+            "被迫行动"
+          ],
+          "description": "休息的需要被抑制或忽视，导致筋疲力尽、濒临崩溃。你也可能被外部事件强迫行动，在还没准备好的情况下就被中断了疗养。"
+        },
+        "story": "心碎的圣杯骑士踏上旅途，在火车上打瞌睡时错过了站，这让他意识到有许多事需要停下来重新思考。",
+        "core_meaning": "在一场冲突、挑战或 mental overload 之后，需要停下来进行必要的休息、恢复和思考。",
+        "potential_risks": "以休息的名义逃避问题，或恢复时间过长。",
+        "possible_real_world_mapping": "生病后休养、请假、冥想静修、需要时间来思考一个复杂问题。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯骑士"
+          ],
+          "props": [
+            "火车",
+            "心碎（背景）"
+          ],
+          "environment": [
+            "行进中的休息场所"
+          ],
+          "time_hint": "挑战之后",
+          "direction": "静止"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "打瞌睡",
+            "坐过站"
+          ],
+          "potential_branches": [
+            "理清思绪",
+            "确定下一步计划",
+            "避免做的重大决定"
+          ]
+        }
+      },
+      {
+        "id": 55,
+        "name": "宝剑骑士",
+        "english": "Knight of Swords",
+        "upright": {
+          "keywords": [
+            "机智敏锐",
+            "大胆",
+            "直接",
+            "思维迅速"
+          ],
+          "description": "宝剑骑士思绪飞转，喜爱以极快速度得出结论并付诸行动。他大胆且势不可挡，一旦形成想法便会固执地坚持并横冲直撞。"
+        },
+        "reversed": {
+          "keywords": [
+            "傲慢",
+            "粗鲁",
+            "鲁莽行动",
+            "结论草率"
+          ],
+          "description": "他思维迅速的优势变得失衡，转化为不计后果的鲁莽行动和草率的结论。直接变成了粗鲁和傲慢，为了追求速度而牺牲了准确性和同理心。"
+        },
+        "story": "他像个无畏的冒险家一样踩着滑板腾空而起。他看起来毫不担心，但前方的台阶比看上去要危险得多。",
+        "core_meaning": "毫不畏惧地将一个想法以最快的速度付诸行动。",
+        "potential_risks": "因不经全面思考就行动而失败，或因言辞强势伤害他人。",
+        "possible_real_world_mapping": "启动一个紧急项目、在危机中快速决策、为了目标横冲直撞。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑骑士"
+          ],
+          "props": [
+            "滑板",
+            "陡峭的台阶",
+            "画着骷髅头的画板底"
+          ],
+          "environment": [
+            "充满挑战的城市街道"
+          ],
+          "time_hint": "执行的瞬间",
+          "direction": "不顾一切地向前冲"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "踩滑板腾空",
+            "无视危险"
+          ],
+          "potential_branches": [
+            "寻求一场争斗或事故",
+            "因为固执己见而无人能挡"
+          ]
+        }
+      },
+      {
+        "id": 56,
+        "name": "宝剑五",
+        "english": "Five of Swords",
+        "upright": {
+          "keywords": [
+            "冲突",
+            "失败",
+            "好斗的胜利",
+            "不和"
+          ],
+          "description": "宝剑五描述的是一场没有真正赢家的冲突。你可能赢了争论，但牺牲了人际关系。这种强硬的胜利最终会让所有人都不满意。"
+        },
+        "reversed": {
+          "keywords": [
+            "和解",
+            "结束冲突",
+            "妥协",
+            "屈服"
+          ],
+          "description": "冲突的能量得到缓和。这可能是一次和解、你主动结束了争斗，或是有一方做出了妥协。虽可能是无奈的选择，但最终避免了更大的伤害。"
+        },
+        "story": "圣杯骑士坚持只玩自己能赢的游戏，厌倦了一直输的星币骑士最终选择离开。",
+        "core_meaning": "追求不惜一切代价的胜利，最终导致冲突、 alienation 和某种形式的失败。",
+        "potential_risks": "为了赢而破坏了重要的关系，制造了敌人。",
+        "possible_real_world_mapping": "在争吵中一定要赢、工作中的惡性竞争、为了个人利益牺牲团队。",
+        "symbolic_elements": {
+          "characters": [
+            "圣杯骑士",
+            "星币骑士"
+          ],
+          "props": [
+            "游戏",
+            "抓娃娃机"
+          ],
+          "environment": [
+            "游戏场所"
+          ],
+          "time_hint": "冲突中",
+          "direction": "对立"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "坚持要赢",
+            "厌倦而离开"
+          ],
+          "potential_branches": [
+            "赢了游戏但结下梁子",
+            "跟重要的人断绝关系"
+          ]
+        }
+      },
+      {
+        "id": 57,
+        "name": "宝剑六",
+        "english": "Six of Swords",
+        "upright": {
+          "keywords": [
+            "过渡",
+            "离去",
+            "疗伤之旅",
+            "摆脱困境"
+          ],
+          "description": "宝剑六是一次必要且虽然痛苦的过渡，它让你脱离旧的有害处境。虽然对未来感到疑虑，但走向未知也意味着拥有更幸福生活的可能性。"
+        },
+        "reversed": {
+          "keywords": [
+            "受困",
+            "停滞",
+            "推迟旅行",
+            "旧病复发"
+          ],
+          "description": "必要的过渡和离去受阻。你可能被困在有害的环境里无法脱身，想要做的改变被延迟，或者过去的问题重新浮现，阻碍你的前行。"
+        },
+        "story": "由于沟通不畅，一对母女的关系（怨恨）变得冰冷，她们正一起坐船前往一个更温暖的地方。",
+        "core_meaning": "从一个困难或动荡的时期，平稳地过渡到一个较为平静和有希望的未来。",
+        "potential_risks": "带着过去的包袱上路，没能真正放下。",
+        "possible_real_world_mapping": "分手后搬家、离开一个有毒的工作环境、戒断后的康复期。",
+        "symbolic_elements": {
+          "characters": [
+            "母女"
+          ],
+          "props": [
+            "冰柱（怨恨的象征）",
+            "船（过渡的工具）"
+          ],
+          "environment": [
+            "冬季到一个更温暖的地方"
+          ],
+          "time_hint": "过渡期",
+          "direction": "向前平移"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "一同旅行",
+            "渐行渐远"
+          ],
+          "potential_branches": [
+            "拥有更幸福生活的可能性",
+            "需要放下过去的包袱"
+          ]
+        }
+      },
+      {
+        "id": 58,
+        "name": "宝剑七",
+        "english": "Seven of Swords",
+        "upright": {
+          "keywords": [
+            "欺骗",
+            "偷窃",
+            "策略",
+            "不诚实"
+          ],
+          "description": "宝剑七的能量涉及欺骗或恶意的意图，某人正在试图不被人察觉地践踏他人的信任。这张牌警告你要多加小心，并留意那些也在暗中观察你的人。"
+        },
+        "reversed": {
+          "keywords": [
+            "坦白",
+            "计划暴露",
+            "良心发现",
+            "回归诚实"
+          ],
+          "description": "欺骗的行为被抑制或已经曝光。某人将可能会坦白自己的不诚实行为，或是阴谋被揭穿。这也代表你决定放弃欺骗，重回诚实的道路。"
+        },
+        "story": "一个戴着兜帽的男人企图从宝剑女王的办公室偷走贵重物品，但被带铁条的窗户和一双眼睛阻止了。",
+        "core_meaning": "运用欺骗、策略来达成目的，通常涉及盗窃、不诚实或逃避责任。",
+        "potential_risks": "被发现后名誉扫地，或因不诚实而失去他人的信任。",
+        "possible_real_world_mapping": "在考试中作弊、剽窃他人的作品、偷偷地做某件不被允许的事、逃避责任。",
+        "symbolic_elements": {
+          "characters": [
+            "戴兜帽的男人",
+            "宝剑女王（物主）"
+          ],
+          "props": [
+            "贵重物品",
+            "带铁条的窗户",
+            "一双眼睛"
+          ],
+          "environment": [
+            "办公室"
+          ],
+          "time_hint": "暗中图谋时",
+          "direction": "鬼祟地前进"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "偷看",
+            "计划偷窃",
+            "被阻止"
+          ],
+          "potential_branches": [
+            "践踏他人信任",
+            "被察觉并阻止"
+          ]
+        }
+      },
+      {
+        "id": 59,
+        "name": "宝剑八",
+        "english": "Eight of Swords",
+        "upright": {
+          "keywords": [
+            "受困",
+            "自我限制",
+            "无助",
+            "囚徒"
+          ],
+          "description": "星币女王成了自己思想的囚徒，酗酒助长了这种想法，让她无法看到出路。宝剑八的能量让人感到被身体禁锢，所有选择都是死胡同。"
+        },
+        "reversed": {
+          "keywords": [
+            "解脱",
+            "释放",
+            "找到出路",
+            "获得自由"
+          ],
+          "description": "自我设限的幻觉被打破，受困的能量开始释放。你摘下了眼罩，开始意识到所谓的限制只是自己的想法造成的，并找到了解决问题或摆脱困境的方法。"
+        },
+        "story": "星币女王因不安全感而成为自己思想的囚徒，酗酒加剧了这种感觉，让她蒙蔽双眼，看不到出路。",
+        "core_meaning": "因自身的信念、恐惧或视角，而感到受限制和无助。这种束缚多半是自我造成的。",
+        "potential_risks": "因受害者心态而放弃为自己负责，看不到任何希望。",
+        "possible_real_world_mapping": "害怕离开一段虐待关系、感到自己的工作毫无出路、在一段困境里自怨自艾。",
+        "symbolic_elements": {
+          "characters": [
+            "星币女王"
+          ],
+          "props": [
+            "监狱（喻指思想）",
+            "酗酒",
+            "不安全感（眼罩）"
+          ],
+          "environment": [
+            "内心的牢笼"
+          ],
+          "time_hint": "受困期间",
+          "direction": "内部束缚"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "被自己思想禁锢",
+            "酗酒"
+          ],
+          "potential_branches": [
+            "这座监狱只是幻觉",
+            "摘下眼罩看清生活"
+          ]
+        }
+      },
+      {
+        "id": 60,
+        "name": "宝剑九",
+        "english": "Nine of Swords",
+        "upright": {
+          "keywords": [
+            "焦虑",
+            "恐惧",
+            "噩梦",
+            "绝望"
+          ],
+          "description": "在宝剑八的禁锢感后，焦虑演变成恐慌。宝剑九的能量会夺走所有快乐，但关在室内无济于事，到外面去或许能有所帮助。"
+        },
+        "reversed": {
+          "keywords": [
+            "释放恐惧",
+            "恢复",
+            "找到帮助",
+            "面对现实"
+          ],
+          "description": "极度焦虑的能量正在减轻。你可能已经找到应对恐惧的方法，或是在他人的帮助下开始恢复。最黑暗的时刻正在过去，负面思想对你的抑制在减弱。"
+        },
+        "story": "星币女王一直在逃避自己的情绪，直到情绪悄悄来袭，演变成恐慌发作，她措手不及，只能哭到睡着。",
+        "core_meaning": "因为过度的思虑、内疚或恐惧而产生的极致的精神痛苦、失眠和噩梦。",
+        "potential_risks": "因恐惧而被彻底压垮，导致精神崩溃或严重的抑郁。",
+        "possible_real_world_mapping": "失眠、夜里因担惊受怕而惊醒、突发的恐慌症、极度的内疚和自责。",
+        "symbolic_elements": {
+          "characters": [
+            "星币女王"
+          ],
+          "props": [
+            "泪水",
+            "情绪"
+          ],
+          "environment": [
+            "独自承受情绪的卧室"
+          ],
+          "time_hint": "深夜，午夜梦回时",
+          "direction": "向内的无限循环折磨"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "逃避情绪",
+            "情绪悄然袭来",
+            "哭泣"
+          ],
+          "potential_branches": [
+            "外出呼吸新鲜空气",
+            "让阳光帮助自己"
+          ]
+        }
+      },
+      {
+        "id": 61,
+        "name": "宝剑十",
+        "english": "Ten of Swords",
+        "upright": {
+          "keywords": [
+            "无可挽回的结局",
+            "谷底",
+            "背叛",
+            "崩溃"
+          ],
+          "description": "在你以为事情会好转时，最后一击彻底击垮了你。宝剑十是一个屈服的点，从内部被击垮。但好消息是，触底反弹，情况不会更糟了。"
+        },
+        "reversed": {
+          "keywords": [
+            "幸存",
+            "复苏",
+            "疗愈的过程",
+            "解脱"
+          ],
+          "description": "毁灭性的打击已经过去，尽管伤痕累累，但幸存了下来。虽然痛苦的回避无法在顷刻间消失，但最糟糕的阶段已经结束，你正从打击中缓慢地复苏和解脱。"
+        },
+        "story": "由于无法承受持续的痛苦和创伤言语攻击，星币侍女一动不动地躺着，她的尊严和自尊被彻底剥夺。",
+        "core_meaning": "达到了痛苦和毁灭的极限，是一个彻底且无可挽回的终结，同时也预示着改变的必然性。",
+        "potential_risks": "被打击得一蹶不振，失去所有希望。",
+        "possible_real_world_mapping": "被恶意造谣重伤、一段关系的惨烈收场、彻底的失败、项目被终止。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍女"
+          ],
+          "props": [
+            "网络信息（剥夺尊严的武器）"
+          ],
+          "environment": [
+            "遭受攻击的场所"
+          ],
+          "time_hint": "终结的时刻",
+          "direction": "彻底倒下"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "一动不动地躺着",
+            "承受攻击"
+          ],
+          "potential_branches": [
+            "开始对痛苦麻木",
+            "对痛苦产生免疫力"
+          ]
+        }
+      },
+      {
+        "id": 62,
+        "name": "宝剑王后",
+        "english": "Queen of Swords",
+        "upright": {
+          "keywords": [
+            "诚实",
+            "富有智慧",
+            "独立",
+            "客观判断"
+          ],
+          "description": "宝剑王后拥有丰富的词汇，从不畏惧使用，且直言不讳。她凭借天生的直觉、事实和逻辑，成为真相与正义的倡导者，在法庭上设定高标准。"
+        },
+        "reversed": {
+          "keywords": [
+            "爱批评",
+            "标准过高",
+            "冷酷",
+            "刻薄"
+          ],
+          "description": "她的客观与智慧变得失衡，转化为对他人的冷酷和过分挑剔。清晰的界限可能变为情感上的隔离，使其言辞变得尖酸刻薄。"
+        },
+        "story": "牌面中，宝剑王后已结束倾听（即收集事实），现在轮到她发言反驳。从她自信坚定的姿态和表情来看，她已有全盘计划。",
+        "core_meaning": "凭借清晰的思维、智慧和公正，来看透事物本质，独立地做出判断并寻求真相。",
+        "potential_risks": "可能变得冷酷无情，只讲究逻辑而忽略人的感受。",
+        "possible_real_world_mapping": "经验丰富的法官或律师、受人尊敬的教授、需要做出客观公正决定的独立审查员。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑王后"
+          ],
+          "props": [
+            "西装外套",
+            "书籍",
+            "证据（抽象）"
+          ],
+          "environment": [
+            "法庭"
+          ],
+          "time_hint": "发表意见或做出裁决时",
+          "direction": "直指核心"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "专注倾听",
+            "发表意见",
+            "识破谎言"
+          ],
+          "potential_branches": [
+            "为客户倾尽全力地辩护",
+            "就社会紧迫问题发声"
+          ]
+        }
+      },
+      {
+        "id": 63,
+        "name": "宝剑国王",
+        "english": "King of Swords",
+        "upright": {
+          "keywords": [
+            "才华横溢",
+            "富有创新精神",
+            "权威",
+            "逻辑专家"
+          ],
+          "description": "宝剑国王是一名擅长解谜的警队队长，做事循规蹈矩。他热爱用逻辑战斗，是一个凭借知识和经验登上顶峰的权威人物，下属都听从他的建议。"
+        },
+        "reversed": {
+          "keywords": [
+            "冷漠",
+            "严肃",
+            "独裁的",
+            "沟通不畅"
+          ],
+          "description": "他的权威和才智失去平衡变成了冷漠和专断。过于信赖自己的逻辑而刚愎自用，难以听进不同的意见，与人沟通可能缺乏人情味甚至有些强硬。"
+        },
+        "story": "在这张牌中，宝剑国王正凝神思考，试图解开这个令人困惑的谜团。他的办公室里展示着他的案件板和一把象征权威的传家宝剑。",
+        "core_meaning": "运用顶级的智力、逻辑和权威来设立规则、执行法律和寻求真理。",
+        "potential_risks": "变得过于专制，压制创造性思维，或不通人情世故。",
+        "possible_real_world_mapping": "高级别的军事指挥官、警官、外科医生或CEO。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑国王"
+          ],
+          "props": [
+            "案件板",
+            "传家宝剑",
+            "办公室"
+          ],
+          "environment": [
+            "需要逻辑思考和决策的权威场所"
+          ],
+          "time_hint": "解谜或制定战略时",
+          "direction": "用智慧建立秩序"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "凝神思考",
+            "解开谜团",
+            "智胜罪犯"
+          ],
+          "potential_branches": [
+            "维持民众的信任和尊重",
+            "保护社会重任"
+          ]
+        }
+      },
+      {
+        "id": 64,
+        "name": "星币王牌",
+        "english": "Ace of Pentacles",
+        "upright": {
+          "keywords": [
+            "机会",
+            "富足",
+            "新项目",
+            "具象化"
+          ],
+          "description": "星币王牌是一个信号，表明你的项目将获得资金，或有一个切实的机会出现。你现在有了种子资金，可以将想法变成现实。"
+        },
+        "reversed": {
+          "keywords": [
+            "机会错失",
+            "计划不周",
+            "财务风险",
+            "投资失败"
+          ],
+          "description": "一个宝贵的机会由于计划不周或犹豫不决而被错失。新的投资或项目未能获得资金，财务上的起步能量被抑制或延迟。"
+        },
+        "story": "星币骑士通过抓娃娃机抓住一个机会，从而奠定了他的事业基础。只要他为了赢而玩，就不用担心财务。",
+        "core_meaning": "一个将想法转化为现实世界的切实机会，尤其在财务、事业或物质层面。",
+        "potential_risks": "不善理财，将到手的初始资金或机会挥霍一空。",
+        "possible_real_world_mapping": "获得一笔投资、拿到项目启动资金、中奖、得到一份薪资优渥的工作offer。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士"
+          ],
+          "props": [
+            "抓娃娃机（机会的象征）",
+            "事业",
+            "种子资金"
+          ],
+          "environment": [
+            "提供物质机会的场所"
+          ],
+          "time_hint": "创始阶段",
+          "direction": "向下扎根"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "抓住物质机会",
+            "为赢而玩"
+          ],
+          "potential_branches": [
+            "项目获得资金",
+            "明智消费使财富增倍"
+          ]
+        }
+      },
+      {
+        "id": 65,
+        "name": "星币二",
+        "english": "Two of Pentacles",
+        "upright": {
+          "keywords": [
+            "平衡",
+            "多任务",
+            "应对变化",
+            "忙碌"
+          ],
+          "description": "为了维持财务状况，你可能需要同时处理多项任务。星币二代表着忙碌和有压力的能量，需要灵活地平衡各方面事务并了解自己的极限。"
+        },
+        "reversed": {
+          "keywords": [
+            "失衡",
+            "不堪重负",
+            "事情搞砸",
+            "财务混乱"
+          ],
+          "description": "平衡被打破。同时处理多项任务导致心力交瘁、顾此失彼，最终可能把事情搞砸。财务管理出现混乱，难以维持收支平衡。"
+        },
+        "story": "人手不足的星币国王同时打两份工，结果在费力处理任务时，两件事都没做好，还把主菜烧焦了。",
+        "core_meaning": "在不断变化的环境中，努力地去平衡生活的多个方面（尤其是财务和工作）。",
+        "potential_risks": "因一心多用而导致两头落空，决策失误，效率低下。",
+        "possible_real_world_mapping": "同时打两份工、平衡工作与家庭生活、管理多个项目。",
+        "symbolic_elements": {
+          "characters": [
+            "星币国王"
+          ],
+          "props": [
+            "两份工作",
+            "烧焦的主菜（失败的结果）"
+          ],
+          "environment": [
+            "忙碌的工作现场"
+          ],
+          "time_hint": "需要灵活应对的忙碌期",
+          "direction": "不断地、循环地调整"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "打两份工",
+            "分心处理任务",
+            "搞砸事情"
+          ],
+          "potential_branches": [
+            "在承诺前三思",
+            "了解自己的极限以维持平衡"
+          ]
+        }
+      },
+      {
+        "id": 66,
+        "name": "星币三",
+        "english": "Three of Pentacles",
+        "upright": {
+          "keywords": [
+            "团队合作",
+            "协作",
+            "专业技能",
+            "高质量"
+          ],
+          "description": "星币三强调，成功的唯一途径是通过团队合作。你的努力只有在与具备不同专业技能的人协作时才能闪耀，创造出高质量的成果。"
+        },
+        "reversed": {
+          "keywords": [
+            "缺乏合作",
+            "各自为战",
+            "技能不足",
+            "质量低下"
+          ],
+          "description": "团队协作的能量被抑制或失衡。团队成员缺乏合作精神，各自为战，或者是项目中缺少关键技能的专家，导致最终成果质量低下。"
+        },
+        "story": "星币骑士深情的嗓音和圣杯骑士无可挑剔的节奏感形成完美合作，一次协作让两个朋友走到一起，一同创作必将登上排行榜的歌曲。",
+        "core_meaning": "通过与他人合作，汇集不同的专业技能，从而完成高质量的工作并获得认可。",
+        "potential_risks": "过于依赖他人，或者在团队中无法发挥自己的价值。",
+        "possible_real_world_mapping": "在一个工作项目中与同事合作、聘请专家来完成一个任务、建筑施工团队的协作。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士",
+            "圣杯骑士"
+          ],
+          "props": [
+            "深情的嗓音",
+            "无可挑剔的节奏感",
+            "歌曲"
+          ],
+          "environment": [
+            "创作或工作的场所"
+          ],
+          "time_hint": "协作期",
+          "direction": "共同建设"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "合作",
+            "对彼此才华感到惊讶"
+          ],
+          "potential_branches": [
+            "通过团队合作获得成功",
+            "找到合适的专家完成工作"
+          ]
+        }
+      },
+      {
+        "id": 67,
+        "name": "星币四",
+        "english": "Four of Pentacles",
+        "upright": {
+          "keywords": [
+            "储蓄",
+            "保守",
+            "控制",
+            "财务安全"
+          ],
+          "description": "宝剑骑士为了买车的目标而省吃俭用，不与朋友挥霍。这张牌暗示在此期间应控制财务，做好预算，可能需要削减开支以保证安全。"
+        },
+        "reversed": {
+          "keywords": [
+            "吝啬",
+            "过度消费",
+            "财务失控",
+            "恐惧失去"
+          ],
+          "description": "对财务的控制能量失衡。这可以表现为走向两个极端：要么是过度的吝啬，因害怕失去而死守资产不敢做任何投资；要么是失控地挥霍浪费金钱。"
+        },
+        "story": "宝剑骑士一直在攒生日钱和小费，为了买一辆属于自己的车，他不和朋友们一起挥霍，并夜以继日地工作。",
+        "core_meaning": "为了安全感和未来的目标而保留、控制和管理自己的资源（尤其是金钱）。",
+        "potential_risks": "变得过于小气和守旧，因害怕风险而错失成长的机会。",
+        "possible_real_world_mapping": "为买房或买车存钱、保守的投资策略、严格执行开支预算。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑骑士"
+          ],
+          "props": [
+            "生日钱",
+            "餐厅小费",
+            "未来的车"
+          ],
+          "environment": [
+            "餐厅"
+          ],
+          "time_hint": "储蓄期",
+          "direction": "向内紧握"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "攒钱",
+            "不挥霍",
+            "工作"
+          ],
+          "potential_branches": [
+            "为财务做预算",
+            "削减开支",
+            "好好算账"
+          ]
+        }
+      },
+      {
+        "id": 68,
+        "name": "星币五",
+        "english": "Five of Pentacles",
+        "upright": {
+          "keywords": [
+            "贫困",
+            "困境",
+            "被拒绝",
+            "财务损失"
+          ],
+          "description": "星币五可能预示着一次个人危机，财务受到重创。被剥夺了资源后，寻求帮助时可能会被拒绝，必须靠创造力和毅力才能摆脱困境。"
+        },
+        "reversed": {
+          "keywords": [
+            "危机结束",
+            "恢复",
+            "找到援助",
+            "走出困境"
+          ],
+          "description": "困难时期正迎来转机，财务或物质上的匮乏状态得到缓解。你可能终于找到了援助之手，或依靠自己的努力走出了困境，财务开始恢复。"
+        },
+        "story": "星币女王在奢侈生活结束后，被剥夺了现金和信用卡，无家可归，必须面对作为独立成年人的残酷现实。",
+        "core_meaning": "代表一段艰难时期，感到被孤立、物质匮乏、财务困顿。",
+        "potential_risks": "感到绝望和无助，彻底失去信心。",
+        "possible_real_world_mapping": "失业、投资大幅亏损、无家可归、感到被社群排斥在外。",
+        "symbolic_elements": {
+          "characters": [
+            "星币女王"
+          ],
+          "props": [
+            "被剥夺的现金和信用卡"
+          ],
+          "environment": [
+            "寒冷的外部世界，缺乏庇护所"
+          ],
+          "time_hint": "艰难时期",
+          "direction": "被排斥在外"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "面对现实",
+            "寻找住处"
+          ],
+          "potential_branches": [
+            "被大多数人拒绝",
+            "依靠创造力和毅力摆脱困境"
+          ]
+        }
+      },
+      {
+        "id": 69,
+        "name": "星币六",
+        "english": "Six of Pentacles",
+        "upright": {
+          "keywords": [
+            "慷慨",
+            "慈善",
+            "给予与接受",
+            "分享财富"
+          ],
+          "description": "星币六代表了财富的流动。在星币五的无望之后，有人会向你伸出援手。这份祝福可能来自朋友、银行等。如果你正处于优势地位，也可能是你向他人提供帮助。"
+        },
+        "reversed": {
+          "keywords": [
+            "债务",
+            "不平等的给予",
+            "吝啬",
+            "别有用心的援助"
+          ],
+          "description": "财富与善意的能量失衡。给予可能是别有用心、附带苛刻条件，或者是单方面不平等的付出。也代表深陷债务，或者该来的援助被延迟。"
+        },
+        "story": "以投资有潜力的人而闻名的星币国王，相信某二人组值得他投入时间和金钱。",
+        "core_meaning": "财务上的公平交换、慷慨的给予或获得重要的援助。",
+        "potential_risks": "给予和接受的关系不平衡，可能产生优越感或依赖感。",
+        "possible_real_world_mapping": "获得奖学金或贷款、做慈善捐款、在财务上帮助朋友或被帮助。",
+        "symbolic_elements": {
+          "characters": [
+            "星币国王（付出方）",
+            "二人组（接受方）"
+          ],
+          "props": [
+            "时间和金钱"
+          ],
+          "environment": [
+            "投资/慈善的场合"
+          ],
+          "time_hint": "交换/援助期",
+          "direction": "向下（给予）与向上（接受）"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "投资他人",
+            "提供援助",
+            "请求帮助"
+          ],
+          "potential_branches": [
+            "接受一份祝福",
+            "帮助他人"
+          ]
+        }
+      },
+      {
+        "id": 70,
+        "name": "星币七",
+        "english": "Seven of Pentacles",
+        "upright": {
+          "keywords": [
+            "评估",
+            "耐心",
+            "收获",
+            "回顾"
+          ],
+          "description": "辛勤付出后，终于到了可以欣赏并回顾成果的时刻。如果结果令人失望，这也是一个评估后尝试另一条路的契机。"
+        },
+        "reversed": {
+          "keywords": [
+            "缺乏成果",
+            "不耐烦",
+            "投机失败",
+            "分心"
+          ],
+          "description": "长期的努力没有带来预期的回报，收获被延迟或大大减产。由于不耐烦或分心，你可能过早地放弃了努力，导致看不到最终结果。"
+        },
+        "story": "报效国家多年的宝剑国王，累积了无数勋章。他回顾自己的成就，并将其归功于家人。",
+        "core_meaning": "停下来评估长期投资或努力的成果，并决定下一步的行动。",
+        "potential_risks": "努力付出后成果不佳，或者对漫长的等待过程感到不耐烦。",
+        "possible_real_world_mapping": "评估一个长期项目的进展、检视投资组合的回报率、完成学业后的反思。",
+        "symbolic_elements": {
+          "characters": [
+            "宝剑国王"
+          ],
+          "props": [
+            "无数勋章（成就）",
+            "多年的服役（努力）"
+          ],
+          "environment": [
+            "回顾与静思的地方"
+          ],
+          "time_hint": "等待回报期",
+          "direction": "停下回顾"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "回顾成就",
+            "感谢家人"
+          ],
+          "potential_branches": [
+            "欣赏辛勤付出",
+            "如果失望则尝试新路"
+          ]
+        }
+      },
+      {
+        "id": 71,
+        "name": "星币八",
+        "english": "Eight of Pentacles",
+        "upright": {
+          "keywords": [
+            "精通",
+            "勤奋",
+            "技能提升",
+            "专注"
+          ],
+          "description": "当你找到充满热情的事业或爱好时，星币八鼓励你勤奋地学习，将自己的技艺打磨至完美，不断提升技能，才能变得更有价值并超越期望。"
+        },
+        "reversed": {
+          "keywords": [
+            "华而不实",
+            "缺乏奉献",
+            "工作马虎",
+            "半途而废"
+          ],
+          "description": "勤奋与专注的能量失衡。代表着工作马虎、只求速成而不注重细节和质量。在提升技能的道路上缺乏耐心和奉献精神，最终半途而废。"
+        },
+        "story": "星币骑士知道自己的篮球技能出色，但为了精进，他必须通过锻炼来提高耐力和肌肉。",
+        "core_meaning": "专注于学习和掌握一门手艺或技能，全心投入地通过勤奋工作来达到精通。",
+        "potential_risks": "过于专注细节而忽略大局，或者变成一个工作狂。",
+        "possible_real_world_mapping": "上职业培训课程、学习一门新乐器、作为学徒刻苦工作、研发一个新产品。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士"
+          ],
+          "props": [
+            "篮球技能（爱好）",
+            "肌肉（通过努力获得的）"
+          ],
+          "environment": [
+            "训练场"
+          ],
+          "time_hint": "学徒/练习期",
+          "direction": "专注深入"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "提高耐力",
+            "锻炼肌肉"
+          ],
+          "potential_branches": [
+            "打磨技艺至完美",
+            "变得更有价值"
+          ]
+        }
+      },
+      {
+        "id": 72,
+        "name": "星币九",
+        "english": "Nine of Pentacles",
+        "upright": {
+          "keywords": [
+            "独立",
+            "富足",
+            "财务自由",
+            "自我享受"
+          ],
+          "description": "星币九关乎你在事业和生活方式上的舒适与独立。你不再为财务担忧，可以开始享受自己的劳动成果，好好款待自己。"
+        },
+        "reversed": {
+          "keywords": [
+            "过度挥霍",
+            "依赖他人",
+            "财务困境",
+            "虚荣"
+          ],
+          "description": "财务独立的能量失衡。这可以指财务上依然依赖他人而并非真正的独立，或者是为了维持一个奢华的表象而过度挥霍，导致潜在的财务困境，好景不长。"
+        },
+        "story": "星币女王凝视着镜中的倒影，欣赏自己的风格和独立。她毫不羞于为自己挥霍，好好款待自己。",
+        "core_meaning": "依靠自己的努力实现财务独立，并自由地享受劳动成果和高质量的生活。",
+        "potential_risks": "可能变得孤芳自赏，与人疏远。",
+        "possible_real_world_mapping": "经济独立后独自生活、享受一次奢华spa、买一件昂贵的礼物奖励自己。",
+        "symbolic_elements": {
+          "characters": [
+            "星币女王"
+          ],
+          "props": [
+            "镜中倒影（自我欣赏）",
+            "新衣",
+            "水疗中心"
+          ],
+          "environment": [
+            "舒适的个人空间"
+          ],
+          "time_hint": "收获、独立的时期",
+          "direction": "向内（享受个人成果）"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "欣赏自己",
+            "为自己挥霍"
+          ],
+          "potential_branches": [
+            "添置新衣",
+            "留出个人时间"
+          ]
+        }
+      },
+      {
+        "id": 73,
+        "name": "星币十",
+        "english": "Ten of Pentacles",
+        "upright": {
+          "keywords": [
+            "财富",
+            "传承",
+            "家庭",
+            "稳定"
+          ],
+          "description": "经过不懈努力，你的事业和财务已经达到一个高点，可以供养家庭并与朋友分享。这张牌是在所有投资、辛勤工作和耐心之后，家族财富稳定和得以传承的体现。"
+        },
+        "reversed": {
+          "keywords": [
+            "财富损失",
+            "家庭纠纷",
+            "不稳定",
+            "遗产问题"
+          ],
+          "description": "家族财富和稳定的能量被打破或延迟。可能会出现财务损失、遗产纠纷或因为金钱问题导致家庭不和。表面的富裕之下可能隐藏着巨大的财务风险。"
+        },
+        "story": "骑士和侍从们不懈地工作，现在他们作为各行各业的成功人士，可以与视为家人的伙伴一起庆祝节日。",
+        "core_meaning": "长期的财务成功和物质富足，不仅为你个人带来稳定，更能传承并惠及整个家庭或社群。",
+        "potential_risks": "家族内部可能为金钱产生纠纷，或将财富看得比家庭关系更重要。",
+        "possible_real_world_mapping": "建立家族企业、购买可传承的房产、为后代留下遗产、家庭庆祝重大财务成就。",
+        "symbolic_elements": {
+          "characters": [
+            "骑士们",
+            "侍从们",
+            "家人"
+          ],
+          "props": [
+            "事业成功",
+            "盛宴"
+          ],
+          "environment": [
+            "家庭或大家族的庆祝场所"
+          ],
+          "time_hint": "顶峰/传承期",
+          "direction": "扎根并向外辐射"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "庆祝节日",
+            "享受欢庆",
+            "请客吃饭"
+          ],
+          "potential_branches": [
+            "供养家庭",
+            "感谢支持者"
+          ]
+        }
+      },
+      {
+        "id": 74,
+        "name": "星币侍者",
+        "english": "Page of Pentacles",
+        "upright": {
+          "keywords": [
+            "精明务实",
+            "节俭",
+            "新的学习机会",
+            "有抱负"
+          ],
+          "description": "作为一名刚刚起步的自由艺术家，星币侍从懂得预算管理的必要性。看到出售作品的潜力后，她正走在通过关注每一次促销机会，给自己寻找和开拓市场的道路上。"
+        },
+        "reversed": {
+          "keywords": [
+            "缺乏抱负",
+            "懒惰",
+            "错过了机会",
+            "无能"
+          ],
+          "description": "其实用的能量不能充分得以利用或呈现懒惰、缺少远大抱负状态。可能表现为停留在学习的初步阶段，因为犹豫不决错过了将技能变现的机会。"
+        },
+        "story": "一位艺术家为一次促销做好了全部准备，她攒够了钱，要去采购下一个项目所需的所有材料。为求好运，她还会往许愿池里再投下一枚硬币。",
+        "core_meaning": "代表一个新的专注学习实务技能和有效方法的开始。",
+        "potential_risks": "过分关注学习而欠缺开始行动的勇气、或者因为太想省钱而畏缩不前，错失好的机遇。",
+        "symbolic_elements": {
+          "characters": [
+            "星币侍者"
+          ],
+          "props": [
+            "优惠券",
+            "许愿池硬币",
+            "绘画材料"
+          ],
+          "environment": [
+            "艺术展览或促销活动现场"
+          ],
+          "time_hint": "职业生涯或者学习阶段的初期",
+          "direction": "为未来打下物质基础的开始"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "购买物品",
+            "积存金钱",
+            "为梦想而许愿"
+          ],
+          "potential_branches": [
+            "寻找自己的市场价值",
+            "独立进行成年生活"
+          ]
+        }
+      },
+      {
+        "id": 75,
+        "name": "星币骑士",
+        "english": "Knight of Pentacles",
+        "upright": {
+          "keywords": [
+            "勤奋",
+            "循序渐进",
+            "可靠",
+            "注重细节"
+          ],
+          "description": "星币骑士遵循严格的日常训练计划，以奉献精神完善每一个最微小的细节。对他而言，成功的关键在于通过耐心和重复，缓慢而稳步地实现宏伟计划。"
+        },
+        "reversed": {
+          "keywords": [
+            "缓慢",
+            "固执",
+            "倦怠",
+            "停滞"
+          ],
+          "description": "他的勤奋能量变得失衡，转化为固执、缺乏灵活性的过分循规蹈矩。这可能导致他因陷入完美的细节而进展停滞，或因对日常事务感到倦怠而变得懒惰散漫。"
+        },
+        "story": "他正在篮球场上，花时间制定策略，并实施他反复练习过的脚步动作，无论进攻还是防守，都胸有成竹。",
+        "core_meaning": "通过循序渐进、注重细节的勤奋练习来实现长远目标。",
+        "potential_risks": "可能过于缓慢和保守，因陷入细节而错失良机，或对工作感到倦怠。",
+        "possible_real_world_mapping": "完成一个需要长期耐心和重复练习的项目、从事一份稳定的但可能有些乏味的工作、一个匠人的学徒生涯。",
+        "symbolic_elements": {
+          "characters": [
+            "星币骑士"
+          ],
+          "props": [
+            "篮球",
+            "训练计划"
+          ],
+          "environment": [
+            "大学球场",
+            "训练场"
+          ],
+          "time_hint": "长期的练习或成长期",
+          "direction": "慢而稳地前进"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "制定策略",
+            "练习脚步",
+            "遵循计划"
+          ],
+          "potential_branches": [
+            "获得奖学金实现梦想",
+            "因过于缓慢而可能落后于人但最终坚持"
+          ]
+        }
+      },
+      {
+        "id": 76,
+        "name": "星币王后",
+        "english": "Queen of Pentacles",
+        "upright": {
+          "keywords": [
+            "富足",
+            "独立",
+            "慷慨",
+            "务实能干"
+          ],
+          "description": "星币王后是一位白手起家的独立女性，懂得如何赚取金钱来维持奢华的生活方式。她成熟、务实且慷慨，在享受劳动成果的同时，也与他人分享财富。"
+        },
+        "reversed": {
+          "keywords": [
+            "物质主义",
+            "虚荣",
+            "财务失衡",
+            "依赖"
+          ],
+          "description": "她的务实能量失衡，变为过分的物质主义和虚荣。可能为了维持奢华表象而陷入财务困境，或在情感和财务上仍然依赖他人，与她独立的形象不符。"
+        },
+        "story": "她姿态挺拔自信地坐在灯火通明的办公室里，从假发到高跟鞋，浑身散发着成功和富足的光彩。",
+        "core_meaning": "通过务实和商业头脑实现财务独立，并慷慨地享受和分享自己创造的富足生活。",
+        "potential_risks": "可能变得过于物质主义，将自我价值与财富挂钩，或因过于专注事业而忽略情感联系。",
+        "possible_real_world_mapping": "成功的女企业家、能干的家庭主妇、理财专家、一位能够平衡事业与家庭的成熟女性。",
+        "symbolic_elements": {
+          "characters": [
+            "星币王后"
+          ],
+          "props": [
+            "奢侈品包",
+            "灯火通明的办公室",
+            "时尚的装扮"
+          ],
+          "environment": [
+            "象征成功的办公室"
+          ],
+          "time_hint": "成熟和收获的时期",
+          "direction": "向下扎根同时向外分享"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "姿态自信",
+            "炫耀时尚",
+            "分享财富"
+          ],
+          "potential_branches": [
+            "白手起家取得成功",
+            "与忠诚员工和慈善机构分享财富"
+          ]
+        }
+      },
+      {
+        "id": 77,
+        "name": "星币国王",
+        "english": "King of Pentacles",
+        "upright": {
+          "keywords": [
+            "财富",
+            "成功",
+            "有远见",
+            "稳重"
+          ],
+          "description": "作为家庭的顶梁柱，他有足够的能力供养数代人。他精通预算和宏大的投资，并敢于承担巨大风险以获取更大收益。他慷慨大方，但同时也严厉地要求家庭成员独立负责。"
+        },
+        "reversed": {
+          "keywords": [
+            "贪婪",
+            "保守固执",
+            "投资失败",
+            "严苛"
+          ],
+          "description": "稳定与成功的能量失衡。他可能变得过度贪婪和唯利是图，或是变得极端保守固执，致企业停滞。他的重大投资可能遭遇失败。"
+        },
+        "story": "在牌面上，星币国王端坐着，露出他赚钱的自信微笑。当晚，他的影迷正在庆祝他电影事业的巨大成功。",
+        "core_meaning": "代表世俗物质成功的顶峰，通过远见、冒险和专业的管理，建立了一个稳定且繁荣的物质帝国。",
+        "potential_risks": "可能过于注重物质而变得贪婪，或者对他人要求过于严苛和专横。",
+        "possible_real_world_mapping": "经验证的公司的CEO、家族企业的族长、成功的投资者或行业大亨。",
+        "symbolic_elements": {
+          "characters": [
+            "星币国王",
+            "影迷"
+          ],
+          "props": [
+            "跑车",
+            "聚会",
+            "赚钱的微笑"
+          ],
+          "environment": [
+            "成功的公众庆祝场合"
+          ],
+          "time_hint": "成就的巅峰",
+          "direction": "向下巩固物质帝国"
+        },
+        "symbolic_attributes": {
+          "interactions": [
+            "端坐微笑",
+            "被庆祝",
+            "承担风险",
+            "投资理财"
+          ],
+          "potential_branches": [
+            "为家族提供稳定支持",
+            "通过慈善慷慨回馈社会"
+          ]
+        }
+      }
+    ]
+
+}

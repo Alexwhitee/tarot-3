@@ -558,70 +558,241 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
     </div>
 
     <!-- 查看牌面模态框 -->
+<!--    <div v-if="showCardViewModal" class="card-view-modal-overlay" @click.self="closeCardViewModal">-->
+<!--      <div class="card-view-modal-content">-->
+<!--        &lt;!&ndash; 头部 &ndash;&gt;-->
+<!--        <div class="card-view-header">-->
+<!--          <h3 v-if="showDeckSelector">选择要查看的塔罗牌</h3>-->
+<!--          <h3 v-else>{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>-->
+<!--          <button class="close-btn" @click="closeCardViewModal">×</button>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 牌组选择界面 &ndash;&gt;-->
+<!--        <div v-if="showDeckSelector" class="deck-selector">-->
+<!--          <div class="deck-grid">-->
+<!--            <div-->
+<!--              v-for="deck in decks"-->
+<!--              :key="deck.key"-->
+<!--              class="deck-option"-->
+<!--              @click="selectViewDeck(deck.key)"-->
+<!--            >-->
+<!--              <div class="deck-preview">-->
+<!--                <img :src="`${base}${deck.imagePath}back.jpg`" alt="牌背" class="deck-back-image">-->
+<!--              </div>-->
+<!--              <div class="deck-info">-->
+<!--                <h4>{{ deck.name }}</h4>-->
+<!--                <p>{{ deck.cardCount }}张牌</p>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 牌面网格显示 &ndash;&gt;-->
+<!--        <div v-else class="cards-grid-container">-->
+<!--          &lt;!&ndash; 返回按钮 &ndash;&gt;-->
+<!--          <div class="grid-header">-->
+<!--            <Button class="back-btn" @click="showDeckSelector = true">-->
+<!--              ← 返回选择-->
+<!--            </Button>-->
+<!--            <div class="card-count">-->
+<!--              共 {{ getSelectedDeckCards.length }} 张牌-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; 牌面网格 &ndash;&gt;-->
+<!--          <div class="cards-grid" ref="cardsGridRef">-->
+<!--            <div-->
+<!--              v-for="card in getSelectedDeckCards"-->
+<!--              :key="card.no"-->
+<!--              class="card-grid-item"-->
+<!--            >-->
+<!--              <img-->
+<!--                :src="card.imagePath"-->
+<!--                :alt="card.name"-->
+<!--                class="card-image"-->
+<!--                @error="handleImageError"-->
+<!--                loading="lazy"-->
+<!--              />-->
+<!--              <div class="card-info">-->
+<!--                <span class="card-number">{{ card.no + 1 }}</span>-->
+<!--                <span class="card-name">{{ card.name }}</span>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <!-- 查看牌面模态框 -->
     <div v-if="showCardViewModal" class="card-view-modal-overlay" @click.self="closeCardViewModal">
-      <div class="card-view-modal-content">
+      <div class="card-view-modal-content" :class="{ 'detail-mode': showCardDetail }">
         <!-- 头部 -->
         <div class="card-view-header">
           <h3 v-if="showDeckSelector">选择要查看的塔罗牌</h3>
-          <h3 v-else>{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>
+          <h3 v-else-if="!showCardDetail">{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>
+          <h3 v-else>{{ selectedCardDetail?.name }} {{ selectedCardDetail?.english }}</h3>
           <button class="close-btn" @click="closeCardViewModal">×</button>
         </div>
 
-        <!-- 牌组选择界面 -->
-        <div v-if="showDeckSelector" class="deck-selector">
-          <div class="deck-grid">
-            <div
-              v-for="deck in decks"
-              :key="deck.key"
-              class="deck-option"
-              @click="selectViewDeck(deck.key)"
-            >
-              <div class="deck-preview">
-                <img :src="`${base}${deck.imagePath}back.jpg`" alt="牌背" class="deck-back-image">
-              </div>
-              <div class="deck-info">
-                <h4>{{ deck.name }}</h4>
-                <p>{{ deck.cardCount }}张牌</p>
+        <!-- 主体内容区域 -->
+        <div class="card-view-body">
+          <!-- 牌组选择界面 -->
+          <div v-if="showDeckSelector" class="deck-selector">
+            <div class="deck-grid">
+              <div
+                v-for="deck in decks"
+                :key="deck.key"
+                class="deck-option"
+                @click="selectViewDeck(deck.key)"
+              >
+                <div class="deck-preview">
+                  <img :src="`${base}${deck.imagePath}back.jpg`" alt="牌背" class="deck-back-image">
+                </div>
+                <div class="deck-info">
+                  <h4>{{ deck.name }}</h4>
+                  <p>{{ deck.cardCount }}张牌</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- 牌面网格显示 -->
-        <div v-else class="cards-grid-container">
-          <!-- 返回按钮 -->
-          <div class="grid-header">
-            <Button class="back-btn" @click="showDeckSelector = true">
-              ← 返回选择
-            </Button>
-            <div class="card-count">
-              共 {{ getSelectedDeckCards.length }} 张牌
+          <!-- 牌面网格和详情面板 -->
+          <div v-else class="cards-main-container">
+            <!-- 左侧：牌面网格 -->
+            <div class="cards-grid-section" :class="{ 'compressed': showCardDetail }">
+              <div class="grid-header">
+                <Button class="back-btn" @click="showDeckSelector = true">
+                  ← 返回选择
+                </Button>
+                <div class="card-count">
+                  共 {{ getSelectedDeckCards.length }} 张牌
+                </div>
+              </div>
+
+              <div class="cards-grid" ref="cardsGridRef">
+                <div
+                  v-for="card in getSelectedDeckCards"
+                  :key="card.no"
+                  class="card-grid-item"
+                  :class="{ 'active': selectedCardDetail?.id === card.no }"
+                  @click="selectCardDetail(card.no)"
+                >
+                  <img
+                    :src="card.imagePath"
+                    :alt="card.name"
+                    class="card-image"
+                    @error="handleImageError"
+                    loading="lazy"
+                  />
+                  <div class="card-info">
+                    <span class="card-number">{{ card.no + 1 }}</span>
+                    <span class="card-name">{{ card.name }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- 牌面网格 -->
-          <div class="cards-grid" ref="cardsGridRef">
-            <div
-              v-for="card in getSelectedDeckCards"
-              :key="card.no"
-              class="card-grid-item"
-            >
-              <img
-                :src="card.imagePath"
-                :alt="card.name"
-                class="card-image"
-                @error="handleImageError"
-                loading="lazy"
-              />
-              <div class="card-info">
-                <span class="card-number">{{ card.no + 1 }}</span>
-                <span class="card-name">{{ card.name }}</span>
+            <!-- 右侧：卡牌详情面板 -->
+            <div v-if="showCardDetail && selectedCardDetail" class="card-detail-panel">
+              <div class="detail-panel-header">
+                <button class="close-detail-btn" @click="closeCardDetail">×</button>
+              </div>
+
+              <div class="detail-panel-content">
+                <!-- 卡牌基本信息 -->
+                <div class="card-basic-info">
+                  <div class="card-image-large">
+                    <img
+                      :src="getCardImagePath(selectedCardDetail.id)"
+                      :alt="selectedCardDetail.name"
+                      class="detail-card-image"
+                    />
+                  </div>
+                  <div class="card-names">
+                    <h2 class="card-name-cn">{{ selectedCardDetail.name }}</h2>
+                    <h3 class="card-name-en">{{ selectedCardDetail.english }}</h3>
+                  </div>
+                </div>
+
+                <!-- 核心含义 -->
+                <div class="meaning-section">
+                  <h4 class="section-title">核心含义</h4>
+                  <p class="core-meaning">{{ selectedCardDetail.core_meaning }}</p>
+                </div>
+
+                <!-- 正位含义 -->
+                <div class="meaning-section upright-section">
+                  <h4 class="section-title">正位含义</h4>
+                  <div class="keywords">
+                <span v-for="keyword in selectedCardDetail.upright.keywords" :key="keyword" class="keyword">
+                  {{ keyword }}
+                </span>
+                  </div>
+                  <p class="description">{{ selectedCardDetail.upright.description }}</p>
+                </div>
+
+                <!-- 逆位含义 -->
+                <div class="meaning-section reversed-section">
+                  <h4 class="section-title">逆位含义</h4>
+                  <div class="keywords">
+                <span v-for="keyword in selectedCardDetail.reversed.keywords" :key="keyword" class="keyword reversed-keyword">
+                  {{ keyword }}
+                </span>
+                  </div>
+                  <p class="description">{{ selectedCardDetail.reversed.description }}</p>
+                </div>
+
+                <!-- 故事背景 -->
+                <div class="meaning-section">
+                  <h4 class="section-title">故事背景</h4>
+                  <p class="story-text">{{ selectedCardDetail.story }}</p>
+                </div>
+
+                <!-- 现实映射 -->
+                <div class="meaning-section">
+                  <h4 class="section-title">现实映射</h4>
+                  <p class="mapping-text">{{ selectedCardDetail.possible_real_world_mapping }}</p>
+                </div>
+
+                <!-- 潜在风险 -->
+                <div class="meaning-section risk-section">
+                  <h4 class="section-title">潜在风险</h4>
+                  <p class="risk-text">{{ selectedCardDetail.potential_risks }}</p>
+                </div>
+
+                <!-- 象征元素 -->
+                <div class="meaning-section">
+                  <h4 class="section-title">象征元素</h4>
+                  <div class="symbolic-elements">
+                    <div class="element-group">
+                      <span class="element-label">人物：</span>
+                      <span class="element-content">{{ selectedCardDetail.symbolic_elements.characters.join('、') }}</span>
+                    </div>
+                    <div class="element-group">
+                      <span class="element-label">道具：</span>
+                      <span class="element-content">{{ selectedCardDetail.symbolic_elements.props.join('、') }}</span>
+                    </div>
+                    <div class="element-group">
+                      <span class="element-label">环境：</span>
+                      <span class="element-content">{{ selectedCardDetail.symbolic_elements.environment.join('、') }}</span>
+                    </div>
+                    <div class="element-group">
+                      <span class="element-label">时间：</span>
+                      <span class="element-content">{{ selectedCardDetail.symbolic_elements.time_hint }}</span>
+                    </div>
+                    <div class="element-group">
+                      <span class="element-label">方向：</span>
+                      <span class="element-content">{{ selectedCardDetail.symbolic_elements.direction }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
   </section>
 </template>
@@ -636,6 +807,44 @@ import Typed from 'typed.js'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import tarotDecks from '../../data/tarot-decks.json';
+
+
+// 在现有 import 后添加
+import cardDetails from '../../data/pai.json'
+
+// 在现有类型定义后添加
+type CardDetail = {
+  id: number
+  name: string
+  english: string
+  upright: {
+    keywords: string[]
+    description: string
+  }
+  reversed: {
+    keywords: string[]
+    description: string
+  }
+  story: string
+  core_meaning: string
+  potential_risks: string
+  possible_real_world_mapping: string
+  symbolic_elements: {
+    characters: string[]
+    props: string[]
+    environment: string[]
+    time_hint: string
+    direction: string
+  }
+  symbolic_attributes: {
+    interactions: string[]
+    potential_branches: string[]
+  }
+}
+
+
+
+
 
 // 类型定义
 type Spread = {
@@ -1449,11 +1658,22 @@ const openCardViewModal = () => {
   selectedViewDeck.value = ''
 }
 
+// const closeCardViewModal = () => {
+//   showCardViewModal.value = false
+//   selectedViewDeck.value = ''
+//   showDeckSelector.value = true
+// }
+
+
 const closeCardViewModal = () => {
   showCardViewModal.value = false
   selectedViewDeck.value = ''
   showDeckSelector.value = true
+  // 新增：重置详情面板状态
+  showCardDetail.value = false
+  selectedCardDetail.value = null
 }
+
 
 const selectViewDeck = (deckKey: string) => {
   selectedViewDeck.value = deckKey
@@ -1491,6 +1711,66 @@ const resetCustomForm = () => {
     usage: '通用场景'
   }
 }
+
+// 在现有的查看牌面相关状态后添加
+const selectedCardDetail = ref<CardDetail | null>(null)
+const showCardDetail = ref(false)
+
+
+// 选择卡牌详情
+// const selectCardDetail = (cardNo: number) => {
+//   const detail = cardDetails.find(card => card.id === cardNo)
+//   if (detail) {
+//     selectedCardDetail.value = detail
+//     showCardDetail.value = true
+//   }
+// }
+
+// 修改导入和类型定义
+import allCardDetails from '../../data/pai.json'
+
+// 添加类型定义
+type CardDetailsData = Record<string, CardDetail[]>
+
+const selectCardDetail = (cardNo: number) => {
+  if (!selectedViewDeck.value) return
+
+  // 使用牌组的key作为标识符
+  const deckKey = selectedViewDeck.value
+  const deckDetails = (allCardDetails as CardDetailsData)[deckKey]
+
+  if (!deckDetails) {
+    console.warn(`未找到牌组 ${deckKey} 的详情数据`)
+    console.log('可用的牌组标识:', Object.keys(allCardDetails))
+    return
+  }
+
+  const detail = deckDetails.find(card => card.id === cardNo)
+  if (detail) {
+    selectedCardDetail.value = detail
+    showCardDetail.value = true
+  } else {
+    console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
+  }
+}
+
+
+// 关闭卡牌详情
+const closeCardDetail = () => {
+  showCardDetail.value = false
+  selectedCardDetail.value = null
+}
+
+// 获取卡牌图片路径
+const getCardImagePath = (cardId: number): string => {
+  const deck = decks.value.find(d => d.key === selectedViewDeck.value)
+  if (!deck) return ''
+
+  const fileNo = cardId + (deck.start ?? 0)
+  return `${base}${deck.imagePath}${fileNo}.jpg`
+}
+
+
 
 const validateCustomForm = (): boolean => {
   formErrors.value = {}
@@ -3795,6 +4075,351 @@ label {
 
   .subsection-header {
     gap: 8px;
+  }
+}
+
+
+
+
+/* ===========================================
+   卡牌详情面板样式
+   =========================================== */
+
+/* 修改模态框布局以支持详情模式 */
+.card-view-modal-content.detail-mode {
+  max-width: 1400px;
+  width: 95vw;
+}
+
+.card-view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cards-main-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.cards-grid-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cards-grid-section.compressed {
+  flex: 0 0 60%;
+}
+
+.cards-grid-section .cards-grid {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.card-grid-item.active {
+  border-color: #f39c12 !important;
+  box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+/* 详情面板 */
+.card-detail-panel {
+  flex: 0 0 40%;
+  background: #f8f9fa;
+  border-left: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  background: #fff;
+}
+
+.close-detail-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.close-detail-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.detail-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* 卡牌基本信息 */
+.card-basic-info {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-image-large {
+  margin-bottom: 16px;
+}
+
+.detail-card-image {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-names {
+  text-align: center;
+}
+
+.card-name-cn {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.card-name-en {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0;
+  font-weight: normal;
+}
+
+/* 含义区块 */
+.meaning-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.upright-section .section-title {
+  color: #27ae60;
+  border-bottom-color: #27ae60;
+}
+
+.reversed-section .section-title {
+  color: #e74c3c;
+  border-bottom-color: #e74c3c;
+}
+
+.risk-section .section-title {
+  color: #f39c12;
+  border-bottom-color: #f39c12;
+}
+
+/* 关键词 */
+.keywords {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.keyword {
+  background: #3498db;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.reversed-keyword {
+  background: #e74c3c;
+}
+
+/* 描述文本 */
+.description,
+.core-meaning,
+.story-text,
+.mapping-text,
+.risk-text {
+  line-height: 1.6;
+  color: #34495e;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* 象征元素 */
+.symbolic-elements {
+  font-size: 0.9rem;
+}
+
+.element-group {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.element-label {
+  font-weight: bold;
+  color: #2c3e50;
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+.element-content {
+  color: #34495e;
+  line-height: 1.4;
+}
+
+/* 深色模式适配 */
+.dark-mode .card-detail-panel {
+  background: #1a1a1a;
+  border-left-color: #444;
+}
+
+.dark-mode .detail-panel-header {
+  background: #2d2d2d;
+  border-bottom-color: #444;
+}
+
+.dark-mode .close-detail-btn {
+  color: #ccc;
+}
+
+.dark-mode .close-detail-btn:hover {
+  background: #444;
+  color: #fff;
+}
+
+.dark-mode .card-basic-info,
+.dark-mode .meaning-section {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .card-name-cn {
+  color: #f1f5f9;
+}
+
+.dark-mode .card-name-en {
+  color: #cbd5e1;
+}
+
+.dark-mode .section-title {
+  color: #f1f5f9;
+  border-bottom-color: #444;
+}
+
+.dark-mode .upright-section .section-title {
+  color: #2ecc71;
+  border-bottom-color: #2ecc71;
+}
+
+.dark-mode .reversed-section .section-title {
+  color: #e74c3c;
+  border-bottom-color: #e74c3c;
+}
+
+.dark-mode .risk-section .section-title {
+  color: #f39c12;
+  border-bottom-color: #f39c12;
+}
+
+.dark-mode .description,
+.dark-mode .core-meaning,
+.dark-mode .story-text,
+.dark-mode .mapping-text,
+.dark-mode .risk-text {
+  color: #d1d5db;
+}
+
+.dark-mode .element-label {
+  color: #f1f5f9;
+}
+
+.dark-mode .element-content {
+  color: #d1d5db;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .cards-main-container {
+    flex-direction: column;
+  }
+
+  .cards-grid-section {
+    flex: none !important;
+    height: 40vh;
+  }
+
+  .cards-grid-section.compressed {
+    flex: none !important;
+  }
+
+  .card-detail-panel {
+    flex: 1 !important;
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .detail-card-image {
+    width: 100px;
+  }
+
+  .card-name-cn {
+    font-size: 1.3rem;
+  }
+
+  .card-name-en {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-panel-content {
+    padding: 12px;
+  }
+
+  .card-basic-info {
+    padding: 16px;
+  }
+
+  .meaning-section {
+    padding: 12px;
+  }
+
+  .detail-card-image {
+    width: 80px;
   }
 }
 
