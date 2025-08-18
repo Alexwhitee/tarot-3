@@ -80,6 +80,10 @@
 
     <!-- 结果展示区域 - 优先显示 -->
     <div v-if="resStatus" class="result-container">
+
+
+
+
       <!-- 指示牌展示 -->
       <div v-if="guideCards.length > 0" class="guide-cards-section">
         <h4 class="cards-section-title">指示牌</h4>
@@ -125,6 +129,109 @@
           </div>
         </div>
       </div>
+
+      <!-- 新增：抽牌详情展示区域 -->
+      <div class="divination-details-section">
+        <div class="section-header">
+          <h4 class="cards-section-title">抽牌详情</h4>
+          <button class="copy-all-btn" @click="copyAllDetails" :disabled="isCopying">
+            <span v-if="isCopying">复制中...</span>
+            <span v-else-if="copySuccess">已复制 ✓</span>
+            <span v-else>📋 复制全部</span>
+          </button>
+        </div>
+
+        <!-- 问题展示 -->
+        <div class="question-display">
+          <div class="subsection-header">
+            <h5 class="subsection-title">基本信息</h5>
+            <button class="copy-btn" @click="copyBasicInfo">📋</button>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">占卜问题：</span>
+            <span class="detail-content">{{ textValue || '无具体问题' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">使用牌组：</span>
+            <span class="detail-content">{{ selectedDeck?.name || '标准塔罗牌' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">选择牌阵：</span>
+            <span class="detail-content">{{ selectedSpread?.name || '标准牌阵' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">占卜时间：</span>
+            <span class="detail-content">{{ formatCurrentTime }}</span>
+          </div>
+        </div>
+
+        <!-- 抽牌结果详细展示 -->
+        <div class="cards-detail-display">
+          <!-- 指示牌详情（如果有） -->
+          <div v-if="guideCards.length > 0" class="guide-cards-detail">
+            <div class="subsection-header">
+              <h5 class="detail-subtitle">指示牌抽牌结果</h5>
+              <button class="copy-btn" @click="copyGuideCards">📋</button>
+            </div>
+            <div class="cards-list">
+              <div v-for="(card, index) in guideCards" :key="`guide-detail-${card.no}`" class="card-detail-item">
+                <div class="card-index">{{ index + 1 }}</div>
+                <div class="card-detail-info">
+                  <div class="card-name-with-status">
+                    {{ card.name }}
+                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
+                {{ card.isReversed ? '（逆位）' : '（正位）' }}
+              </span>
+                  </div>
+                  <div class="card-type-label">指示牌</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 牌阵牌详情 -->
+          <div v-if="spreadCards.length > 0" class="spread-cards-detail">
+            <div class="subsection-header">
+              <h5 class="detail-subtitle">牌阵牌抽牌结果</h5>
+              <button class="copy-btn" @click="copySpreadCards">📋</button>
+            </div>
+            <div class="cards-list">
+              <div v-for="(card, index) in spreadCards" :key="`spread-detail-${card.no}`" class="card-detail-item">
+                <div class="card-index">{{ index + 1 }}</div>
+                <div class="card-detail-info">
+                  <div class="card-name-with-status">
+                    {{ card.name }}
+                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
+                {{ card.isReversed ? '（逆位）' : '（正位）' }}
+              </span>
+                  </div>
+                  <div class="card-position-label">
+                    {{ selectedSpread?.positions?.[index] || `第${index + 1}位` }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 传给AI的完整数据预览 -->
+          <div class="ai-input-preview">
+            <div class="subsection-header">
+              <h5 class="detail-subtitle">
+                传给AI的数据
+                <button class="toggle-btn" @click="showAIData = !showAIData">
+                  {{ showAIData ? '隐藏' : '显示' }}
+                </button>
+              </h5>
+              <button v-if="showAIData" class="copy-btn" @click="copyAIData">📋</button>
+            </div>
+            <div v-if="showAIData" class="ai-data-content">
+              <pre class="ai-data-json">{{ formatAIInputData }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- 占卜结果显示区域 -->
       <div class="divination-result">
@@ -596,6 +703,173 @@ const showCardViewModal = ref(false)
 const selectedViewDeck = ref<string>('')
 const showDeckSelector = ref(true)
 const isOpenCardMode = ref(false)
+
+
+
+// 在现有的 ref 声明附近添加
+const showAIData = ref(false)
+const isCopying = ref(false)
+const copySuccess = ref(false)
+
+// 格式化当前时间
+const formatCurrentTime = computed(() => {
+  return new Date().toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+})
+
+// 添加格式化AI输入数据的计算属性
+const formatAIInputData = computed(() => {
+  if (!resStatus.value || cardResult.value.length === 0) return ''
+
+  const aiInputData = {
+    question: textValue.value || '请为我进行塔罗占卜',
+    deck: {
+      key: selectedDeck.value?.key || '',
+      name: selectedDeck.value?.name || '标准塔罗牌'
+    },
+    spread: {
+      key: selectedSpread.value?.key || '',
+      name: selectedSpread.value?.name || '标准牌阵',
+      desc: selectedSpread.value?.desc || '',
+      positions: selectedSpread.value?.positions || []
+    },
+    cards: cardResult.value.map((card, index) => ({
+      index: index + 1,
+      no: card.no,
+      name: card.name,
+      type: card.type,
+      isReversed: card.isReversed,
+      position: card.type === 'spread'
+        ? selectedSpread.value?.positions?.[spreadCards.value.findIndex(c => c.no === card.no)] || `第${index + 1}位`
+        : '指示牌'
+    })),
+    guideCardsCount: guideCards.value.length,
+    spreadCardsCount: spreadCards.value.length,
+    totalCards: cardResult.value.length
+  }
+
+  return JSON.stringify(aiInputData, null, 2)
+})
+
+// 复制功能函数
+const copyToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (err) {
+    // 降级方案
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    const success = document.execCommand('copy')
+    document.body.removeChild(textArea)
+    return success
+  }
+}
+
+const showCopyFeedback = () => {
+  copySuccess.value = true
+  setTimeout(() => {
+    copySuccess.value = false
+  }, 2000)
+}
+
+// 复制基本信息
+const copyBasicInfo = async () => {
+  const basicInfo = `塔罗占卜基本信息
+占卜问题：${textValue.value || '无具体问题'}
+使用牌组：${selectedDeck.value?.name || '标准塔罗牌'}
+选择牌阵：${selectedSpread.value?.name || '标准牌阵'}
+占卜时间：${formatCurrentTime.value}`
+
+  const success = await copyToClipboard(basicInfo)
+  if (success) {
+    showCopyFeedback()
+  }
+}
+
+// 复制指示牌信息
+const copyGuideCards = async () => {
+  if (guideCards.value.length === 0) return
+
+  const guideCardsText = `指示牌抽牌结果：
+${guideCards.value.map((card, index) =>
+    `${index + 1}. ${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`
+  ).join('\n')}`
+
+  const success = await copyToClipboard(guideCardsText)
+  if (success) {
+    showCopyFeedback()
+  }
+}
+
+// 复制牌阵牌信息
+const copySpreadCards = async () => {
+  if (spreadCards.value.length === 0) return
+
+  const spreadCardsText = `${selectedSpread.value?.name || '标准牌阵'}牌阵抽牌结果：
+${spreadCards.value.map((card, index) => {
+    const position = selectedSpread.value?.positions?.[index] || `第${index + 1}位`
+    return `${index + 1}. ${position}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`
+  }).join('\n')}`
+
+  const success = await copyToClipboard(spreadCardsText)
+  if (success) {
+    showCopyFeedback()
+  }
+}
+
+// 复制AI数据
+const copyAIData = async () => {
+  const success = await copyToClipboard(formatAIInputData.value)
+  if (success) {
+    showCopyFeedback()
+  }
+}
+
+// 复制全部详情
+const copyAllDetails = async () => {
+  isCopying.value = true
+
+  const allDetails = `塔罗占卜完整记录
+===================
+
+【基本信息】
+占卜问题：${textValue.value || '无具体问题'}
+使用牌组：${selectedDeck.value?.name || '标准塔罗牌'}
+选择牌阵：${selectedSpread.value?.name || '标准牌阵'}
+占卜时间：${formatCurrentTime.value}
+
+${guideCards.value.length > 0 ? `【指示牌】
+${guideCards.value.map((card, index) =>
+    `${index + 1}. ${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`
+  ).join('\n')}
+
+` : ''}【牌阵牌】
+${spreadCards.value.map((card, index) => {
+    const position = selectedSpread.value?.positions?.[index] || `第${index + 1}位`
+    return `${index + 1}. ${position}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`
+  }).join('\n')}
+
+【AI分析结果】
+${firstDivinationResult.value ? firstDivinationResult.value.replace(/<[^>]*>/g, '') : '分析中...'}`
+
+  const success = await copyToClipboard(allDetails)
+  isCopying.value = false
+
+  if (success) {
+    showCopyFeedback()
+  }
+}
+
+
 
 // 主题相关
 const isDarkMode = ref(false)
@@ -3412,5 +3686,117 @@ label {
 .dark-mode .no-result {
   color: #888;
 }
+
+
+/* 新增的复制按钮相关样式 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.subsection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.subsection-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #343a40;
+  margin: 0;
+}
+
+.copy-all-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.copy-all-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.copy-all-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.copy-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-btn:hover {
+  background: #5a6268;
+  transform: scale(1.05);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+/* 深色模式适配 */
+.dark-mode .copy-all-btn {
+  background: linear-gradient(135deg, #198754 0%, #0d6efd 100%);
+}
+
+.dark-mode .copy-all-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #157347 0%, #0b5ed7 100%);
+}
+
+.dark-mode .copy-btn {
+  background: #495057;
+}
+
+.dark-mode .copy-btn:hover {
+  background: #6c757d;
+}
+
+.dark-mode .subsection-title {
+  color: #f8f9fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .copy-all-btn {
+    width: 100%;
+  }
+
+  .subsection-header {
+    gap: 8px;
+  }
+}
+
 
 </style>
