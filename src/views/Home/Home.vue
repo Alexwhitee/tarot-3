@@ -178,106 +178,215 @@
       </div>
 
       <!-- 新增：抽牌详情展示区域 -->
+<!--      <div class="divination-details-section">-->
+<!--        <div class="section-header">-->
+<!--          <h4 class="cards-section-title">抽牌详情</h4>-->
+<!--          <button class="copy-all-btn" @click="copyAllDetails" :disabled="isCopying">-->
+<!--            <span v-if="isCopying">复制中...</span>-->
+<!--            <span v-else-if="copySuccess">已复制 ✓</span>-->
+<!--            <span v-else>📋 复制全部</span>-->
+<!--          </button>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 问题展示 &ndash;&gt;-->
+<!--        <div class="question-display">-->
+<!--          <div class="subsection-header">-->
+<!--            <h5 class="subsection-title">基本信息</h5>-->
+<!--            <button class="copy-btn" @click="copyBasicInfo">📋</button>-->
+<!--          </div>-->
+<!--          <div class="detail-item">-->
+<!--            <span class="detail-label">占卜问题：</span>-->
+<!--            <span class="detail-content">{{ textValue || '无具体问题' }}</span>-->
+<!--          </div>-->
+<!--          <div class="detail-item">-->
+<!--            <span class="detail-label">使用牌组：</span>-->
+<!--            <span class="detail-content">{{ selectedDeck?.name || '标准塔罗牌' }}</span>-->
+<!--          </div>-->
+<!--          <div class="detail-item">-->
+<!--            <span class="detail-label">选择牌阵：</span>-->
+<!--            <span class="detail-content">{{ selectedSpread?.name || '标准牌阵' }}</span>-->
+<!--          </div>-->
+<!--          <div class="detail-item">-->
+<!--            <span class="detail-label">占卜时间：</span>-->
+<!--            <span class="detail-content">{{ formatCurrentTime }}</span>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 抽牌结果详细展示 &ndash;&gt;-->
+<!--        <div class="cards-detail-display">-->
+
+<!--          &lt;!&ndash; 指示牌详情（如果有） &ndash;&gt;-->
+<!--          <div v-if="guideCards.length > 0" class="guide-cards-detail">-->
+<!--            <div class="subsection-header">-->
+<!--              <h5 class="detail-subtitle">指示牌抽牌结果</h5>-->
+<!--              <button class="copy-btn" @click="copyGuideCards">📋</button>-->
+<!--            </div>-->
+<!--            <div class="cards-list">-->
+<!--              <div v-for="(card, index) in guideCards" :key="`guide-detail-${card.no}`" class="card-detail-item">-->
+<!--                <div class="card-index">{{ index + 1 }}</div>-->
+<!--                <div class="card-detail-info">-->
+<!--                  <div class="card-name-with-status">-->
+<!--                    {{ card.name }}-->
+<!--                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">-->
+<!--                {{ card.isReversed ? '（逆位）' : '（正位）' }}-->
+<!--              </span>-->
+<!--                  </div>-->
+<!--                  <div class="card-type-label">指示牌</div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; 牌阵牌详情 &ndash;&gt;-->
+<!--          <div v-if="spreadCards.length > 0" class="spread-cards-detail">-->
+<!--            <div class="subsection-header">-->
+<!--              <h5 class="detail-subtitle">牌阵牌抽牌结果</h5>-->
+<!--              <button class="copy-btn" @click="copySpreadCards">📋</button>-->
+<!--            </div>-->
+<!--            <div class="cards-list">-->
+<!--              <div v-for="(card, index) in spreadCards" :key="`spread-detail-${card.no}`" class="card-detail-item">-->
+<!--                <div class="card-index">{{ index + 1 }}</div>-->
+<!--                <div class="card-detail-info">-->
+<!--                  <div class="card-name-with-status">-->
+<!--                    {{ card.name }}-->
+<!--                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">-->
+<!--                {{ card.isReversed ? '（逆位）' : '（正位）' }}-->
+<!--              </span>-->
+<!--                  </div>-->
+<!--                  <div class="card-position-label">-->
+<!--                    {{ selectedSpread?.positions?.[index] || `第${index + 1}位` }}-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; 传给AI的完整数据预览 &ndash;&gt;-->
+<!--          <div class="ai-input-preview">-->
+<!--            <div class="subsection-header">-->
+<!--              <h5 class="detail-subtitle">-->
+<!--                传给AI的数据-->
+<!--                <button class="toggle-btn" @click="showAIData = !showAIData">-->
+<!--                  {{ showAIData ? '隐藏' : '显示' }}-->
+<!--                </button>-->
+<!--              </h5>-->
+<!--              <button v-if="showAIData" class="copy-btn" @click="copyAIData">📋</button>-->
+<!--            </div>-->
+<!--            <div v-if="showAIData" class="ai-data-content">-->
+<!--              <pre class="ai-data-json">{{ formatAIInputData }}</pre>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <!-- 新增：抽牌详情展示区域 -->
       <div class="divination-details-section">
         <div class="section-header">
-          <h4 class="cards-section-title">抽牌详情</h4>
-          <button class="copy-all-btn" @click="copyAllDetails" :disabled="isCopying">
+          <h4 class="cards-section-title">
+            抽牌详情
+            <button class="toggle-btn" @click="showDivinationDetails = !showDivinationDetails">
+              {{ showDivinationDetails ? '隐藏' : '显示' }}
+            </button>
+          </h4>
+          <button v-if="showDivinationDetails" class="copy-all-btn" @click="copyAllDetails" :disabled="isCopying">
             <span v-if="isCopying">复制中...</span>
             <span v-else-if="copySuccess">已复制 ✓</span>
             <span v-else>📋 复制全部</span>
           </button>
         </div>
 
-        <!-- 问题展示 -->
-        <div class="question-display">
-          <div class="subsection-header">
-            <h5 class="subsection-title">基本信息</h5>
-            <button class="copy-btn" @click="copyBasicInfo">📋</button>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">占卜问题：</span>
-            <span class="detail-content">{{ textValue || '无具体问题' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">使用牌组：</span>
-            <span class="detail-content">{{ selectedDeck?.name || '标准塔罗牌' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">选择牌阵：</span>
-            <span class="detail-content">{{ selectedSpread?.name || '标准牌阵' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">占卜时间：</span>
-            <span class="detail-content">{{ formatCurrentTime }}</span>
-          </div>
-        </div>
-
-        <!-- 抽牌结果详细展示 -->
-        <div class="cards-detail-display">
-          <!-- 指示牌详情（如果有） -->
-          <div v-if="guideCards.length > 0" class="guide-cards-detail">
+        <!-- 整个详情内容区域 - 添加 v-if 控制显示 -->
+        <div v-if="showDivinationDetails" class="divination-details-content">
+          <!-- 问题展示 -->
+          <div class="question-display">
             <div class="subsection-header">
-              <h5 class="detail-subtitle">指示牌抽牌结果</h5>
-              <button class="copy-btn" @click="copyGuideCards">📋</button>
+              <h5 class="subsection-title">基本信息</h5>
+              <button class="copy-btn" @click="copyBasicInfo">📋</button>
             </div>
-            <div class="cards-list">
-              <div v-for="(card, index) in guideCards" :key="`guide-detail-${card.no}`" class="card-detail-item">
-                <div class="card-index">{{ index + 1 }}</div>
-                <div class="card-detail-info">
-                  <div class="card-name-with-status">
-                    {{ card.name }}
-                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
-                {{ card.isReversed ? '（逆位）' : '（正位）' }}
-              </span>
-                  </div>
-                  <div class="card-type-label">指示牌</div>
-                </div>
+            <div class="detail-item">
+              <span class="detail-label">占卜问题：</span>
+              <span class="detail-content">{{ textValue || '无具体问题' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">使用牌组：</span>
+              <span class="detail-content">{{ selectedDeck?.name || '标准塔罗牌' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">选择牌阵：</span>
+              <span class="detail-content">{{ selectedSpread?.name || '标准牌阵' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">占卜时间：</span>
+              <span class="detail-content">{{ formatCurrentTime }}</span>
+            </div>
+          </div>
+
+          <!-- 抽牌结果详细展示 -->
+          <div class="cards-detail-display">
+            <!-- 指示牌详情（如果有） -->
+            <div v-if="guideCards.length > 0" class="guide-cards-detail">
+              <div class="subsection-header">
+                <h5 class="detail-subtitle">指示牌抽牌结果</h5>
+                <button class="copy-btn" @click="copyGuideCards">📋</button>
               </div>
-            </div>
-          </div>
-
-          <!-- 牌阵牌详情 -->
-          <div v-if="spreadCards.length > 0" class="spread-cards-detail">
-            <div class="subsection-header">
-              <h5 class="detail-subtitle">牌阵牌抽牌结果</h5>
-              <button class="copy-btn" @click="copySpreadCards">📋</button>
-            </div>
-            <div class="cards-list">
-              <div v-for="(card, index) in spreadCards" :key="`spread-detail-${card.no}`" class="card-detail-item">
-                <div class="card-index">{{ index + 1 }}</div>
-                <div class="card-detail-info">
-                  <div class="card-name-with-status">
-                    {{ card.name }}
-                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
-                {{ card.isReversed ? '（逆位）' : '（正位）' }}
-              </span>
-                  </div>
-                  <div class="card-position-label">
-                    {{ selectedSpread?.positions?.[index] || `第${index + 1}位` }}
+              <div class="cards-list">
+                <div v-for="(card, index) in guideCards" :key="`guide-detail-${card.no}`" class="card-detail-item">
+                  <div class="card-index">{{ index + 1 }}</div>
+                  <div class="card-detail-info">
+                    <div class="card-name-with-status">
+                      {{ card.name }}
+                      <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
+                  {{ card.isReversed ? '（逆位）' : '（正位）' }}
+                </span>
+                    </div>
+                    <div class="card-type-label">指示牌</div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- 传给AI的完整数据预览 -->
-          <div class="ai-input-preview">
-            <div class="subsection-header">
-              <h5 class="detail-subtitle">
-                传给AI的数据
-                <button class="toggle-btn" @click="showAIData = !showAIData">
-                  {{ showAIData ? '隐藏' : '显示' }}
-                </button>
-              </h5>
-              <button v-if="showAIData" class="copy-btn" @click="copyAIData">📋</button>
+            <!-- 牌阵牌详情 -->
+            <div v-if="spreadCards.length > 0" class="spread-cards-detail">
+              <div class="subsection-header">
+                <h5 class="detail-subtitle">牌阵牌抽牌结果</h5>
+                <button class="copy-btn" @click="copySpreadCards">📋</button>
+              </div>
+              <div class="cards-list">
+                <div v-for="(card, index) in spreadCards" :key="`spread-detail-${card.no}`" class="card-detail-item">
+                  <div class="card-index">{{ index + 1 }}</div>
+                  <div class="card-detail-info">
+                    <div class="card-name-with-status">
+                      {{ card.name }}
+                      <span class="card-status" :class="{ 'reversed-status': card.isReversed }">
+                  {{ card.isReversed ? '（逆位）' : '（正位）' }}
+                </span>
+                    </div>
+                    <div class="card-position-label">
+                      {{ selectedSpread?.positions?.[index] || `第${index + 1}位` }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div v-if="showAIData" class="ai-data-content">
-              <pre class="ai-data-json">{{ formatAIInputData }}</pre>
+
+            <!-- 传给AI的完整数据预览 -->
+            <div class="ai-input-preview">
+              <div class="subsection-header">
+                <h5 class="detail-subtitle">
+                  前端发给API的数据
+                  <button class="toggle-btn" @click="showAIData = !showAIData">
+                    {{ showAIData ? '隐藏' : '显示' }}
+                  </button>
+                </h5>
+                <button v-if="showAIData" class="copy-btn" @click="copyAIData">📋</button>
+              </div>
+              <div v-if="showAIData" class="ai-data-content">
+                <pre class="ai-data-json">{{ formatAIInputData }}</pre>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
 
 
       <!-- 占卜结果显示区域 -->
@@ -1030,12 +1139,12 @@ type CardInfo = {
   isReversed: boolean
 }
 
-type CardResult = {
-  no: number
-  name: string
-  type?: 'guide' | 'spread'
-  isReversed: boolean
-}
+// type CardResult = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+// }
 
 type ConversationMessage = {
   role: 'user' | 'assistant'
@@ -1046,6 +1155,16 @@ type CustomSpread = Spread & {
   isCustom: boolean
   createdAt: string
 }
+
+type CardResult = {
+  no: number
+  name: string
+  type?: 'guide' | 'spread'
+  isReversed: boolean
+  cardAnalysis?: any // 添加这一行
+}
+
+
 
 // 添加新的状态管理
 const cardReversedStates = ref<Record<number, boolean>>({}) // 跟踪每张卡牌的逆位状态
@@ -1075,6 +1194,10 @@ const isOpenCardMode = ref(false)
 const showAIData = ref(false)
 const isCopying = ref(false)
 const copySuccess = ref(false)
+// 在现有的 ref 声明附近添加
+// 控制抽牌详情展示区域的显示/隐藏
+const showDivinationDetails = ref(false) // 默认显示
+
 
 // 格式化当前时间
 const formatCurrentTime = computed(() => {
@@ -1089,38 +1212,71 @@ const formatCurrentTime = computed(() => {
 })
 
 // 添加格式化AI输入数据的计算属性
+// const formatAIInputData = computed(() => {
+//   if (!resStatus.value || cardResult.value.length === 0) return ''
+//
+//   const aiInputData = {
+//     question: textValue.value || '请为我进行塔罗占卜',
+//     deck: {
+//       key: selectedDeck.value?.key || '',
+//       name: selectedDeck.value?.name || '标准塔罗牌'
+//     },
+//     spread: {
+//       key: selectedSpread.value?.key || '',
+//       name: selectedSpread.value?.name || '标准牌阵',
+//       desc: selectedSpread.value?.desc || '',
+//       positions: selectedSpread.value?.positions || []
+//     },
+//     cards: cardResult.value.map((card, index) => ({
+//       index: index + 1,
+//       no: card.no,
+//       name: card.name,
+//       type: card.type,
+//       isReversed: card.isReversed,
+//       position: card.type === 'spread'
+//         ? selectedSpread.value?.positions?.[spreadCards.value.findIndex(c => c.no === card.no)] || `第${index + 1}位`
+//         : '指示牌'
+//     })),
+//     guideCardsCount: guideCards.value.length,
+//     spreadCardsCount: spreadCards.value.length,
+//     totalCards: cardResult.value.length
+//   }
+//
+//   return JSON.stringify(aiInputData, null, 2)
+// })
+
 const formatAIInputData = computed(() => {
   if (!resStatus.value || cardResult.value.length === 0) return ''
 
-  const aiInputData = {
-    question: textValue.value || '请为我进行塔罗占卜',
-    deck: {
-      key: selectedDeck.value?.key || '',
-      name: selectedDeck.value?.name || '标准塔罗牌'
-    },
+  const frontendToApiData = {
+    text: textValue.value || '请为我进行塔罗占卜',
+    pms: cardResult.value.map(card => ({
+      no: card.no,
+      name: card.name,
+      type: card.type,
+      isReversed: card.isReversed,
+      cardAnalysis: card.cardAnalysis ? {
+        symbols: card.cardAnalysis.symbols,
+        actions: card.cardAnalysis.actions,
+        story_hint: card.cardAnalysis.story_hint,
+        branches: card.cardAnalysis.branches
+      } : null
+    })),
     spread: {
       key: selectedSpread.value?.key || '',
       name: selectedSpread.value?.name || '标准牌阵',
       desc: selectedSpread.value?.desc || '',
       positions: selectedSpread.value?.positions || []
     },
-    cards: cardResult.value.map((card, index) => ({
-      index: index + 1,
-      no: card.no,
-      name: card.name,
-      type: card.type,
-      isReversed: card.isReversed,
-      position: card.type === 'spread'
-        ? selectedSpread.value?.positions?.[spreadCards.value.findIndex(c => c.no === card.no)] || `第${index + 1}位`
-        : '指示牌'
-    })),
-    guideCardsCount: guideCards.value.length,
-    spreadCardsCount: spreadCards.value.length,
-    totalCards: cardResult.value.length
+    deck: {
+      key: selectedDeck.value?.key || '',
+      name: selectedDeck.value?.name || '标准塔罗牌'
+    }
   }
 
-  return JSON.stringify(aiInputData, null, 2)
+  return JSON.stringify(frontendToApiData, null, 2)
 })
+
 
 // 复制功能函数
 const copyToClipboard = async (text: string) => {
@@ -1736,21 +1892,25 @@ const getRes = async () => {
   if (isOpenCardMode.value) {
     cardResult.value = selectCardArr.value.map((cardNo, index) => {
       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
+      const cardAnalysis = generateCardAnalysis(cardNo)
       return {
         no: cardNo,
         name: String(cardInfo?.name || `第${cardNo + 1}张`),
         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-        isReversed: Boolean(cardReversedStates.value[cardNo])
+        isReversed: Boolean(cardReversedStates.value[cardNo]),
+        cardAnalysis: cardAnalysis // 添加这一行
       } as CardResult
     })
   } else {
     cardResult.value = selectCardArr.value.map((cardNo, index) => {
       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+      const cardAnalysis = generateCardAnalysis(cardNo)
       return {
         no: cardNo,
         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-        isReversed: needReversed.value ? Math.random() > 0.5 : false
+        isReversed: needReversed.value ? Math.random() > 0.5 : false,
+        cardAnalysis: cardAnalysis // 添加这一行
       } as CardResult
     })
   }
@@ -1997,6 +2157,72 @@ const selectCardDetail = (cardNo: number) => {
   } else {
     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
   }
+}
+
+
+
+// 生成卡牌分析数据的函数
+const generateCardAnalysis = (cardNo: number): any => {
+  const currentDeckKey = selectedDeck.value?.key
+
+  if (!currentDeckKey) {
+    console.error('无法确定当前牌组')
+    return null
+  }
+
+  const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+
+  if (!deckDetails) {
+    console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+    return null
+  }
+
+  const cardDetail = deckDetails.find(card => card.id === cardNo)
+
+  if (!cardDetail) {
+    console.error(`未找到卡牌 ${cardNo} 的详情信息`)
+    // 返回默认数据而不是 null
+    return {
+      symbols: {
+        characters: ["未知人物"],
+        props: ["未知道具"],
+        environment: ["未知环境"],
+        time_hint: "未知时间",
+        direction: "未知方向"
+      },
+      actions: ["未知行动"],
+      story_hint: "无可用故事信息",
+      branches: ["需要更多信息"]
+    }
+  }
+
+  // 根据 cardDetail 生成 cardAnalysis
+  // return {
+  //   symbols: {
+  //     characters: cardDetail.symbolic_elements.characters,
+  //     props: cardDetail.symbolic_elements.props,
+  //     environment: cardDetail.symbolic_elements.environment,
+  //     time_hint: cardDetail.symbolic_elements.time_hint,
+  //     direction: cardDetail.symbolic_elements.direction
+  //   },
+  //   actions: cardDetail.symbolic_attributes.interactions,
+  //   story_hint: cardDetail.story,
+  //   branches: cardDetail.symbolic_attributes.potential_branches
+  // }
+  const analysis = {
+    symbols: {
+      characters: cardDetail.symbolic_elements.characters || ["未知人物"],
+      props: cardDetail.symbolic_elements.props || ["未知道具"],
+      environment: cardDetail.symbolic_elements.environment || ["未知环境"],
+      time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
+      direction: cardDetail.symbolic_elements.direction || "未知方向"
+    },
+    actions: cardDetail.symbolic_attributes.interactions || ["未知行动"],
+    story_hint: cardDetail.story || "无可用故事信息",
+    branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"]
+  }
+  console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
+  return analysis
 }
 
 

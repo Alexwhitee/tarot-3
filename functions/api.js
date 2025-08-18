@@ -633,6 +633,278 @@
 // }
 
 
+// export async function onRequestPost({ request }) {
+//   console.log('收到占卜请求');
+//
+//   try {
+//     const { text, pms, spread, deck } = await request.json();
+//
+//     if (!pms || !Array.isArray(pms)) {
+//       return new Response(JSON.stringify({ error: 'pms 字段必须是数组' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const spreadCards = pms.filter(card => card.type === 'spread');
+//
+//     if (spreadCards.length === 0) {
+//       return new Response(JSON.stringify({ error: '没有找到牌阵牌' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const systemPrompt = `[身份与目标]
+// [身份设定]
+// 你是一名精通塔罗、雷诺曼和易经的资深占卜师，擅长运用“象法”解析牌面或卦象。你的目标是将牌面象征（人物、动作、道具、环境、颜色、数字、方向等）转化为现实事件发展脉络，并提供可执行的建议。
+//
+// [象法运用步骤]
+// 1. **定位（抓象）**：在每张牌或卦象中找到最能对应所问事件的符号。
+// 2. **读象（解象）**：分析符号的状态、动作、特征，推演其现实意义。
+// 3. **取舍（去杂）**：忽略冗余或泛化的元素，专注与问题最贴切的核心象。
+// 4. **串联（讲故事）**：将各张牌或卦象的核心象串联成事件发展脉络，形成完整故事。
+// 5. **结论与行动**：给出事件倾向、较可能结果，以及1-3条具体可执行的现实行动建议。
+//
+// [象征元素解读指南]
+// - **characters（人物）**：事件中的关键角色及其状态
+// - **props（道具）**：事件涉及的工具、资源或影响因素
+// - **environment（环境）**：事件发生背景或外在条件
+// - **time_hint（时间提示）**：事件时间节点或发展阶段
+// - **direction（方向）**：事件动向或能量流
+// - **actions（行动）**：正在发生或即将发生的具体动作
+// - **story_hint（故事提示）**：整体情境核心线索
+// - **branches（分支建议）**：可行的行动方向
+//
+// [输出要求]
+// 1. **首部**：问题描述 + 牌阵/卦象列表 + 牌阵说明
+// 2. **主体**：
+//    - 逐张牌或卦象的象征解读
+//    - 串联成完整事件脉络（故事化描述，强调动作、环境、符号）
+// 3. **结论**：
+//    - 事件倾向
+//    - 较可能结果
+//    - 1-3条现实可执行的行动建议
+// 4. **风格**：
+//    - 直观、形象
+//    - 注重动作与物象
+//    - 避免心理化或过度抽象
+//
+// [注意事项]
+// - 解释必须严格基于提供的象征元素，不依赖传统牌义。
+// - 解读应落地到现实事件，符合常理（如出行、健康、职务、天气等）。
+// - 尽量使用牌面/卦象动作、方向、环境的具体信息，形成连贯故事。
+// - 分支建议应融入行动指导中，使占卜结果可操作。`;
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
+//     }).join('\n')}
+//
+// 请严格按照上述牌阵布局进行解析，提供详细占卜解析。`;
+//
+//     const apiRequestBody = {
+//       model: "glm-4.5-flash",
+//       messages: [
+//         { role: "system", content: systemPrompt },
+//         { role: "user", content: userMessage }
+//       ],
+//       temperature: 0.6,
+//       max_tokens: 9000
+//     };
+//
+//     const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+//       method: "POST",
+//       headers: {
+//         "Authorization": "Bearer 71417eea1e2e423e8da537452dfb7a21.kCF5Hgqhr40Rp9va",
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify(apiRequestBody)
+//     });
+//
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       throw new Error(`智谱AI API 错误! status: ${response.status}, response: ${errorText}`);
+//     }
+//
+//     const data = await response.json();
+//
+//     if (!data.choices?.[0]?.message) {
+//       throw new Error('智谱AI API 响应格式异常');
+//     }
+//
+//     return new Response(JSON.stringify({
+//       content: data.choices[0].message.content
+//     }), { headers: { 'Content-Type': 'application/json' } });
+//
+//   } catch (error) {
+//     console.error('处理请求时出错:', error);
+//     return new Response(JSON.stringify({
+//       error: '处理请求失败',
+//       details: error.message,
+//       success: false
+//     }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+//   }
+// }
+
+
+//
+//
+// export async function onRequestPost({ request }) {
+//   console.log('收到占卜请求');
+//
+//   try {
+//     const { text, pms, spread, deck } = await request.json();
+//
+//     if (!pms || !Array.isArray(pms)) {
+//       return new Response(JSON.stringify({ error: 'pms 字段必须是数组' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const spreadCards = pms.filter(card => card.type === 'spread');
+//
+//     if (spreadCards.length === 0) {
+//       return new Response(JSON.stringify({ error: '没有找到牌阵牌' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     // 验证每张牌是否包含cardAnalysis数据
+//     const missingAnalysis = spreadCards.filter(card => !card.cardAnalysis);
+//     if (missingAnalysis.length > 0) {
+//       return new Response(JSON.stringify({
+//         error: '部分牌缺少象征分析数据',
+//         missingCards: missingAnalysis.map(card => card.name)
+//       }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const systemPrompt = `
+// [身份与目标]
+// 你是一名精通塔罗/雷诺曼/易经的资深占卜师，掌握"象法"解读技巧。你要通过牌面符号（人物、动作、物件、环境、颜色、数字、方向等）来推演事件，并给出符合常理的结论与可执行建议。
+//
+// [象法运用步骤]
+// 1. 定位：在牌面中找出最能对应所问事情的符号。
+// 2. 读象：分析符号的状态、动作或特征，并解释它在现实语境中的可能含义。
+// 3. 取舍：忽略冗余或泛化的元素，专注于与问题最贴切的核心象。
+// 4. 串联：把各张牌的符号串联成一个故事或过程，描绘事情的发展脉络。
+// 5. 结论：给出简明结果，包含事件走向+可能的细节+1–3条可行行动建议。
+//
+// [象征元素解读指南]
+// - characters（人物）：代表事件中的关键角色或当事人的状态
+// - props（道具）：象征具体的工具、资源或影响因素
+// - environment（环境）：反映事件发生的背景或外在条件
+// - time_hint（时间提示）：指示事件的时间节点或发展阶段
+// - direction（方向）：暗示事件的动向或能量流动
+// - actions（行动）：描述正在发生或即将发生的具体动作
+// - story_hint（故事提示）：提供整体情境的核心线索
+// - branches（分支建议）：基于当前象征给出的可能行动方向
+//
+// [输出格式]
+// 首部：问题+背景+抽牌列表
+// 主体：逐张牌的象征解读 → 象法串联 → 结论
+// 风格：直观、形象，注重细节（动作/物象），避免过度抽象或心理化解读
+// 结论：用"倾向/较可能/建议"表达，优先采用牌面提供的分支建议
+//
+// [特别注意]
+// - 你必须基于提供的象征元素（symbols、actions、story_hint）来推断，而不是只依赖传统牌义。
+// - 解释要能落地到现实事件（如：出行、健康、沟通、变化）。
+// - 遇到自然现象类问题（天气/身体/环境），结论需符合常理。
+// - 充分利用branches字段中的建议，将其融入到最终的行动指导中。
+// `;
+//
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       const analysis = card.cardAnalysis;
+//
+//       return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+//
+// 象征元素：
+// - 人物：${analysis.symbols.characters.join('、')}
+// - 道具：${analysis.symbols.props.join('、')}
+// - 环境：${analysis.symbols.environment.join('、')}
+// - 时间提示：${analysis.symbols.time_hint}
+// - 方向：${analysis.symbols.direction}
+//
+// 关键行动：${analysis.actions.join('、')}
+// 故事线索：${analysis.story_hint}
+// 建议分支：${analysis.branches.join('、')}`;
+//     }).join('\n\n')}
+//
+// 请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
+//
+//     const apiRequestBody = {
+//       model: "glm-4.5-flash",
+//       messages: [
+//         { role: "system", content: systemPrompt },
+//         { role: "user", content: userMessage }
+//       ],
+//       temperature: 0.6,
+//       max_tokens: 9000
+//     };
+//
+//     const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+//       method: "POST",
+//       headers: {
+//         "Authorization": "Bearer 71417eea1e2e423e8da537452dfb7a21.kCF5Hgqhr40Rp9va",
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify(apiRequestBody)
+//     });
+//
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       throw new Error(`智谱AI API 错误! status: ${response.status}, response: ${errorText}`);
+//     }
+//
+//     const data = await response.json();
+//
+//     if (!data.choices?.[0]?.message) {
+//       throw new Error('智谱AI API 响应格式异常');
+//     }
+//
+//     return new Response(JSON.stringify({
+//       content: data.choices[0].message.content
+//     }), { headers: { 'Content-Type': 'application/json' } });
+//
+//   } catch (error) {
+//     console.error('处理请求时出错:', error);
+//     return new Response(JSON.stringify({
+//       error: '处理请求失败',
+//       details: error.message,
+//       success: false
+//     }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+//   }
+// }
+
+
+
 export async function onRequestPost({ request }) {
   console.log('收到占卜请求');
 
@@ -655,9 +927,20 @@ export async function onRequestPost({ request }) {
       });
     }
 
-    const systemPrompt = `
-[身份与目标]
-你是一名精通塔罗/雷诺曼/易经的资深占卜师，掌握“象法”解读技巧。你要通过牌面符号（人物、动作、物件、环境、颜色、数字、方向等）来推演事件，并给出符合常理的结论与可执行建议。
+    // 验证每张牌是否包含cardAnalysis数据
+    const missingAnalysis = spreadCards.filter(card => !card.cardAnalysis);
+    if (missingAnalysis.length > 0) {
+      return new Response(JSON.stringify({
+        error: '部分牌缺少象征分析数据',
+        missingCards: missingAnalysis.map(card => card.name)
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const systemPrompt = `[身份与目标]
+你是一名精通塔罗/雷诺曼/易经的资深占卜师，掌握"象法"解读技巧。你要通过牌面符号（人物、动作、物件、环境、颜色、数字、方向等）来推演事件，并给出符合常理的结论与可执行建议。
 
 [象法运用步骤]
 1. 定位：在牌面中找出最能对应所问事情的符号。
@@ -666,17 +949,27 @@ export async function onRequestPost({ request }) {
 4. 串联：把各张牌的符号串联成一个故事或过程，描绘事情的发展脉络。
 5. 结论：给出简明结果，包含事件走向+可能的细节+1–3条可行行动建议。
 
+[象征元素解读指南]
+- characters（人物）：代表事件中的关键角色或当事人的状态
+- props（道具）：象征具体的工具、资源或影响因素
+- environment（环境）：反映事件发生的背景或外在条件
+- time_hint（时间提示）：指示事件的时间节点或发展阶段
+- direction（方向）：暗示事件的动向或能量流动
+- actions（行动）：描述正在发生或即将发生的具体动作
+- story_hint（故事提示）：提供整体情境的核心线索
+- branches（分支建议）：基于当前象征给出的可能行动方向
+
 [输出格式]
 首部：问题+背景+抽牌列表
-主体：逐张牌的符号解读 → 象法串联 → 结论
+主体：逐张牌的象征解读 → 象法串联 → 结论
 风格：直观、形象，注重细节（动作/物象），避免过度抽象或心理化解读
-结论：用“倾向/较可能/建议”表达
+结论：用"倾向/较可能/建议"表达，优先采用牌面提供的分支建议
 
 [特别注意]
-- 你必须基于牌面可见的图像元素来推断，而不是只依赖传统牌义。
+- 你必须基于提供的象征元素（symbols、actions、story_hint）来推断，而不是只依赖传统牌义。
 - 解释要能落地到现实事件（如：出行、健康、沟通、变化）。
 - 遇到自然现象类问题（天气/身体/环境），结论需符合常理。
-`;
+- 充分利用branches字段中的建议，将其融入到最终的行动指导中。`;
 
     const userMessage = `【占卜问题】
 ${text || '请为我进行塔罗占卜'}
@@ -688,42 +981,59 @@ ${deck?.name || '标准塔罗牌'}
 牌阵名称：${spread?.name || '标准牌阵'}
 牌阵说明：${spread?.desc || ''}
 
-【牌阵布局】（共${spreadCards.length}张牌）
+【牌阵布局与象征分析】（共${spreadCards.length}张牌）
 ${spreadCards.map((card, index) => {
       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-      return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
-    }).join('\n')}
+      const analysis = card.cardAnalysis;
 
-请严格按照上述牌阵布局进行解析，提供详细占卜解析。`;
+      return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
 
+象征元素：
+- 人物：${analysis.symbols.characters.join('、')}
+- 道具：${analysis.symbols.props.join('、')}
+- 环境：${analysis.symbols.environment.join('、')}
+- 时间提示：${analysis.symbols.time_hint}
+- 方向：${analysis.symbols.direction}
+
+关键行动：${analysis.actions.join('、')}
+故事线索：${analysis.story_hint}
+建议分支：${analysis.branches.join('、')}`;
+    }).join('\n\n')}
+
+请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
+
+    // 使用新的API
     const apiRequestBody = {
-      model: "glm-4.5-flash",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userMessage }
       ],
+      stream: false,
+      model: "glm-4-flash",
       temperature: 0.6,
-      max_tokens: 9000
+      presence_penalty: 0,
+      frequency_penalty: 0,
+      top_p: 1
     };
 
-    const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+    const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 71417eea1e2e423e8da537452dfb7a21.kCF5Hgqhr40Rp9va",
-        "Content-Type": "application/json"
+        "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
+        "content-type": "application/json"
       },
       body: JSON.stringify(apiRequestBody)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`智谱AI API 错误! status: ${response.status}, response: ${errorText}`);
+      throw new Error(`API 错误! status: ${response.status}, response: ${errorText}`);
     }
 
     const data = await response.json();
 
     if (!data.choices?.[0]?.message) {
-      throw new Error('智谱AI API 响应格式异常');
+      throw new Error('API 响应格式异常');
     }
 
     return new Response(JSON.stringify({

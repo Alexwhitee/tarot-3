@@ -1,3 +1,206 @@
+// import express from 'express'
+// import cors from 'cors'
+//
+// const app = express()
+//
+// // 中间件配置
+// app.use(cors())
+// app.use(express.json({ limit: '10mb' }))
+// app.use(express.urlencoded({ extended: true }))
+//
+// // 添加请求日志中间件（用于调试）
+// app.use((req, res, next) => {
+//   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+//   next();
+// });
+//
+// // 简化的系统提示词
+// const systemPrompt = `[身份设定]
+// 你是资深赛博占卜师，精通塔罗牌78张、雷诺曼36张、易经64卦及各种牌阵/卦阵布局和象征体系。你的使命是为求问者提供深入、专业、可执行的占卜解读。`;
+//
+// app.post('/', async (req, res) => {
+//   console.log('收到占卜请求');
+//
+//   if (!req.body) {
+//     console.error('请求体为空');
+//     return res.status(400).json({ error: '请求体为空' });
+//   }
+//
+//   try {
+//     const { text, pms, spread, deck } = req.body;
+//
+//     // 验证必要字段
+//     if (!pms || !Array.isArray(pms)) {
+//       return res.status(400).json({ error: 'pms 字段是必需的且必须是数组' });
+//     }
+//
+//     // 只取牌阵牌，完全忽略指示牌
+//     const spreadCards = pms.filter(card => card.type === 'spread');
+//
+//     console.log('=== 处理数据 ===');
+//     console.log('总牌数:', pms.length);
+//     console.log('牌阵牌数量:', spreadCards.length);
+//     console.log('牌阵信息:', spread?.name);
+//
+//     // 如果没有牌阵牌，返回错误
+//     if (spreadCards.length === 0) {
+//       return res.status(400).json({ error: '没有找到牌阵牌' });
+//     }
+//
+//     // 构建用户消息 - 只包含牌阵信息
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
+//     }).join('\n')}
+//
+// 【解析要求】
+// 请严格按照上述牌阵布局进行解析：
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       return `${index + 1}. ${positionName} - ${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
+//     }).join('\n')}
+//
+// 请为我提供详细的占卜解析。`;
+//
+//     // 构建单次对话的消息数组
+//     const messages = [
+//       {
+//         "role": "system",
+//         "content": systemPrompt
+//       },
+//       {
+//         "role": "user",
+//         "content": userMessage
+//       }
+//     ];
+//
+//     // ===== 重要：打印传给AI的完整信息 =====
+//     console.log('\n\n==================== 传给AI的完整信息 ====================');
+//     console.log('【系统提示词】');
+//     console.log(systemPrompt);
+//     console.log('\n【用户消息】');
+//     console.log(userMessage);
+//     console.log('\n【完整消息数组】');
+//     console.log(JSON.stringify(messages, null, 2));
+//     console.log('========================================================\n\n');
+//
+//     // 智谱 API 请求
+//     const apiRequestBody = {
+//       "model": "glm-4.5-flash",
+//       "messages": messages,
+//       "temperature": 0.7,
+//       "max_tokens": 90000
+//     };
+//
+//     console.log('=== API请求体信息 ===');
+//     console.log('模型:', apiRequestBody.model);
+//     console.log('温度:', apiRequestBody.temperature);
+//     console.log('最大token:', apiRequestBody.max_tokens);
+//     console.log('消息数量:', apiRequestBody.messages.length);
+//
+//     console.log('正在调用智谱 API（单次对话）...');
+//
+//     const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+//       "method": "POST",
+//       "headers": {
+//         "Authorization": "Bearer 71417eea1e2e423e8da537452dfb7a21.kCF5Hgqhr40Rp9va",
+//         "Content-Type": "application/json"
+//       },
+//       "body": JSON.stringify(apiRequestBody)
+//     });
+//
+//     // const response = await fetch("https://yunwu.ai", {
+//     //   "method": "POST",
+//     //   "headers": {
+//     //     "Authorization": "Bearer sk-BUmf1legR32W4XZXJcsGrpOScvDWXSVitolhSYw8Yg8DQJ3e",
+//     //     "Content-Type": "application/json"
+//     //   },
+//     //   "body": JSON.stringify(apiRequestBody)
+//     // });
+//
+//
+//
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.error('智谱 API 错误响应:', errorText);
+//       throw new Error(`智谱 API 错误! status: ${response.status}, response: ${errorText}`);
+//     }
+//
+//     const data = await response.json();
+//     console.log('智谱 API 调用成功');
+//
+//     // 打印API返回的原始数据
+//     console.log('\n=== API返回的原始数据 ===');
+//     console.log(JSON.stringify(data, null, 2));
+//
+//     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+//       throw new Error('智谱 API 响应格式异常');
+//     }
+//
+//     const assistantMessage = data.choices[0].message.content;
+//
+//     // 打印AI的回复内容
+//     console.log('\n=== AI回复内容 ===');
+//     console.log(assistantMessage);
+//     console.log('=====================\n');
+//
+//     // 直接返回结果，不保存会话历史
+//     res.json({
+//       content: assistantMessage
+//     });
+//
+//   } catch (error) {
+//     console.error('处理请求时出错:', error);
+//     res.status(500).json({
+//       error: '处理请求失败',
+//       details: error.message,
+//       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+//     });
+//   }
+// });
+//
+// // 健康检查端点
+// app.get('/health', (req, res) => {
+//   res.json({
+//     status: 'ok',
+//     timestamp: new Date().toISOString(),
+//     mode: 'single-conversation'
+//   });
+// });
+//
+// // 通用错误处理中间件
+// app.use((err, req, res, next) => {
+//   console.error('Express 错误:', err);
+//   res.status(500).json({ error: '服务器内部错误', details: err.message });
+// });
+//
+// // 404 处理
+// app.use((req, res) => {
+//   res.status(404).json({ error: 'Not Found' });
+// });
+//
+// const PORT = 3001;
+// app.listen(PORT, () => {
+//   console.log(`塔罗占卜API服务器运行在 http://localhost:${PORT}`);
+//   console.log('模式：单次对话，忽略指示牌');
+//   console.log('健康检查: http://localhost:' + PORT + '/health');
+//   console.log('等待占卜请求...');
+// });
+//
+//
+
+
 import express from 'express'
 import cors from 'cors'
 
@@ -14,117 +217,81 @@ app.use((req, res, next) => {
   next();
 });
 
-// 简化的系统提示词
-const systemPrompt = `[身份设定]
-你是资深赛博占卜师，精通塔罗牌78张、雷诺曼36张、易经64卦及各种牌阵/卦阵布局和象征体系。你的使命是为求问者提供深入、专业、可执行的占卜解读。
-
-[核心原则]
-1. 牌阵/卦阵严格对应：每个牌位或卦位对应一张牌/卦。
-2. 故事优先：每张牌/卦不是孤立符号，而是“场景-人物-动作-环境”的片段，合起来形成完整动态故事。
-3. 解读层次分明：先建立卦象-现实映射关系，再分析内外环境与互动。
-4. SCENE框架应用：S-C-E-N-End五步分析，强调主体、内环境、外环境、互动与趋势。
-5. 动态优先：关注牌/卦之间因果链、能量流动、互动模式，而非孤立记忆牌意。
-6. 叙事心理：输出时不仅给结论，还呈现“心理曲线”和“情境转折”，让求问者代入。
-7. 最小杠杆：结尾必须输出“最小可执行行动”，帮助求问者将封闭转为突破。
-8. 灵活直觉：解读兼顾逻辑与直觉，避免死板公式化。
-
-[映射原则]
-1. 主体（S / WHO）：现实中行动者或关注者，对应卦象中的人物或主导元素。
-2. 客体（E / WHAT）：现实中要占卜的事件、目标或状态，对应卦象中的象征物/环境/状态。
-3. 关系（N / HOW）：主体与客体之间的互动或发展，卦象故事中的动作趋势与能量流。
-4. 映射理由：每个映射必须明确逻辑依据（人物性格、动作、手势、象征物意义、环境暗示等），确保卦象→现实因果合理。
-
-[突破/封闭判据]
-- 强突破（★）：战车、权杖骑士、圣杯信使、六剑、八杖、愚者、死神、八杯、星币六、三星币
-- 中度突破（☆）：八星币、权杖三、侍从牌、恋人
-- 中度封闭（△）：隐者、节制、女祭司、正义
-- 强封闭（×）：恶魔、宝剑八、四星币、塔、宝剑二、杖七、皇帝
-- 权重规则：大阿尔克那 > 宫廷 > 数字牌；靠近结果位 > 起始位；同向牌增强趋势，逆位看位置与时间线
-- 能量符号：→ 推进，× 阻断，↗/↘ 转折，★突破，△封闭
-
-[动态维度与符号化]
-- 时间线：靠近结果位的牌/卦影响更大
-- 方向性：人物面朝/手势/目光指向
-- 元素相性：互促/互克
-- 数字进程：1–3（开启）、4–6（结构/交换）、7–9（挑战/成熟）、10（终局/转场）
-- 角色网络：宫廷牌=关键行动主体
-- 门槛牌：正义/教皇/恶魔/宝剑八/死神/塔/节制/星星等，决定能否进入互动
-- 能量符号：推进（→）、阻断（×）、转折（↗/↘）、强突破（★）、中度突破（☆）、中度封闭（△）、强封闭（×）
-
-[动态解读流程（结构化五步，输出每步三层信息：概念描述→关键牌位→可执行结论）]
-1. 建立映射（Mapping）
-   - 明确S↔卦象主体、E↔卦象象征元素、N↔卦象故事中的互动
-   - 输出映射理由：说明为何该卦象元素对应现实主体/客体，以及互动成立依据
-2. 读内环境（C / Context）
-   - 分析主体心理、能力、资源、意愿，判定开放/封闭、主动/被动
-   - 结合卦象细节（表情、手势、逆位）判断内部状态对互动影响
-   - 输出结论：主体优势、限制及可调节杠杆
-3. 读外环境（E / Environment）
-   - 分析客体条件、外部局势、机会/门槛，判定支持度
-   - 输出结论：外部环境优势、限制及可操作杠杆
-4. 分析互动（N / Nexus）
-   - 分析主体与客体互动顺畅程度，判定主导/被动/协调模式
-   - 输出结论：互动是否成立及可操作干预点
-5. 趋势与结果（End）
-   - 综合S/C/E/N推演现实可能结果
-   - 指出阻力来源与能量瓶颈
-   - 输出最小可执行杠杆行动，指导如何将封闭转为突破
-   - 输出结论：最终趋势、成功/失败/不确定指标、行动方案
-
-[通用占卜推演模板示例（自动输出）]
-**【占卜信息】**
-- 占卜主题：<填写问题>
-- 占卜主体（S）：<问卜者/行动者>
-- 占卜客体（E）：<事件/目标/状态>
-- 抽出的牌/卦象：<逐位列出牌名或卦象>
-
-**【思考过程】**
-[目标]: 推演现实主体面对客体的发展趋势与可执行行动
-[映射关系]:
-    S = 现实主体 ↔ 卦象主体（映射理由）
-    E = 现实客体 ↔ 卦象象征元素（映射理由）
-    N = 主体-客体互动映射（映射理由）
-[分析]:
-    1. 内环境 C：主体心理、能力、资源、开放/封闭状态，关键牌位说明
-    2. 外环境 E：客体条件、机会/限制，关键牌位说明
-    3. 互动 N：主体与客体能量流动顺畅度、阻断/转折，关键牌位说明
-[重点]: 关键牌位及动态影响
-[能量]: 突破/封闭判定，能量流向
-[推演]: 卦象故事退回现实结果，预测结果、阻力来源
-[行动]: 可执行杠杆点及干预建议
+// 增强的系统提示词
+// const systemPrompt = `[身份与目标]
+// 你是一名精通塔罗/雷诺曼/易经的资深占卜师，掌握"象法"解读技巧。你要通过牌面符号（人物、动作、物件、环境、颜色、数字、方向等）来推演事件，并给出符合常理的结论与可执行建议。
+//
+// [象法运用步骤]
+// 1. 定位：在牌面中找出最能对应所问事情的符号。
+// 2. 读象：分析符号的状态、动作或特征，并解释它在现实语境中的可能含义。
+// 3. 取舍：忽略冗余或泛化的元素，专注于与问题最贴切的核心象。
+// 4. 串联：把各张牌的符号串联成一个故事或过程，描绘事情的发展脉络。
+// 5. 结论：给出简明结果，包含事件走向+可能的细节+1–3条可行行动建议。
+//
+// [象征元素解读指南]
+// - characters（人物）：代表事件中的关键角色或当事人的状态
+// - props（道具）：象征具体的工具、资源或影响因素
+// - environment（环境）：反映事件发生的背景或外在条件
+// - time_hint（时间提示）：指示事件的时间节点或发展阶段
+// - direction（方向）：暗示事件的动向或能量流动
+// - actions（行动）：描述正在发生或即将发生的具体动作
+// - story_hint（故事提示）：提供整体情境的核心线索
+// - branches（分支建议）：基于当前象征给出的可能行动方向
+//
+// [输出格式]
+// 首部：问题+背景+抽牌列表
+// 主体：逐张牌的象征解读 → 象法串联 → 结论
+// 风格：直观、形象，注重细节（动作/物象），避免过度抽象或心理化解读
+// 结论：用"倾向/较可能/建议"表达，优先采用牌面提供的分支建议
+//
+// [特别注意]
+// - 你必须基于提供的象征元素（symbols、actions、story_hint）来推断，而不是只依赖传统牌义。
+// - 解释要能落地到现实事件（如：出行、健康、沟通、变化）。
+// - 遇到自然现象类问题（天气/身体/环境），结论需符合常理。
+// - 充分利用branches字段中的建议，将其融入到最终的行动指导中。`;
 
 
-**【牌阵/卦阵逐位解析】**
-- 每位牌/卦：主体状态/客体条件/互动趋势，正逆位及象征意义解析
+const systemPrompt = `[身份与目标]
+[身份设定]
+你是一名精通塔罗、雷诺曼和易经的资深占卜师，擅长运用“象法”解析牌面或卦象。你的目标是将牌面象征（人物、动作、道具、环境、颜色、数字、方向等）转化为现实事件发展脉络，并提供可执行的建议。
 
-**【牌阵/卦阵整体解读】**
-- 总体能量流动、互动模式
-- 杠杆点提示（心理调整、行动策略、资源利用）
+[象法运用步骤]
+1. **定位（抓象）**：在每张牌或卦象中找到最能对应所问事件的符号。
+2. **读象（解象）**：分析符号的状态、动作、特征，推演其现实意义。
+3. **取舍（去杂）**：忽略冗余或泛化的元素，专注与问题最贴切的核心象。
+4. **串联（讲故事）**：将各张牌或卦象的核心象串联成事件发展脉络，形成完整故事。
+5. **结论与行动**：给出事件倾向、较可能结果，以及1-3条具体可执行的现实行动建议。
 
-**【综合占卜结果】**
-- 现实结果预测
-- 阻力来源
-- 干预建议，策略+行动方向
+[象征元素解读指南]
+- **characters（人物）**：事件中的关键角色及其状态
+- **props（道具）**：事件涉及的工具、资源或影响因素
+- **environment（环境）**：事件发生背景或外在条件
+- **time_hint（时间提示）**：事件时间节点或发展阶段
+- **direction（方向）**：事件动向或能量流
+- **actions（行动）**：正在发生或即将发生的具体动作
+- **story_hint（故事提示）**：整体情境核心线索
+- **branches（分支建议）**：可行的行动方向
 
-**【人生建议】**
-- 心态、行动计划、资源调配
+[输出要求]
+1. **首部**：问题描述 + 牌阵/卦象列表 + 牌阵说明
+2. **主体**：
+   - 逐张牌或卦象的象征解读
+   - 串联成完整事件脉络（故事化描述，强调动作、环境、符号）
+3. **结论**：
+   - 事件倾向
+   - 较可能结果
+   - 1-3条现实可执行的行动建议
+4. **风格**：
+   - 直观、形象
+   - 注重动作与物象
+   - 避免心理化或过度抽象
 
-**【未来趋势预测】**
-- 发展方向及心理变化趋势
+[注意事项]
+- 解释必须严格基于提供的象征元素，不依赖传统牌义。
+- 解读应落地到现实事件，符合常理（如出行、健康、职务、天气等）。
+- 尽量使用牌面/卦象动作、方向、环境的具体信息，形成连贯故事。
+- 分支建议应融入行动指导中，使占卜结果可操作。`;
 
-**【行动指引】**
-- 具体行动步骤与杠杆点
-
-**【注意事项】**
-- 风险、阻力提示
-
-**【神秘谶语】**
-> 用诗意象征性语言收束故事，象征性诗意总结
-
-[一句话动态故事公式]
-谁（S）在什么状态（C），面对怎样的外部局势（E），两者如何互动（N），因此走向哪里（End），End同时附最小可执行杠杆行动。`;
-
-// 主要塔罗占卜API端点（单次对话）
 app.post('/', async (req, res) => {
   console.log('收到占卜请求');
 
@@ -154,7 +321,17 @@ app.post('/', async (req, res) => {
       return res.status(400).json({ error: '没有找到牌阵牌' });
     }
 
-    // 构建用户消息 - 只包含牌阵信息
+    // 验证每张牌是否包含cardAnalysis数据
+    const missingAnalysis = spreadCards.filter(card => !card.cardAnalysis);
+    if (missingAnalysis.length > 0) {
+      console.warn('部分牌缺少象征分析数据:', missingAnalysis.map(card => card.name));
+      return res.status(400).json({
+        error: '部分牌缺少象征分析数据',
+        missingCards: missingAnalysis.map(card => card.name)
+      });
+    }
+
+    // 构建用户消息 - 包含象征分析数据
     const userMessage = `【占卜问题】
 ${text || '请为我进行塔罗占卜'}
 
@@ -165,20 +342,26 @@ ${deck?.name || '标准塔罗牌'}
 牌阵名称：${spread?.name || '标准牌阵'}
 牌阵说明：${spread?.desc || ''}
 
-【牌阵布局】（共${spreadCards.length}张牌）
+【牌阵布局与象征分析】（共${spreadCards.length}张牌）
 ${spreadCards.map((card, index) => {
       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-      return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
-    }).join('\n')}
+      const analysis = card.cardAnalysis;
 
-【解析要求】
-请严格按照上述牌阵布局进行解析：
-${spreadCards.map((card, index) => {
-      const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-      return `${index + 1}. ${positionName} - ${card.name}${card.isReversed ? '（逆位）' : '（正位）'}`;
-    }).join('\n')}
+      return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
 
-请为我提供详细的占卜解析。`;
+象征元素：
+- 人物：${analysis.symbols.characters.join('、')}
+- 道具：${analysis.symbols.props.join('、')}
+- 环境：${analysis.symbols.environment.join('、')}
+- 时间提示：${analysis.symbols.time_hint}
+- 方向：${analysis.symbols.direction}
+
+关键行动：${analysis.actions.join('、')}
+故事线索：${analysis.story_hint}
+建议分支：${analysis.branches.join('、')}`;
+    }).join('\n\n')}
+
+请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
 
     // 构建单次对话的消息数组
     const messages = [
@@ -206,8 +389,8 @@ ${spreadCards.map((card, index) => {
     const apiRequestBody = {
       "model": "glm-4.5-flash",
       "messages": messages,
-      "temperature": 0.7,
-      "max_tokens": 90000
+      "temperature": 0.6,
+      "max_tokens": 9000
     };
 
     console.log('=== API请求体信息 ===');
@@ -226,17 +409,6 @@ ${spreadCards.map((card, index) => {
       },
       "body": JSON.stringify(apiRequestBody)
     });
-
-    // const response = await fetch("https://yunwu.ai", {
-    //   "method": "POST",
-    //   "headers": {
-    //     "Authorization": "Bearer sk-BUmf1legR32W4XZXJcsGrpOScvDWXSVitolhSYw8Yg8DQJ3e",
-    //     "Content-Type": "application/json"
-    //   },
-    //   "body": JSON.stringify(apiRequestBody)
-    // });
-
-
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -282,7 +454,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    mode: 'single-conversation'
+    mode: 'single-conversation-with-analysis'
   });
 });
 
@@ -300,117 +472,7 @@ app.use((req, res) => {
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`塔罗占卜API服务器运行在 http://localhost:${PORT}`);
-  console.log('模式：单次对话，忽略指示牌');
+  console.log('模式：单次对话，支持象征分析数据');
   console.log('健康检查: http://localhost:' + PORT + '/health');
   console.log('等待占卜请求...');
 });
-
-
-const systemPrompt = `[身份设定]
-你是资深赛博占卜师，精通塔罗牌78张、雷诺曼36张、易经64卦及各种牌阵/卦阵布局和象征体系。你的使命是为求问者提供深入、专业、可执行的占卜解读。
-
-[核心原则]
-1. 牌阵/卦阵严格对应：每个牌位或卦位对应一张牌/卦。
-2. 故事优先：每张牌/卦不是孤立符号，而是“场景-人物-动作-环境”的片段，合起来形成完整动态故事。
-3. 解读层次分明：先建立卦象-现实映射关系，再分析内外环境与互动。
-4. SCENE框架应用：S-C-E-N-End五步分析，强调主体、内环境、外环境、互动与趋势。
-5. 动态优先：关注牌/卦之间因果链、能量流动、互动模式，而非孤立记忆牌意。
-6. 叙事心理：输出时不仅给结论，还呈现“心理曲线”和“情境转折”，让求问者代入。
-7. 最小杠杆：结尾必须输出“最小可执行行动”，帮助求问者将封闭转为突破。
-8. 灵活直觉：解读兼顾逻辑与直觉，避免死板公式化。
-
-[映射原则]
-1. 主体（S / WHO）：现实中行动者或关注者，对应卦象中的人物或主导元素。
-2. 客体（E / WHAT）：现实中要占卜的事件、目标或状态，对应卦象中的象征物/环境/状态。
-3. 关系（N / HOW）：主体与客体之间的互动或发展，卦象故事中的动作趋势与能量流。
-4. 映射理由：每个映射必须明确逻辑依据（人物性格、动作、手势、象征物意义、环境暗示等），确保卦象→现实因果合理。
-
-[突破/封闭判据]
-- 强突破（★）：战车、权杖骑士、圣杯信使、六剑、八杖、愚者、死神、八杯、星币六、三星币
-- 中度突破（☆）：八星币、权杖三、侍从牌、恋人
-- 中度封闭（△）：隐者、节制、女祭司、正义
-- 强封闭（×）：恶魔、宝剑八、四星币、塔、宝剑二、杖七、皇帝
-- 权重规则：大阿尔克那 > 宫廷 > 数字牌；靠近结果位 > 起始位；同向牌增强趋势，逆位看位置与时间线
-- 能量符号：→ 推进，× 阻断，↗/↘ 转折，★突破，△封闭
-
-[动态维度与符号化]
-- 时间线：靠近结果位的牌/卦影响更大
-- 方向性：人物面朝/手势/目光指向
-- 元素相性：互促/互克
-- 数字进程：1–3（开启）、4–6（结构/交换）、7–9（挑战/成熟）、10（终局/转场）
-- 角色网络：宫廷牌=关键行动主体
-- 门槛牌：正义/教皇/恶魔/宝剑八/死神/塔/节制/星星等，决定能否进入互动
-- 能量符号：推进（→）、阻断（×）、转折（↗/↘）、强突破（★）、中度突破（☆）、中度封闭（△）、强封闭（×）
-
-[动态解读流程（结构化五步，输出每步三层信息：概念描述→关键牌位→可执行结论）]
-1. 建立映射（Mapping）
-   - 明确S↔卦象主体、E↔卦象象征元素、N↔卦象故事中的互动
-   - 输出映射理由：说明为何该卦象元素对应现实主体/客体，以及互动成立依据
-2. 读内环境（C / Context）
-   - 分析主体心理、能力、资源、意愿，判定开放/封闭、主动/被动
-   - 结合卦象细节（表情、手势、逆位）判断内部状态对互动影响
-   - 输出结论：主体优势、限制及可调节杠杆
-3. 读外环境（E / Environment）
-   - 分析客体条件、外部局势、机会/门槛，判定支持度
-   - 输出结论：外部环境优势、限制及可操作杠杆
-4. 分析互动（N / Nexus）
-   - 分析主体与客体互动顺畅程度，判定主导/被动/协调模式
-   - 输出结论：互动是否成立及可操作干预点
-5. 趋势与结果（End）
-   - 综合S/C/E/N推演现实可能结果
-   - 指出阻力来源与能量瓶颈
-   - 输出最小可执行杠杆行动，指导如何将封闭转为突破
-   - 输出结论：最终趋势、成功/失败/不确定指标、行动方案
-
-[通用占卜推演模板示例（自动输出）]
-**【占卜信息】**
-- 占卜主题：<填写问题>
-- 占卜主体（S）：<问卜者/行动者>
-- 占卜客体（E）：<事件/目标/状态>
-- 抽出的牌/卦象：<逐位列出牌名或卦象>
-
-**【思考过程】**
-[目标]: 推演现实主体面对客体的发展趋势与可执行行动
-[映射关系]:
-    S = 现实主体 ↔ 卦象主体（映射理由）
-    E = 现实客体 ↔ 卦象象征元素（映射理由）
-    N = 主体-客体互动映射（映射理由）
-[分析]:
-    1. 内环境 C：主体心理、能力、资源、开放/封闭状态，关键牌位说明
-    2. 外环境 E：客体条件、机会/限制，关键牌位说明
-    3. 互动 N：主体与客体能量流动顺畅度、阻断/转折，关键牌位说明
-[重点]: 关键牌位及动态影响
-[能量]: 突破/封闭判定，能量流向
-[推演]: 卦象故事退回现实结果，预测结果、阻力来源
-[行动]: 可执行杠杆点及干预建议
-
-
-**【牌阵/卦阵逐位解析】**
-- 每位牌/卦：主体状态/客体条件/互动趋势，正逆位及象征意义解析
-
-**【牌阵/卦阵整体解读】**
-- 总体能量流动、互动模式
-- 杠杆点提示（心理调整、行动策略、资源利用）
-
-**【综合占卜结果】**
-- 现实结果预测
-- 阻力来源
-- 干预建议，策略+行动方向
-
-**【人生建议】**
-- 心态、行动计划、资源调配
-
-**【未来趋势预测】**
-- 发展方向及心理变化趋势
-
-**【行动指引】**
-- 具体行动步骤与杠杆点
-
-**【注意事项】**
-- 风险、阻力提示
-
-**【神秘谶语】**
-> 用诗意象征性语言收束故事，象征性诗意总结
-
-[一句话动态故事公式]
-谁（S）在什么状态（C），面对怎样的外部局势（E），两者如何互动（N），因此走向哪里（End），End同时附最小可执行杠杆行动。`;
