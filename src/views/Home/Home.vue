@@ -1285,32 +1285,32 @@ type Deck = {
 //     }
 //   }
 // }
-type CardInfo = {
-  no: number
-  name: string
-  type?: 'guide' | 'spread'
-  isReversed: boolean
-  cardAnalysis?: {
-    symbols: {
-      characters: string[]
-      props: string[]
-      environment: string[]
-      time_hint: string
-      direction: string
-    }
-    actions: string[]
-    story_hint: string
-    branches: string[]
-    possible_real_world_mapping: string
-    element_relations?: {
-      element: string
-      generates: string[]
-      overcomes: string[]
-      generated_by: string[]
-      overcome_by: string[]
-    }
-  }
-}
+// type CardInfo = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+//   cardAnalysis?: {
+//     symbols: {
+//       characters: string[]
+//       props: string[]
+//       environment: string[]
+//       time_hint: string
+//       direction: string
+//     }
+//     actions: string[]
+//     story_hint: string
+//     branches: string[]
+//     possible_real_world_mapping: string
+//     element_relations?: {
+//       element: string
+//       generates: string[]
+//       overcomes: string[]
+//       generated_by: string[]
+//       overcome_by: string[]
+//     }
+//   }
+// }
 
 // type CardResult = {
 //   no: number
@@ -1336,32 +1336,32 @@ type CustomSpread = Spread & {
 //   isReversed: boolean
 //   cardAnalysis?: any // 添加这一行
 // }
-type CardResult = {
-  no: number
-  name: string
-  type?: 'guide' | 'spread'
-  isReversed: boolean
-  cardAnalysis?: {
-    symbols: {
-      characters: string[]
-      props: string[]
-      environment: string[]
-      time_hint: string
-      direction: string
-    }
-    actions: string[]
-    story_hint: string
-    branches: string[]
-    possible_real_world_mapping: string
-    element_relations?: {
-      element: string
-      generates: string[]
-      overcomes: string[]
-      generated_by: string[]
-      overcome_by: string[]
-    }
-  }
-}
+// type CardResult = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+//   cardAnalysis?: {
+//     symbols: {
+//       characters: string[]
+//       props: string[]
+//       environment: string[]
+//       time_hint: string
+//       direction: string
+//     }
+//     actions: string[]
+//     story_hint: string
+//     branches: string[]
+//     possible_real_world_mapping: string
+//     element_relations?: {
+//       element: string
+//       generates: string[]
+//       overcomes: string[]
+//       generated_by: string[]
+//       overcome_by: string[]
+//     }
+//   }
+// }
 
 
 
