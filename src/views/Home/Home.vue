@@ -1119,6 +1119,43 @@ import cardDetails from '../../data/pai.json'
 //   }
 // }
 
+// type CardDetail = {
+//   id: number
+//   name: string
+//   english: string
+//   upright: {
+//     keywords: string[]
+//     description: string
+//   }
+//   reversed: {
+//     keywords: string[]
+//     description: string
+//   }
+//   story: string
+//   core_meaning: string
+//   potential_risks: string
+//   possible_real_world_mapping: string
+//   symbolic_elements: {
+//     characters: string[]
+//     props: string[]
+//     environment: string[]
+//     time_hint: string
+//     direction: string
+//   }
+//   symbolic_attributes: {
+//     interactions: string[]
+//     potential_branches: string[]
+//   }
+//   element_relations?: {  // 可选字段
+//     element: string
+//     generates: string[]
+//     overcomes: string[]
+//     generated_by: string[]
+//     overcome_by: string[]
+//   }
+//   relative_effects?: any  // 可选字段
+// }
+
 type CardDetail = {
   id: number
   name: string
@@ -1143,17 +1180,16 @@ type CardDetail = {
     direction: string
   }
   symbolic_attributes: {
-    interactions: string[]
+    interactions: string[] // 确保是 string[]
     potential_branches: string[]
   }
-  element_relations?: {  // 可选字段
+  element_relations?: {
     element: string
     generates: string[]
     overcomes: string[]
     generated_by: string[]
     overcome_by: string[]
   }
-  relative_effects?: any  // 可选字段
 }
 
 
@@ -1205,12 +1241,38 @@ type CustomSpread = Spread & {
   createdAt: string
 }
 
+// type CardResult = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+//   cardAnalysis?: any // 添加这一行
+// }
 type CardResult = {
   no: number
   name: string
   type?: 'guide' | 'spread'
   isReversed: boolean
-  cardAnalysis?: any // 添加这一行
+  cardAnalysis?: {
+    symbols: {
+      characters: string[]
+      props: string[]
+      environment: string[]
+      time_hint: string
+      direction: string
+    }
+    actions: string[]
+    story_hint: string
+    branches: string[]
+    possible_real_world_mapping: string
+    element_relations?: {
+      element: string
+      generates: string[]
+      overcomes: string[]
+      generated_by: string[]
+      overcome_by: string[]
+    }
+  }
 }
 
 
@@ -1327,29 +1389,75 @@ const formatCurrentTime = computed(() => {
 // })
 
 
+// const formatAIInputData = computed(() => {
+//   if (!resStatus.value || cardResult.value.length === 0) return ''
+//
+//   const frontendToApiData = {
+//     text: textValue.value || '请为我进行塔罗占卜',
+//     pms: cardResult.value.map(card => {
+//       const cardData = {
+//         no: card.no,
+//         name: card.name,
+//         type: card.type,
+//         isReversed: card.isReversed,
+//         cardAnalysis: card.cardAnalysis ? {
+//           symbols: card.cardAnalysis.symbols,
+//           actions: card.cardAnalysis.actions,
+//           story_hint: card.cardAnalysis.story_hint,
+//           branches: card.cardAnalysis.branches,
+//           possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping // 新增
+//         } : null
+//       }
+//
+//       // 如果有 element_relations 且不为 null，则添加
+//       if (card.cardAnalysis?.element_relations) {
+//         cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+//       }
+//
+//       return cardData
+//     }),
+//     spread: {
+//       key: selectedSpread.value?.key || '',
+//       name: selectedSpread.value?.name || '标准牌阵',
+//       desc: selectedSpread.value?.desc || '',
+//       positions: selectedSpread.value?.positions || []
+//     },
+//     deck: {
+//       key: selectedDeck.value?.key || '',
+//       name: selectedDeck.value?.name || '标准塔罗牌'
+//     }
+//   }
+//
+//   return JSON.stringify(frontendToApiData, null, 2)
+// })
+
 const formatAIInputData = computed(() => {
   if (!resStatus.value || cardResult.value.length === 0) return ''
 
   const frontendToApiData = {
     text: textValue.value || '请为我进行塔罗占卜',
     pms: cardResult.value.map(card => {
-      const cardData = {
+      const cardData: any = {
         no: card.no,
         name: card.name,
         type: card.type,
-        isReversed: card.isReversed,
-        cardAnalysis: card.cardAnalysis ? {
+        isReversed: card.isReversed
+      }
+
+      // 如果有 cardAnalysis，则添加相关字段
+      if (card.cardAnalysis) {
+        cardData.cardAnalysis = {
           symbols: card.cardAnalysis.symbols,
           actions: card.cardAnalysis.actions,
           story_hint: card.cardAnalysis.story_hint,
           branches: card.cardAnalysis.branches,
-          possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping // 新增
-        } : null
-      }
+          possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+        }
 
-      // 如果有 element_relations 且不为 null，则添加
-      if (card.cardAnalysis?.element_relations) {
-        cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+        // 只有当 element_relations 存在且不为 null 时才添加
+        if (card.cardAnalysis.element_relations) {
+          cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+        }
       }
 
       return cardData
@@ -1368,7 +1476,6 @@ const formatAIInputData = computed(() => {
 
   return JSON.stringify(frontendToApiData, null, 2)
 })
-
 
 // 复制功能函数
 const copyToClipboard = async (text: string) => {
@@ -2256,6 +2363,34 @@ const showCardDetail = ref(false)
 //   selectedCardDetail.value = null
 // }
 // 显示抽中卡牌的详情（保持不变）
+// const showDrawnCardDetail = (drawnCard: CardResult) => {
+//   console.log('查看抽中卡牌详情:', drawnCard)
+//
+//   const currentDeckKey = selectedDeck.value?.key
+//
+//   if (!currentDeckKey) {
+//     console.error('无法确定当前牌组')
+//     return
+//   }
+//
+//   // const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+// // 在 selectViewDeck 等函数中，如果需要类型转换
+//   const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
+//
+//   if (!deckDetails) {
+//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+//     return
+//   }
+//
+//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
+//
+//   if (cardDetail) {
+//     selectedCardDetail.value = cardDetail
+//     showDrawnCardDetailModal.value = true // 只使用新的模态框状态
+//   } else {
+//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
+//   }
+// }
 const showDrawnCardDetail = (drawnCard: CardResult) => {
   console.log('查看抽中卡牌详情:', drawnCard)
 
@@ -2266,7 +2401,7 @@ const showDrawnCardDetail = (drawnCard: CardResult) => {
     return
   }
 
-  const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+  const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
 
   if (!deckDetails) {
     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
@@ -2277,7 +2412,7 @@ const showDrawnCardDetail = (drawnCard: CardResult) => {
 
   if (cardDetail) {
     selectedCardDetail.value = cardDetail
-    showDrawnCardDetailModal.value = true // 只使用新的模态框状态
+    showDrawnCardDetailModal.value = true
   } else {
     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
   }
@@ -2396,6 +2531,65 @@ const selectCardDetail = (cardNo: number) => {
 //   return analysis
 // }
 // 找到 generateCardAnalysis 函数（大约在第1600行左右），修改返回的数据结构
+// const generateCardAnalysis = (cardNo: number): any => {
+//   const currentDeckKey = selectedDeck.value?.key
+//
+//   if (!currentDeckKey) {
+//     console.error('无法确定当前牌组')
+//     return null
+//   }
+//
+//   const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+//
+//   if (!deckDetails) {
+//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+//     return null
+//   }
+//
+//   const cardDetail = deckDetails.find(card => card.id === cardNo)
+//
+//   if (!cardDetail) {
+//     console.error(`未找到卡牌 ${cardNo} 的详情信息`)
+//     // 返回默认数据而不是 null
+//     return {
+//       symbols: {
+//         characters: ["未知人物"],
+//         props: ["未知道具"],
+//         environment: ["未知环境"],
+//         time_hint: "未知时间",
+//         direction: "未知方向"
+//       },
+//       actions: ["未知行动"],
+//       story_hint: "无可用故事信息",
+//       branches: ["需要更多信息"],
+//       possible_real_world_mapping: "无可用现实映射信息"
+//       // 注意：这里不设置 element_relations，因为没有数据时不应该传递
+//     }
+//   }
+//
+//   const analysis = {
+//     symbols: {
+//       characters: cardDetail.symbolic_elements.characters || ["未知人物"],
+//       props: cardDetail.symbolic_elements.props || ["未知道具"],
+//       environment: cardDetail.symbolic_elements.environment || ["未知环境"],
+//       time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
+//       direction: cardDetail.symbolic_elements.direction || "未知方向"
+//     },
+//     actions: cardDetail.symbolic_attributes.interactions || ["未知行动"],
+//     story_hint: cardDetail.story || "无可用故事信息",
+//     branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"],
+//     possible_real_world_mapping: cardDetail.possible_real_world_mapping || "无可用现实映射信息"
+//   }
+//
+//   // 只有当 element_relations 存在时才添加到分析数据中
+//   if (cardDetail.element_relations) {
+//     analysis.element_relations = cardDetail.element_relations
+//   }
+//
+//   console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
+//   return analysis
+// }
+
 const generateCardAnalysis = (cardNo: number): any => {
   const currentDeckKey = selectedDeck.value?.key
 
@@ -2415,7 +2609,6 @@ const generateCardAnalysis = (cardNo: number): any => {
 
   if (!cardDetail) {
     console.error(`未找到卡牌 ${cardNo} 的详情信息`)
-    // 返回默认数据而不是 null
     return {
       symbols: {
         characters: ["未知人物"],
@@ -2428,9 +2621,13 @@ const generateCardAnalysis = (cardNo: number): any => {
       story_hint: "无可用故事信息",
       branches: ["需要更多信息"],
       possible_real_world_mapping: "无可用现实映射信息"
-      // 注意：这里不设置 element_relations，因为没有数据时不应该传递
     }
   }
+
+  // 确保 interactions 是数组
+  const interactions = Array.isArray(cardDetail.symbolic_attributes.interactions)
+    ? cardDetail.symbolic_attributes.interactions
+    : [cardDetail.symbolic_attributes.interactions].filter(Boolean)
 
   const analysis = {
     symbols: {
@@ -2440,7 +2637,7 @@ const generateCardAnalysis = (cardNo: number): any => {
       time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
       direction: cardDetail.symbolic_elements.direction || "未知方向"
     },
-    actions: cardDetail.symbolic_attributes.interactions || ["未知行动"],
+    actions: interactions,
     story_hint: cardDetail.story || "无可用故事信息",
     branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"],
     possible_real_world_mapping: cardDetail.possible_real_world_mapping || "无可用现实映射信息"
@@ -2454,7 +2651,6 @@ const generateCardAnalysis = (cardNo: number): any => {
   console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
   return analysis
 }
-
 
 // // 在现有的 ref 声明附近添加（大约在第85行左右，showCardDetail 附近）
 // const showCardDetail = ref(false)
