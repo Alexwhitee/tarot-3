@@ -905,6 +905,125 @@
 
 
 
+// export async function onRequestPost({ request }) {
+//   console.log('收到占卜请求');
+//
+//   try {
+//     const { text, pms, spread, deck } = await request.json();
+//
+//     if (!pms || !Array.isArray(pms)) {
+//       return new Response(JSON.stringify({ error: 'pms 字段必须是数组' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const spreadCards = pms.filter(card => card.type === 'spread');
+//
+//     if (spreadCards.length === 0) {
+//       return new Response(JSON.stringify({ error: '没有找到牌阵牌' }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     // 验证每张牌是否包含cardAnalysis数据
+//     const missingAnalysis = spreadCards.filter(card => !card.cardAnalysis);
+//     if (missingAnalysis.length > 0) {
+//       return new Response(JSON.stringify({
+//         error: '部分牌缺少象征分析数据',
+//         missingCards: missingAnalysis.map(card => card.name)
+//       }), {
+//         status: 400,
+//         headers: { 'Content-Type': 'application/json' }
+//       });
+//     }
+//
+//     const systemPrompt = `[身份与目标]
+// 你是一名精通塔罗/雷诺曼/易经的资深占卜师.`;
+//
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       const analysis = card.cardAnalysis;
+//
+//       return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+//
+// 象征元素：
+// - 人物：${analysis.symbols.characters.join('、')}
+// - 道具：${analysis.symbols.props.join('、')}
+// - 环境：${analysis.symbols.environment.join('、')}
+// - 时间提示：${analysis.symbols.time_hint}
+// - 方向：${analysis.symbols.direction}
+//
+// 关键行动：${analysis.actions.join('、')}
+// 故事线索：${analysis.story_hint}
+// 建议分支：${analysis.branches.join('、')}`;
+//     }).join('\n\n')}
+//
+// 请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
+//
+//     // 使用新的API
+//     const apiRequestBody = {
+//       messages: [
+//         { role: "system", content: systemPrompt },
+//         { role: "user", content: userMessage }
+//       ],
+//       stream: false,
+//       model: "glm-4-flash",
+//       temperature: 0.6,
+//       presence_penalty: 0,
+//       frequency_penalty: 0,
+//       top_p: 1
+//     };
+//
+//     const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
+//       method: "POST",
+//       headers: {
+//         "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
+//         "content-type": "application/json"
+//       },
+//       body: JSON.stringify(apiRequestBody)
+//     });
+//
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       throw new Error(`API 错误! status: ${response.status}, response: ${errorText}`);
+//     }
+//
+//     const data = await response.json();
+//
+//     if (!data.choices?.[0]?.message) {
+//       throw new Error('API 响应格式异常');
+//     }
+//
+//     return new Response(JSON.stringify({
+//       content: data.choices[0].message.content
+//     }), { headers: { 'Content-Type': 'application/json' } });
+//
+//   } catch (error) {
+//     console.error('处理请求时出错:', error);
+//     return new Response(JSON.stringify({
+//       error: '处理请求失败',
+//       details: error.message,
+//       success: false
+//     }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+//   }
+// }
+
+
+
+
 export async function onRequestPost({ request }) {
   console.log('收到占卜请求');
 
@@ -939,37 +1058,137 @@ export async function onRequestPost({ request }) {
       });
     }
 
-    const systemPrompt = `[身份与目标]
-你是一名精通塔罗/雷诺曼/易经的资深占卜师，掌握"象法"解读技巧。你要通过牌面符号（人物、动作、物件、环境、颜色、数字、方向等）来推演事件，并给出符合常理的结论与可执行建议。
+    // 验证每张牌是否包含 possible_real_world_mapping 字段
+    const missingMapping = spreadCards.filter(card =>
+      !card.cardAnalysis.possible_real_world_mapping
+    );
+    if (missingMapping.length > 0) {
+      return new Response(JSON.stringify({
+        error: '部分牌缺少现实映射数据',
+        missingCards: missingMapping.map(card => card.name)
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-[象法运用步骤]
-1. 定位：在牌面中找出最能对应所问事情的符号。
-2. 读象：分析符号的状态、动作或特征，并解释它在现实语境中的可能含义。
-3. 取舍：忽略冗余或泛化的元素，专注于与问题最贴切的核心象。
-4. 串联：把各张牌的符号串联成一个故事或过程，描绘事情的发展脉络。
-5. 结论：给出简明结果，包含事件走向+可能的细节+1–3条可行行动建议。
+    const systemPrompt = `## **[身份与目标]**
 
-[象征元素解读指南]
-- characters（人物）：代表事件中的关键角色或当事人的状态
-- props（道具）：象征具体的工具、资源或影响因素
-- environment（环境）：反映事件发生的背景或外在条件
-- time_hint（时间提示）：指示事件的时间节点或发展阶段
-- direction（方向）：暗示事件的动向或能量流动
-- actions（行动）：描述正在发生或即将发生的具体动作
-- story_hint（故事提示）：提供整体情境的核心线索
-- branches（分支建议）：基于当前象征给出的可能行动方向
+你是一名经验丰富的资深占卜师，精通塔罗、雷诺曼、易经64卦、小六壬等图像符号占卜体系，并掌握“象法”解读技巧。
+你的任务是通过牌面符号（**卦象脉络 story_hint**、**卦象动态 actions**、**卦中人象 characters**、**卦中物象 props**、**卦象场域 environment**、**五行生克 element_relations** 等）结合**牌阵结构和每个位置的功能**，推演事件发展脉络，并生成客观、明确的占卜问题答案。
+在整个解读过程中：
+- 避免只强调积极结果；
+- 不得仅以“既可能正面也可能负面”作为结论；
+- 必须根据象征推演给出明确倾向结果，并用**概率化语言或条件分支**说明依据；
+- 避免心理安慰或模糊积极词语（如“乐观”“心态好”）；
+- 仅允许基于牌面符号的现实性解释与策略。
+---
+## **[总体要求]**
+1. 严格遵循 **S-C-E-N-E 流程**：**Symbol → Clue → Essence → Narrative → End**。
+2. 每一步都要提供 **证据（牌名+画面细节）** 与 **映射理由**，说明对应现实要素。
+3. 结论必须可落地、可追踪、可验证，符合现实逻辑，避免心理化或过度抽象解读。
+4. 结论不能以正面结论替代负面分析，必须客观呈现可能阻碍、风险或失败倾向。
+5. 当牌面存在冲突或逆位，必须分析其可能导致的负面结果，并说明现实映射。
+6. 如牌面或卦象包含五行信息，须分析卦象牌面之间的生克关系与现实映射，并在结论与行动建议中体现。
+7. 结论章节必须给出占卜问题的明确答案。
+---
+## **[象法运用步骤]**
 
-[输出格式]
-首部：问题+背景+抽牌列表
-主体：逐张牌的象征解读 → 象法串联 → 结论
-风格：直观、形象，注重细节（动作/物象），避免过度抽象或心理化解读
-结论：用"倾向/较可能/建议"表达，优先采用牌面提供的分支建议
+### 1. 定位（Symbol）
+- 对每张牌列序号、牌名、正/逆位、关键词（4–8项）、映射类型（Who/What/Where/When/How）、**牌阵位置功能**。
+- 必须说明牌面符号在该位置上对应的现实含义。
+- 标明牌面符号(卦象）在现实中对应的角色、事件、动态、资源、背景、时间、方向或行为等等。
+### 2. 读象（Clue）
+- 分析人物表情、动作、道具、环境、颜色、数量、方向等线索时，结合牌阵位置功能，说明该线索对应现实影响。
+- 给出每项线索的证据和现实含义。
+### 3. 取舍（Essence）
+- 列出核心象的正面和负面可能性。
+- 对冲突象或逆位象，优先分析现实影响（如失败、阻碍、误判），再考虑正向缓解措施。
+- 对候选象进行分析，选出核心象并说明理由。
+- 处理冲突时说明优先规则。
+### 4. 串联（Narrative）
+- 按照牌阵布局（如过去→现在→未来，问题→障碍→结果）串联核心象，描绘事件发展脉络。
+- 必须根据牌阵位置功能判断哪条发展路径更贴合实际，并以此作为主线展开叙述。
+- 次要可能性可简要提及，但不得用“既可能成功也可能失败”模糊处理。
+- 叙述中说明不可控风险、潜在阻力、触发条件，并结合牌面细节给出因果链条。
+- 给出时间窗口或“不支持时间信息”说明。
+### 5. 结论（End）
+- 给出占卜问题的最终答案，明确包括倾向结果。
+- 提供最低限度防御性行动方案（基于牌面负面象征，用于降低风险，而非追求成功）。
+---
+## **[象征元素解读指南]**
+- **characters（卦中人象）**：事件关键角色及其状态。
+- **props（卦中物象）**：资源、工具或影响因素。
+- **environment（卦象场域）**：事件背景或外在条件。
+- **time_hint（时机节点）**：事件阶段或发展节点。
+- **direction（气运走向）**：暗示事件动向或能量流向。
+- **actions（卦象动态）**：具体动作或事件发生方式。
+- **story_hint（卦象脉络）**：核心情境线索。
+- **branches（择机抉择）**：可能行动方向或决策选项。
+- **possible_real_world_mapping（应世对照）**：可能的现实映射关系。
+- **element_relations（五行生克）**：考虑卦象牌面之间的五行属性生克关系及现实映射。
+---
+## **[输出风格与注意事项]**
+- 风格直观、形象，注重动作/物象细节，避免抽象心理化解读。
+- 结论必须呈现 **“倾向 / 较可能 / 风险”** 三类信息，明确事件可能的失败或阻碍。
+- 遇自然现象类问题（天气/健康/环境），结论需符合现实逻辑。
+- 必须充分利用牌面分支建议并融入可执行行动。
+- 对不确定因素或矛盾信息明确标注。
+---
+## **[示例输出结构]**
+1. **首部**：占卜主题、求问者背景、**牌阵名称**、**牌阵布局及每个位置的功能说明**、抽牌列表（序号+牌名+正/逆位）。
+2. **主体报告**（章节化）：
+    - 定位 → 读象 → 取舍 → 串联 → 结论
+3. **结论章节**：综合分析给出占卜问题的明确答案，要客观给出结果。
+4. **谶诗**：用象征性意象创作简短谶诗收尾，诗句保留神秘感和隐喻性，同时明确暗示事件结果或结论，不得单纯收尾于圆满或希望，必须保留“可能失败”的暗示。`;
 
-[特别注意]
-- 你必须基于提供的象征元素（symbols、actions、story_hint）来推断，而不是只依赖传统牌义。
-- 解释要能落地到现实事件（如：出行、健康、沟通、变化）。
-- 遇到自然现象类问题（天气/身体/环境），结论需符合常理。
-- 充分利用branches字段中的建议，将其融入到最终的行动指导中。`;
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       const analysis = card.cardAnalysis;
+//
+//       let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+//
+// 象征元素：
+// - 人物：${analysis.symbols.characters.join('、')}
+// - 道具：${analysis.symbols.props.join('、')}
+// - 环境：${analysis.symbols.environment.join('、')}
+// - 时间提示：${analysis.symbols.time_hint}
+// - 方向：${analysis.symbols.direction}
+//
+// 关键行动：${analysis.actions.join('、')}
+// 故事线索：${analysis.story_hint}
+// 建议分支：${analysis.branches.join('、')}
+// 现实映射：${analysis.possible_real_world_mapping}`;
+//
+//       // 如果有五行关系数据，则添加到分析中
+//       if (analysis.element_relations) {
+//         cardInfo += `
+// 五行属性：${analysis.element_relations.element}
+// - 生成：${analysis.element_relations.generates.join('、')}
+// - 克制：${analysis.element_relations.overcomes.join('、')}
+// - 被生：${analysis.element_relations.generated_by.join('、')}
+// - 被克：${analysis.element_relations.overcome_by.join('、')}`;
+//       }
+//
+//       return cardInfo;
+//     }).join('\n\n')}`;
+
+    const safeJoin = (value, separator = '、') => {
+      if (Array.isArray(value)) return value.join(separator);
+      if (value == null) return '';
+      return String(value);
+    };
 
     const userMessage = `【占卜问题】
 ${text || '请为我进行塔罗占卜'}
@@ -984,23 +1203,36 @@ ${deck?.name || '标准塔罗牌'}
 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
 ${spreadCards.map((card, index) => {
       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-      const analysis = card.cardAnalysis;
+      const analysis = card.cardAnalysis || {};
 
-      return `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+      let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
 
 象征元素：
-- 人物：${analysis.symbols.characters.join('、')}
-- 道具：${analysis.symbols.props.join('、')}
-- 环境：${analysis.symbols.environment.join('、')}
-- 时间提示：${analysis.symbols.time_hint}
-- 方向：${analysis.symbols.direction}
+- 卦中人象：${safeJoin(analysis.symbols?.characters)}
+- 卦中物象：${safeJoin(analysis.symbols?.props)}
+- 卦象场域：${safeJoin(analysis.symbols?.environment)}
+- 时机节点：${analysis.symbols?.time_hint || ''}
+- 气运走向：${analysis.symbols?.direction || ''}
 
-关键行动：${analysis.actions.join('、')}
-故事线索：${analysis.story_hint}
-建议分支：${analysis.branches.join('、')}`;
-    }).join('\n\n')}
+卦象动态：${safeJoin(analysis.actions)}
+卦象脉络：${analysis.story_hint || ''}
+择机抉择：${safeJoin(analysis.branches)}
+应世对照：${analysis.possible_real_world_mapping || ''}`;
 
-请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
+      // 如果有五行关系数据，则添加到分析中
+      if (analysis.element_relations) {
+        cardInfo += `
+五行生克：${analysis.element_relations.element || ''}
+- 生成：${safeJoin(analysis.element_relations.generates)}
+- 克制：${safeJoin(analysis.element_relations.overcomes)}
+- 被生：${safeJoin(analysis.element_relations.generated_by)}
+- 被克：${safeJoin(analysis.element_relations.overcome_by)}`;
+      }
+
+      return cardInfo;
+    }).join('\n\n')}`;
+
+
 
     // 使用新的API
     const apiRequestBody = {
@@ -1015,6 +1247,16 @@ ${spreadCards.map((card, index) => {
       frequency_penalty: 0,
       top_p: 1
     };
+
+    console.log('发送给AI的完整数据:', JSON.stringify({
+      spreadCards: spreadCards.map(card => ({
+        name: card.name,
+        isReversed: card.isReversed,
+        hasElementRelations: !!card.cardAnalysis.element_relations,
+        elementType: card.cardAnalysis.element_relations?.element || 'N/A'
+      })),
+      userMessage: userMessage.substring(0, 500) + '...' // 只打印前500字符
+    }, null, 2));
 
     const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
       method: "POST",
