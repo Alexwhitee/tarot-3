@@ -936,7 +936,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://api.wlai.vip/v1/chat/completions", {
       "method": "POST",
       "headers": {
-        "Authorization": "Bearer ",
+        "Authorization": "Bearer sk-BUmf1legR32W4XZXJcsGrpOScvDWXSVitolhSYw8Yg8DQJ3e",
         "Content-Type": "application/json"
       },
       "body": JSON.stringify(apiRequestBody)

@@ -402,6 +402,8 @@
       <div class="divination-result">
         <h4 class="result-title">占卜解析</h4>
 
+
+
         <!-- 加载状态 - 只在文字区域显示 -->
         <div v-if="isWaitingForAnalysis" class="analysis-loading">
           <div class="loading-spinner"></div>
@@ -1380,6 +1382,9 @@ const customSpreadForm = ref({
   usage: '通用场景'
 })
 const formErrors = ref<Record<string, string>>({})
+
+// 在其他 ref 定义附近添加这一行
+const firstDivinationResult = ref('')
 // 在现有的状态变量附近添加
 const isWaitingForAnalysis = ref(false) // 是否正在等待AI分析
 
@@ -1981,8 +1986,6 @@ const loadingStatus = ref(false)
 const resStatus = ref(false)
 const cardResult = ref<CardResult[]>([])
 
-// 在其他 ref 定义附近添加这一行
-const firstDivinationResult = ref('')
 
 
 // 选择牌组
@@ -2126,19 +2129,58 @@ const renderIMG = (no: number): string => {
 }
 
 
+// const parseApiResponse = (responseText: string): string => {
+//   console.log('=== parseApiResponse 开始 ===')
+//   console.log('输入文本长度:', responseText.length)
+//   console.log('输入文本前500字符:', responseText.substring(0, Math.min(responseText.length, 500))) // 打印前500字符
+//
+//   try {
+//     const jsonData = JSON.parse(responseText)
+//     console.log('JSON 解析成功')
+//     console.log('数据结构键:', Object.keys(jsonData))
+//
+//     // 直接返回content字段(如果存在)
+//     if (jsonData.content) {
+//       console.log('找到直接 content 字段')
+//       return jsonData.content
+//     }
+//
+//     // 处理智谱API的嵌套结构
+//     if (jsonData.choices &&
+//       jsonData.choices[0] &&
+//       jsonData.choices[0].message &&
+//       jsonData.choices[0].message.content) {
+//       console.log('找到智谱 API 嵌套结构的 content')
+//       const content = jsonData.choices[0].message.content
+//       console.log('提取的 content 长度:', content.length)
+//       return content
+//     }
+//
+//     // 调试输出完整结构
+//     console.log('未找到预期的 content 结构')
+//     console.log('完整数据结构:', JSON.stringify(jsonData, null, 2))
+//     console.warn('parseApiResponse: 未能提取到有效内容，返回空字符串。原始响应:', responseText); // 警告并打印原始响应
+//     return '' // 明确返回空字符串
+//   } catch (e) {
+//     console.error('JSON 解析失败:', e)
+//     console.log('尝试作为纯文本处理')
+//     console.warn('parseApiResponse: JSON 解析失败，返回原始文本。错误:', e, '原始响应:', responseText); // 警告并打印原始响应
+//   }
+//
+//   console.log('返回原始文本')
+//   return responseText
+// }
+
 const parseApiResponse = (responseText: string): string => {
-  console.log('=== parseApiResponse 开始 ===')
-  console.log('输入文本长度:', responseText.length)
-  console.log('输入文本前500字符:', responseText.substring(0, Math.min(responseText.length, 500))) // 打印前500字符
+  console.log('🔍 parseApiResponse 输入:', responseText.substring(0, 500))
 
   try {
     const jsonData = JSON.parse(responseText)
-    console.log('JSON 解析成功')
-    console.log('数据结构键:', Object.keys(jsonData))
+    console.log('🔍 JSON 解析成功，数据键:', Object.keys(jsonData))
 
-    // 直接返回content字段(如果存在)
+    // 直接返回content字段
     if (jsonData.content) {
-      console.log('找到直接 content 字段')
+      console.log('🔍 找到直接 content 字段')
       return jsonData.content
     }
 
@@ -2147,27 +2189,20 @@ const parseApiResponse = (responseText: string): string => {
       jsonData.choices[0] &&
       jsonData.choices[0].message &&
       jsonData.choices[0].message.content) {
-      console.log('找到智谱 API 嵌套结构的 content')
+      console.log('🔍 找到智谱 API 嵌套结构的 content')
       const content = jsonData.choices[0].message.content
-      console.log('提取的 content 长度:', content.length)
+      console.log('🔍 提取的 content:', content)
       return content
     }
 
-    // 调试输出完整结构
-    console.log('未找到预期的 content 结构')
-    console.log('完整数据结构:', JSON.stringify(jsonData, null, 2))
-    console.warn('parseApiResponse: 未能提取到有效内容，返回空字符串。原始响应:', responseText); // 警告并打印原始响应
-    return '' // 明确返回空字符串
+    console.warn('🔍 未找到预期的 content 结构，完整数据:', jsonData)
+    return ''
   } catch (e) {
-    console.error('JSON 解析失败:', e)
-    console.log('尝试作为纯文本处理')
-    console.warn('parseApiResponse: JSON 解析失败，返回原始文本。错误:', e, '原始响应:', responseText); // 警告并打印原始响应
+    console.error('🔍 JSON 解析失败:', e)
+    console.log('🔍 作为纯文本返回')
+    return responseText
   }
-
-  console.log('返回原始文本')
-  return responseText
 }
-
 
 
 
@@ -2539,12 +2574,39 @@ const getRes = async () => {
       })
     })
 
-    // 处理响应...
+  //   // 处理响应...
+  // } catch (error) {
+  //   console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+  //   firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
+  // } finally {
+  //   isWaitingForAnalysis.value = false
+  // }
+    if (!res.ok) {
+      const errorData = await res.json()
+      console.error('API 错误响应数据:', errorData)
+      throw new Error(`API response was not ok: ${res.statusText}`)
+    }
+    const resText = await res.text()
+    console.log('🔍 API 原始响应文本:', resText) // 添加调试日志
+
+    const content = parseApiResponse(resText)
+    console.log('🔍 parseApiResponse 提取的内容:', content) // 添加调试日志
+    if (!content || content.length === 0) {
+      throw new Error('未能提取到有效内容')
+    }
+    const html = await parseMdToHtml(content)
+    console.log('🔍 Markdown 转换为 HTML:', html) // 添加调试日志
+    // 🔥 关键：确保这里正确赋值
+    firstDivinationResult.value = html
+    console.log('🔍 firstDivinationResult.value 已设置:', firstDivinationResult.value) // 添加调试日志
+    await nextTick()
+    console.log('🔍 DOM 已更新')
   } catch (error) {
-    console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+    console.error('🔍 占卜请求失败:', error)
     firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
   } finally {
     isWaitingForAnalysis.value = false
+    console.log('🔍 最终状态 - isWaitingForAnalysis:', isWaitingForAnalysis.value, 'resStatus:', resStatus.value)
   }
 }
 
@@ -4262,10 +4324,7 @@ label {
   margin-bottom: 16px;
 }
 
-.result-content {
-  font-size: 16px;
-  line-height: 1.5;
-}
+
 
 .result-footer {
   margin-top: 20px;
@@ -5129,6 +5188,7 @@ label {
 
 /* 占卜结果区域 */
 .divination-result {
+  display: block !important;
   background: #f8f9fa;
   border-radius: 12px;
   padding: 24px;
@@ -5144,6 +5204,9 @@ label {
 }
 
 .result-content {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   line-height: 1.7;
   color: #34495e;
   font-size: 1rem;
