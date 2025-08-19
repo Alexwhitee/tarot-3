@@ -1083,11 +1083,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import tarotDecks from '../../data/tarot-decks.json';
 
-// 临时类型声明，解决类型不匹配问题
-declare module '../../data/pai.json' {
-  const value: any
-  export default value
-}
+
 
 
 
@@ -1229,6 +1225,32 @@ type Deck = {
 //   name: string
 //   type?: 'guide' | 'spread'
 //   isReversed: boolean
+// }
+// type CardInfo = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+//   cardAnalysis?: {
+//     symbols: {
+//       characters: string[]
+//       props: string[]
+//       environment: string[]
+//       time_hint: string
+//       direction: string
+//     }
+//     actions: string[]
+//     story_hint: string
+//     branches: string[]
+//     possible_real_world_mapping: string
+//     element_relations?: {
+//       element: string
+//       generates: string[]
+//       overcomes: string[]
+//       generated_by: string[]
+//       overcome_by: string[]
+//     }
+//   }
 // }
 type CardInfo = {
   no: number
@@ -1756,6 +1778,21 @@ const shuffledDeck = ref<CardResult[]>([])
 //     return shuffledDeck.value
 //   }
 // })
+// const displayDeck = computed((): CardInfo[] => {
+//   if (isOpenCardMode.value) {
+//     // 明牌模式：按序号排列
+//     const deckCount = selectedDeck.value?.cardCount ?? 78
+//     return Array.from({ length: deckCount }, (_, i) => ({
+//       no: i,
+//       name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`),
+//       isReversed: false,
+//       type: undefined as 'guide' | 'spread' | undefined
+//     }))
+//   } else {
+//     // 普通模式：随机排列
+//     return shuffle
+//   }
+// })
 const displayDeck = computed((): CardInfo[] => {
   if (isOpenCardMode.value) {
     // 明牌模式：按序号排列
@@ -1768,7 +1805,7 @@ const displayDeck = computed((): CardInfo[] => {
     }))
   } else {
     // 普通模式：随机排列
-    return shuffle
+    return shuffledDeck.value  // 修复：使用 shuffledDeck.value 而不是 shuffle
   }
 })
 
@@ -2203,12 +2240,42 @@ const parseApiResponse = (responseText: string): string => {
 // }
 
 const getRes = async () => {
+  // if (!selectedSpread.value) return
+  //
+  // console.log('=== 开始占卜流程 ===')
+  // loadingStatus.value = true
+  // isWaitingForAnalysis.value = true // 开始等待AI分析
+  //
+  // // 生成抽牌结果 - 立即显示
+  // if (isOpenCardMode.value) {
+  //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
+  //     const cardInfo = displayDeck.value.find(card => card.no === cardNo)
+  //     const cardAnalysis = generateCardAnalysis(cardNo)
+  //     return {
+  //       no: cardNo,
+  //       name: String(cardInfo?.name || `第${cardNo + 1}张`),
+  //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+  //       isReversed: Boolean(cardReversedStates.value[cardNo]),
+  //       cardAnalysis: cardAnalysis // 添加这一行
+  //     } as CardResult
+  //   })
+  // } else {
+  //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
+  //     const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+  //     const cardAnalysis = generateCardAnalysis(cardNo)
+  //     return {
+  //       no: cardNo,
+  //       name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
+  //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+  //       isReversed: needReversed.value ? Math.random() > 0.5 : false,
+  //       cardAnalysis: cardAnalysis // 添加这一行
+  //     } as CardResult
+  //   })
+  // }
   if (!selectedSpread.value) return
-
   console.log('=== 开始占卜流程 ===')
   loadingStatus.value = true
-  isWaitingForAnalysis.value = true // 开始等待AI分析
-
+  isWaitingForAnalysis.value = true
   // 生成抽牌结果 - 立即显示
   if (isOpenCardMode.value) {
     cardResult.value = selectCardArr.value.map((cardNo, index) => {
@@ -2217,9 +2284,9 @@ const getRes = async () => {
       return {
         no: cardNo,
         name: String(cardInfo?.name || `第${cardNo + 1}张`),
-        type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+        type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
         isReversed: Boolean(cardReversedStates.value[cardNo]),
-        cardAnalysis: cardAnalysis // 添加这一行
+        cardAnalysis: cardAnalysis
       } as CardResult
     })
   } else {
@@ -2229,9 +2296,9 @@ const getRes = async () => {
       return {
         no: cardNo,
         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-        type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+        type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
         isReversed: needReversed.value ? Math.random() > 0.5 : false,
-        cardAnalysis: cardAnalysis // 添加这一行
+        cardAnalysis: cardAnalysis
       } as CardResult
     })
   }
