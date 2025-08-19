@@ -1084,7 +1084,40 @@ import { Textarea } from '@/components/ui/textarea'
 import tarotDecks from '../../data/tarot-decks.json';
 
 
-
+interface CardAnalysis {
+  symbols: {
+    characters: string[]
+    props: string[]
+    environment: string[]
+    time_hint: string
+    direction: string
+  }
+  actions: string[]
+  story_hint: string
+  branches: string[]
+  possible_real_world_mapping: string
+  element_relations?: {
+    element: string
+    generates: string[]
+    overcomes: string[]
+    generated_by: string[]
+    overcome_by: string[]
+  }
+}
+interface CardInfo {
+  no: number
+  name: string
+  type?: 'guide' | 'spread'
+  isReversed: boolean
+  cardAnalysis?: CardAnalysis
+}
+interface CardResult {
+  no: number
+  name: string
+  type?: 'guide' | 'spread'
+  isReversed: boolean
+  cardAnalysis?: CardAnalysis
+}
 
 
 
@@ -2239,67 +2272,215 @@ const parseApiResponse = (responseText: string): string => {
 //   }
 // }
 
+// const getRes = async () => {
+//   // if (!selectedSpread.value) return
+//   //
+//   // console.log('=== 开始占卜流程 ===')
+//   // loadingStatus.value = true
+//   // isWaitingForAnalysis.value = true // 开始等待AI分析
+//   //
+//   // // 生成抽牌结果 - 立即显示
+//   // if (isOpenCardMode.value) {
+//   //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//   //     const cardInfo = displayDeck.value.find(card => card.no === cardNo)
+//   //     const cardAnalysis = generateCardAnalysis(cardNo)
+//   //     return {
+//   //       no: cardNo,
+//   //       name: String(cardInfo?.name || `第${cardNo + 1}张`),
+//   //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+//   //       isReversed: Boolean(cardReversedStates.value[cardNo]),
+//   //       cardAnalysis: cardAnalysis // 添加这一行
+//   //     } as CardResult
+//   //   })
+//   // } else {
+//   //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//   //     const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+//   //     const cardAnalysis = generateCardAnalysis(cardNo)
+//   //     return {
+//   //       no: cardNo,
+//   //       name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
+//   //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
+//   //       isReversed: needReversed.value ? Math.random() > 0.5 : false,
+//   //       cardAnalysis: cardAnalysis // 添加这一行
+//   //     } as CardResult
+//   //   })
+//   // }
+//   if (!selectedSpread.value) return
+//   console.log('=== 开始占卜流程 ===')
+//   loadingStatus.value = true
+//   isWaitingForAnalysis.value = true
+//   // 生成抽牌结果 - 立即显示
+//   if (isOpenCardMode.value) {
+//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
+//       const cardAnalysis = generateCardAnalysis(cardNo)
+//       return {
+//         no: cardNo,
+//         name: String(cardInfo?.name || `第${cardNo + 1}张`),
+//         type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
+//         isReversed: Boolean(cardReversedStates.value[cardNo]),
+//         cardAnalysis: cardAnalysis
+//       } as CardResult
+//     })
+//   } else {
+//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
+//       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
+//       const cardAnalysis = generateCardAnalysis(cardNo)
+//       return {
+//         no: cardNo,
+//         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
+//         type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
+//         isReversed: needReversed.value ? Math.random() > 0.5 : false,
+//         cardAnalysis: cardAnalysis
+//       } as CardResult
+//     })
+//   }
+//
+//   // 立即显示抽牌结果
+//   resStatus.value = true
+//   loadingStatus.value = false
+//
+//   // 清空之前的分析结果
+//   firstDivinationResult.value = ''
+//
+//   try {
+//     // const res = await fetch('/api', {
+//     //   method: 'POST',
+//     //   headers: {
+//     //     'Content-Type': 'application/json'
+//     //   },
+//     //   body: JSON.stringify({
+//     //     text: textValue.value,
+//     //     pms: cardResult.value,
+//     //     spread: {
+//     //       key: selectedSpread.value.key,
+//     //       name: selectedSpread.value.name,
+//     //       count: selectedSpread.value.count,
+//     //       positions: selectedSpread.value.positions ?? []
+//     //     },
+//     //     deck: {
+//     //       key: selectedDeck.value?.key ?? '',
+//     //       name: selectedDeck.value?.name ?? ''
+//     //     }
+//     //   })
+//     // })
+//     // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
+//     // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
+//     const res = await fetch('/api', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         pms: cardResult.value.map(card => {
+//           const cardData = {
+//             no: card.no,
+//             name: card.name,
+//             type: card.type,
+//             isReversed: card.isReversed
+//           }
+//
+//           // 如果有 cardAnalysis，则添加相关字段
+//           if (card.cardAnalysis) {
+//             cardData.cardAnalysis = {
+//               symbols: card.cardAnalysis.symbols,
+//               actions: card.cardAnalysis.actions,
+//               story_hint: card.cardAnalysis.story_hint,
+//               branches: card.cardAnalysis.branches,
+//               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+//             }
+//
+//             // 只有当 element_relations 存在时才添加
+//             if (card.cardAnalysis.element_relations) {
+//               cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+//             }
+//           }
+//
+//           return cardData
+//         }),
+//         spread: {
+//           key: selectedSpread.value.key,
+//           name: selectedSpread.value.name,
+//           count: selectedSpread.value.count,
+//           positions: selectedSpread.value.positions ?? []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key ?? '',
+//           name: selectedDeck.value?.name ?? ''
+//         }
+//       })
+//     })
+//
+//
+//
+//     if (!res.ok) {
+//       const errorData = await res.json()
+//       console.error('API 错误响应数据:', errorData)
+//       throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`)
+//     }
+//
+//     const resText = await res.text()
+//     console.log('API 原始响应文本:', resText)
+//     const content = parseApiResponse(resText)
+//     console.log('parseApiResponse 提取的内容:', content)
+//
+//     if (!content || content.length === 0) {
+//       throw new Error('未能提取到有效内容')
+//     }
+//
+//     const html = await parseMdToHtml(content)
+//     console.log('Markdown 转换为 HTML:', html)
+//
+//     // 设置分析结果
+//     firstDivinationResult.value = html
+//     console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0)
+//
+//     await nextTick()
+//     console.log('DOM 已更新')
+//
+//     console.log('=== 占卜成功完成 ===')
+//
+//   } catch (error) {
+//     console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+//     firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
+//   } finally {
+//     isWaitingForAnalysis.value = false // 结束等待
+//     console.log('=== 占卜流程结束，finally 块执行 ===')
+//     console.log('最终 isWaitingForAnalysis:', isWaitingForAnalysis.value, '最终 resStatus:', resStatus.value)
+//   }
+// }
 const getRes = async () => {
-  // if (!selectedSpread.value) return
-  //
-  // console.log('=== 开始占卜流程 ===')
-  // loadingStatus.value = true
-  // isWaitingForAnalysis.value = true // 开始等待AI分析
-  //
-  // // 生成抽牌结果 - 立即显示
-  // if (isOpenCardMode.value) {
-  //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
-  //     const cardInfo = displayDeck.value.find(card => card.no === cardNo)
-  //     const cardAnalysis = generateCardAnalysis(cardNo)
-  //     return {
-  //       no: cardNo,
-  //       name: String(cardInfo?.name || `第${cardNo + 1}张`),
-  //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-  //       isReversed: Boolean(cardReversedStates.value[cardNo]),
-  //       cardAnalysis: cardAnalysis // 添加这一行
-  //     } as CardResult
-  //   })
-  // } else {
-  //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
-  //     const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
-  //     const cardAnalysis = generateCardAnalysis(cardNo)
-  //     return {
-  //       no: cardNo,
-  //       name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-  //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-  //       isReversed: needReversed.value ? Math.random() > 0.5 : false,
-  //       cardAnalysis: cardAnalysis // 添加这一行
-  //     } as CardResult
-  //   })
-  // }
   if (!selectedSpread.value) return
+
   console.log('=== 开始占卜流程 ===')
   loadingStatus.value = true
   isWaitingForAnalysis.value = true
+
   // 生成抽牌结果 - 立即显示
   if (isOpenCardMode.value) {
-    cardResult.value = selectCardArr.value.map((cardNo, index) => {
+    cardResult.value = selectCardArr.value.map((cardNo, index): CardResult => {
       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
       const cardAnalysis = generateCardAnalysis(cardNo)
       return {
         no: cardNo,
         name: String(cardInfo?.name || `第${cardNo + 1}张`),
-        type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
+        type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
         isReversed: Boolean(cardReversedStates.value[cardNo]),
         cardAnalysis: cardAnalysis
-      } as CardResult
+      }
     })
   } else {
-    cardResult.value = selectCardArr.value.map((cardNo, index) => {
+    cardResult.value = selectCardArr.value.map((cardNo, index): CardResult => {
       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
       const cardAnalysis = generateCardAnalysis(cardNo)
       return {
         no: cardNo,
         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-        type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
+        type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
         isReversed: needReversed.value ? Math.random() > 0.5 : false,
         cardAnalysis: cardAnalysis
-      } as CardResult
+      }
     })
   }
 
@@ -2311,28 +2492,7 @@ const getRes = async () => {
   firstDivinationResult.value = ''
 
   try {
-    // const res = await fetch('/api', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     text: textValue.value,
-    //     pms: cardResult.value,
-    //     spread: {
-    //       key: selectedSpread.value.key,
-    //       name: selectedSpread.value.name,
-    //       count: selectedSpread.value.count,
-    //       positions: selectedSpread.value.positions ?? []
-    //     },
-    //     deck: {
-    //       key: selectedDeck.value?.key ?? '',
-    //       name: selectedDeck.value?.name ?? ''
-    //     }
-    //   })
-    // })
-    // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
-    // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
+    // API 调用代码...
     const res = await fetch('/api', {
       method: 'POST',
       headers: {
@@ -2340,8 +2500,8 @@ const getRes = async () => {
       },
       body: JSON.stringify({
         text: textValue.value,
-        pms: cardResult.value.map(card => {
-          const cardData = {
+        pms: cardResult.value.map((card: CardResult) => {
+          const cardData: any = {
             no: card.no,
             name: card.name,
             type: card.type,
@@ -2379,42 +2539,12 @@ const getRes = async () => {
       })
     })
 
-
-
-    if (!res.ok) {
-      const errorData = await res.json()
-      console.error('API 错误响应数据:', errorData)
-      throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`)
-    }
-
-    const resText = await res.text()
-    console.log('API 原始响应文本:', resText)
-    const content = parseApiResponse(resText)
-    console.log('parseApiResponse 提取的内容:', content)
-
-    if (!content || content.length === 0) {
-      throw new Error('未能提取到有效内容')
-    }
-
-    const html = await parseMdToHtml(content)
-    console.log('Markdown 转换为 HTML:', html)
-
-    // 设置分析结果
-    firstDivinationResult.value = html
-    console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0)
-
-    await nextTick()
-    console.log('DOM 已更新')
-
-    console.log('=== 占卜成功完成 ===')
-
+    // 处理响应...
   } catch (error) {
     console.error('=== 占卜请求失败，进入 catch 块 ===', error)
     firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
   } finally {
-    isWaitingForAnalysis.value = false // 结束等待
-    console.log('=== 占卜流程结束，finally 块执行 ===')
-    console.log('最终 isWaitingForAnalysis:', isWaitingForAnalysis.value, '最终 resStatus:', resStatus.value)
+    isWaitingForAnalysis.value = false
   }
 }
 
