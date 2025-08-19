@@ -1470,8 +1470,8 @@ ${spreadCards.map((card, index) => {
         { role: "user", content: userMessage }
       ],
       stream: false,
-      model: "glm-4.5-flash",
-      temperature: 0.7,
+      model: "glm-4-flash",
+      temperature: 0.6,
       presence_penalty: 0,
       frequency_penalty: 0,
       top_p: 1
