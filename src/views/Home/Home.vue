@@ -1,3 +1,6 @@
+
+
+
 <template>
   <section class="Home" :class="{ 'dark-mode': isDarkMode }">
     <!-- 主题切换按钮 -->
@@ -1080,7 +1083,11 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import tarotDecks from '../../data/tarot-decks.json';
 
-
+// 临时类型声明，解决类型不匹配问题
+declare module '../../data/pai.json' {
+  const value: any
+  export default value
+}
 
 
 
@@ -1217,11 +1224,37 @@ type Deck = {
 }
 
 // 在 script setup 顶部添加更严格的类型定义
+// type CardInfo = {
+//   no: number
+//   name: string
+//   type?: 'guide' | 'spread'
+//   isReversed: boolean
+// }
 type CardInfo = {
   no: number
   name: string
   type?: 'guide' | 'spread'
   isReversed: boolean
+  cardAnalysis?: {
+    symbols: {
+      characters: string[]
+      props: string[]
+      environment: string[]
+      time_hint: string
+      direction: string
+    }
+    actions: string[]
+    story_hint: string
+    branches: string[]
+    possible_real_world_mapping: string
+    element_relations?: {
+      element: string
+      generates: string[]
+      overcomes: string[]
+      generated_by: string[]
+      overcome_by: string[]
+    }
+  }
 }
 
 // type CardResult = {
@@ -1274,6 +1307,7 @@ type CardResult = {
     }
   }
 }
+
 
 
 
@@ -1431,6 +1465,51 @@ const formatCurrentTime = computed(() => {
 //   return JSON.stringify(frontendToApiData, null, 2)
 // })
 
+// const formatAIInputData = computed(() => {
+//   if (!resStatus.value || cardResult.value.length === 0) return ''
+//
+//   const frontendToApiData = {
+//     text: textValue.value || '请为我进行塔罗占卜',
+//     pms: cardResult.value.map(card => {
+//       const cardData: any = {
+//         no: card.no,
+//         name: card.name,
+//         type: card.type,
+//         isReversed: card.isReversed
+//       }
+//
+//       // 如果有 cardAnalysis，则添加相关字段
+//       if (card.cardAnalysis) {
+//         cardData.cardAnalysis = {
+//           symbols: card.cardAnalysis.symbols,
+//           actions: card.cardAnalysis.actions,
+//           story_hint: card.cardAnalysis.story_hint,
+//           branches: card.cardAnalysis.branches,
+//           possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+//         }
+//
+//         // 只有当 element_relations 存在且不为 null 时才添加
+//         if (card.cardAnalysis.element_relations) {
+//           cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+//         }
+//       }
+//
+//       return cardData
+//     }),
+//     spread: {
+//       key: selectedSpread.value?.key || '',
+//       name: selectedSpread.value?.name || '标准牌阵',
+//       desc: selectedSpread.value?.desc || '',
+//       positions: selectedSpread.value?.positions || []
+//     },
+//     deck: {
+//       key: selectedDeck.value?.key || '',
+//       name: selectedDeck.value?.name || '标准塔罗牌'
+//     }
+//   }
+//
+//   return JSON.stringify(frontendToApiData, null, 2)
+// })
 const formatAIInputData = computed(() => {
   if (!resStatus.value || cardResult.value.length === 0) return ''
 
@@ -1662,6 +1741,21 @@ const shuffledDeck = ref<CardResult[]>([])
 // })
 
 // 更新 displayDeck 的计算属性
+// const displayDeck = computed((): CardInfo[] => {
+//   if (isOpenCardMode.value) {
+//     // 明牌模式：按序号排列
+//     const deckCount = selectedDeck.value?.cardCount ?? 78
+//     return Array.from({ length: deckCount }, (_, i) => ({
+//       no: i,
+//       name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`),
+//       isReversed: false,
+//       type: undefined // 明确设置为 undefined
+//     }))
+//   } else {
+//     // 普通模式：随机排列
+//     return shuffledDeck.value
+//   }
+// })
 const displayDeck = computed((): CardInfo[] => {
   if (isOpenCardMode.value) {
     // 明牌模式：按序号排列
@@ -1670,11 +1764,11 @@ const displayDeck = computed((): CardInfo[] => {
       no: i,
       name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`),
       isReversed: false,
-      type: undefined // 明确设置为 undefined
+      type: undefined as 'guide' | 'spread' | undefined
     }))
   } else {
     // 普通模式：随机排列
-    return shuffledDeck.value
+    return shuffle
   }
 })
 
@@ -2391,34 +2485,55 @@ const showCardDetail = ref(false)
 //     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
 //   }
 // }
+// const showDrawnCardDetail = (drawnCard: CardResult) => {
+//   console.log('查看抽中卡牌详情:', drawnCard)
+//
+//   const currentDeckKey = selectedDeck.value?.key
+//
+//   if (!currentDeckKey) {
+//     console.error('无法确定当前牌组')
+//     return
+//   }
+//
+//   // const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
+// // 在使用 allCardDetails 的地方，添加类型断言
+//   const deckDetails = (allCardDetails as any)[currentDeckKey] as CardDetail[]
+//
+//   if (!deckDetails) {
+//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
+//     return
+//   }
+//
+//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
+//
+//   if (cardDetail) {
+//     selectedCardDetail.value = cardDetail
+//     showDrawnCardDetailModal.value = true
+//   } else {
+//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
+//   }
+// }
+
 const showDrawnCardDetail = (drawnCard: CardResult) => {
   console.log('查看抽中卡牌详情:', drawnCard)
-
   const currentDeckKey = selectedDeck.value?.key
-
   if (!currentDeckKey) {
     console.error('无法确定当前牌组')
     return
   }
-
-  const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
-
+  const deckDetails = (allCardDetails as any)[currentDeckKey]
   if (!deckDetails) {
     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
     return
   }
-
-  const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
-
+  const cardDetail = deckDetails.find((card: any) => card.id === drawnCard.no)
   if (cardDetail) {
-    selectedCardDetail.value = cardDetail
+    selectedCardDetail.value = cardDetail as CardDetail
     showDrawnCardDetailModal.value = true
   } else {
     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
   }
 }
-
-
 
 // 关闭抽牌详情模态框（修改版）
 const closeDrawnCardDetail = () => {
@@ -2443,29 +2558,45 @@ import allCardDetails from '../../data/pai.json'
 // 添加类型定义
 type CardDetailsData = Record<string, CardDetail[]>
 
+// const selectCardDetail = (cardNo: number) => {
+//   if (!selectedViewDeck.value) return
+//
+//   // 使用牌组的key作为标识符
+//   const deckKey = selectedViewDeck.value
+//   const deckDetails = (allCardDetails as CardDetailsData)[deckKey]
+//
+//   if (!deckDetails) {
+//     console.warn(`未找到牌组 ${deckKey} 的详情数据`)
+//     console.log('可用的牌组标识:', Object.keys(allCardDetails))
+//     return
+//   }
+//
+//   const detail = deckDetails.find(card => card.id === cardNo)
+//   if (detail) {
+//     selectedCardDetail.value = detail
+//     showCardDetail.value = true
+//   } else {
+//     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
+//   }
+// }
+
 const selectCardDetail = (cardNo: number) => {
   if (!selectedViewDeck.value) return
-
-  // 使用牌组的key作为标识符
   const deckKey = selectedViewDeck.value
-  const deckDetails = (allCardDetails as CardDetailsData)[deckKey]
-
+  const deckDetails = (allCardDetails as any)[deckKey]
   if (!deckDetails) {
     console.warn(`未找到牌组 ${deckKey} 的详情数据`)
     console.log('可用的牌组标识:', Object.keys(allCardDetails))
     return
   }
-
-  const detail = deckDetails.find(card => card.id === cardNo)
+  const detail = deckDetails.find((card: any) => card.id === cardNo)
   if (detail) {
-    selectedCardDetail.value = detail
+    selectedCardDetail.value = detail as CardDetail
     showCardDetail.value = true
   } else {
     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
   }
 }
-
-
 
 // 生成卡牌分析数据的函数
 // const generateCardAnalysis = (cardNo: number): any => {
@@ -2598,14 +2729,14 @@ const generateCardAnalysis = (cardNo: number): any => {
     return null
   }
 
-  const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
+  const deckDetails = (allCardDetails as any)[currentDeckKey]
 
   if (!deckDetails) {
     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
     return null
   }
 
-  const cardDetail = deckDetails.find(card => card.id === cardNo)
+  const cardDetail = deckDetails.find((card: any) => card.id === cardNo)
 
   if (!cardDetail) {
     console.error(`未找到卡牌 ${cardNo} 的详情信息`)
@@ -2624,22 +2755,29 @@ const generateCardAnalysis = (cardNo: number): any => {
     }
   }
 
-  // 确保 interactions 是数组
-  const interactions = Array.isArray(cardDetail.symbolic_attributes.interactions)
-    ? cardDetail.symbolic_attributes.interactions
-    : [cardDetail.symbolic_attributes.interactions].filter(Boolean)
+  // 处理 interactions 可能是字符串或数组的情况
+  let interactions: string[] = []
+  if (cardDetail.symbolic_attributes?.interactions) {
+    if (Array.isArray(cardDetail.symbolic_attributes.interactions)) {
+      interactions = cardDetail.symbolic_attributes.interactions
+    } else {
+      interactions = [cardDetail.symbolic_attributes.interactions]
+    }
+  } else {
+    interactions = ["未知行动"]
+  }
 
-  const analysis = {
+  const analysis: any = {
     symbols: {
-      characters: cardDetail.symbolic_elements.characters || ["未知人物"],
-      props: cardDetail.symbolic_elements.props || ["未知道具"],
-      environment: cardDetail.symbolic_elements.environment || ["未知环境"],
-      time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
-      direction: cardDetail.symbolic_elements.direction || "未知方向"
+      characters: cardDetail.symbolic_elements?.characters || ["未知人物"],
+      props: cardDetail.symbolic_elements?.props || ["未知道具"],
+      environment: cardDetail.symbolic_elements?.environment || ["未知环境"],
+      time_hint: cardDetail.symbolic_elements?.time_hint || "未知时间",
+      direction: cardDetail.symbolic_elements?.direction || "未知方向"
     },
     actions: interactions,
     story_hint: cardDetail.story || "无可用故事信息",
-    branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"],
+    branches: cardDetail.symbolic_attributes?.potential_branches || ["需要更多信息"],
     possible_real_world_mapping: cardDetail.possible_real_world_mapping || "无可用现实映射信息"
   }
 
