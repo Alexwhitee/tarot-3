@@ -23,6 +23,3 @@
     </main>
   </footer>
 </template>
-
-<script setup>
-</script>
