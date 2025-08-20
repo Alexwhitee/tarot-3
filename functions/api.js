@@ -1365,6 +1365,9 @@ export async function onRequestPost({ request }) {
 
 ## 象征总结诗
 [四句诗]
+
+## 总结结论
+**问题答案**：[明确回答]（独立段落）
 \`\`\`
 
 ---

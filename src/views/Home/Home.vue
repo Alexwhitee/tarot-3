@@ -17,14 +17,21 @@
 
 
 
+    <!-- 修改现有的问题输入区域 -->
     <div class="text">
-      <h3 class="section-title">1深呼吸，屏除杂念，集中注意力，写下并默念你的问题，开始你的塔罗占卜之旅</h3>
+      <div class="question-header">
+        <h3 class="section-title">1深呼吸，屏除杂念，集中注意力，写下并默念你的问题，开始你的塔罗占卜之旅</h3>
+        <button class="question-guide-btn" @click="openQuestionGuideModal" title="查看提问规范">
+          <span class="question-icon">❓</span>
+        </button>
+      </div>
       <Textarea
         v-model.trim="textValue"
         placeholder="你要占卜的问题（可选）"
         :disabled="loadingStatus"
       />
     </div>
+
 
 
     <!--    &lt;!&ndash; 简化的结果展示区域 &ndash;&gt;-->
@@ -430,7 +437,7 @@
       <div class="deck-selection mb-4">
         <!-- 新增这个容器 -->
         <div class="flex justify-between items-center mb-3">
-          <h3 class="section-title mb-0">2.选择塔罗牌种类（必须）</h3>
+          <h3 class="section-title mb-0">2.选择占卜牌种类（必须）</h3>
           <Button class="view-cards-btn" @click="openCardViewModal">
             查看牌面
           </Button>
@@ -491,7 +498,7 @@
             <div class="spread-header font-bold">
               <span class="spread-name">+ 自定义牌阵</span>
             </div>
-            <p class="spread-desc text-sm">创建您专属的塔罗牌阵</p>
+            <p class="spread-desc text-sm">创建您专属的牌阵</p>
           </div>
         </div>
 
@@ -506,6 +513,18 @@
           </label>
         </div>
       </div>
+
+
+      <!-- 在确认牌阵按钮后添加提示 -->
+      <div v-if="isSpreadConfirmed && !resStatus" class="swipe-hint">
+        <div class="hint-content">
+          <span class="hint-icon">👇</span>
+          <span class="hint-text">下滑抽牌</span>
+          <span class="hint-icon">👇</span>
+        </div>
+        <div class="hint-subtext">向下滑动查看牌组，点击选择占卜牌</div>
+      </div>
+
 
       <div class="hover-info-wrapper mt-4" v-if="clickedSpread">
         <div class="spread-info-bar">
@@ -557,7 +576,7 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
             <img
               :src="isOpenCardMode ? renderIMG(i.no) : renderBackImage()"
               :class="isOpenCardMode ? 'card-front' : 'card-back'"
-              :alt="isOpenCardMode ? i.name : '塔罗牌背面'"
+              :alt="isOpenCardMode ? i.name : '占卜牌背面'"
             />
 
             <!-- 明牌模式下显示卡牌信息覆盖层 -->
@@ -796,7 +815,7 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
       <div class="card-view-modal-content" :class="{ 'detail-mode': showCardDetail }">
         <!-- 头部 -->
         <div class="card-view-header">
-          <h3 v-if="showDeckSelector">选择要查看的塔罗牌</h3>
+          <h3 v-if="showDeckSelector">选择要查看的占卜牌</h3>
           <h3 v-else-if="!showCardDetail">{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>
           <h3 v-else>{{ selectedCardDetail?.name }} {{ selectedCardDetail?.english }}</h3>
           <button class="close-btn" @click="closeCardViewModal">×</button>
@@ -1069,6 +1088,121 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
         </div>
       </div>
     </div>
+
+    <!-- 在现有模态框后面添加提问规范弹窗 -->
+    <!-- 修改提问规范弹窗内容 -->
+    <div v-if="showQuestionGuideModal" class="question-guide-overlay" @click.self="closeQuestionGuideModal">
+      <div class="question-guide-modal">
+        <div class="question-guide-header">
+          <h3>📝 占卜规范</h3>
+          <button class="close-btn" @click="closeQuestionGuideModal">×</button>
+        </div>
+        <div class="question-guide-content">
+          <div class="guide-rules">
+            <ol class="rules-list">
+              <li><strong>明确主体：</strong>注明当事人及性别、关系或出生年（例：1980 年张先生 / 我的母亲）。</li>
+              <li><strong>简洁聚焦：</strong>字数越精炼、问题越具体，结果越清晰。</li>
+              <li><strong>提供背景：</strong>若需细节，可补充关键情境（时间、地点、选项等）。</li>
+              <li><strong>避免错别字，</strong>以免 AI 误解。</li>
+              <li><strong>一事一问，</strong>勿在同一问题中混杂多件事。</li>
+              <li>抱着<strong>"测试、挑战"</strong>心态提问，易使结果偏差。</li>
+              <li><strong>请真诚发问；</strong>默念问题、心无旁骛再点击占卜，可显著提升吻合度。</li>
+            </ol>
+          </div>
+          <div class="examples-section">
+            <h4>【示例】</h4>
+            <div class="examples-list">
+              <div class="example-item" @click="useTemplate('我和女朋友大约何时能结婚？')">
+                <span class="example-number">1</span>
+                <span class="example-text">我和女朋友大约何时能结婚？</span>
+                <span class="use-btn">使用</span>
+              </div>
+              <div class="example-item" @click="useTemplate('小张（1990，男）这次会投资我的项目吗？')">
+                <span class="example-number">2</span>
+                <span class="example-text">小张（1990，男）这次会投资我的项目吗？</span>
+                <span class="use-btn">使用</span>
+              </div>
+              <div class="example-item" @click="useTemplate('我准备开一家川菜馆，开业后几个月能盈利？')">
+                <span class="example-number">3</span>
+                <span class="example-text">我准备开一家川菜馆，开业后几个月能盈利？</span>
+                <span class="use-btn">使用</span>
+              </div>
+              <div class="example-item" @click="useTemplate('收到 A、B 两家公司 offer，我加入哪家更合适？')">
+                <span class="example-number">4</span>
+                <span class="example-text">收到 A、B 两家公司 offer，我加入哪家更合适？</span>
+                <span class="use-btn">使用</span>
+              </div>
+              <div class="example-item" @click="useTemplate('我妈妈最近检查结果待出，她的病情是否严重，多久能康复？')">
+                <span class="example-number">5</span>
+                <span class="example-text">我妈妈最近检查结果待出，她的病情是否严重，多久能康复？</span>
+                <span class="use-btn">使用</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 新增：使用指南内容块 -->
+          <div class="usage-guide-section">
+            <h3>📖 使用指南</h3>
+
+            <div class="guide-item">
+              <h4>一、什么是占卜？赛博占卜的原理</h4>
+              <p><strong>占卜：</strong>当心中有疑惑时，人为制造一次"随机事件"（摇签、抽牌、掷币等），并用特定模型对随机结果进行象征化解读，从而获得启示——它给出的是「参考」而非「确定答案」。</p>
+              <p><strong>赛博占卜：</strong>在传统塔罗占卜的基础上，引入 AI 进行占卜结果解读。</p>
+              <ol>
+                <li>你选择在「此刻」抽牌，本身就构成一次随机性。</li>
+                <li>AI 依据所抽取的牌面卦象要素，自动完成取象、组象与断象流程，并给出启示。</li>
+              </ol>
+            </div>
+
+            <div class="guide-item">
+              <h4>二、为什么有时不准？</h4>
+              <div class="sub-item">
+                <p><strong>1. 题目难度</strong></p>
+                <ul>
+                  <li><strong>极难：</strong>精确时间、数字、方位</li>
+                  <li><strong>较难：</strong>量化收益、损失</li>
+                  <li><strong>相对容易：</strong>趋势走向</li>
+                </ul>
+                <p>越要求"精确细节"，误差越大——人如此，AI 亦然。</p>
+              </div>
+              <div class="sub-item">
+                <p><strong>2. 起卦质量</strong></p>
+                <ul>
+                  <li>随机事件被人为干扰、心不专一，可能导致盘面失真</li>
+                  <li>用"我今年几岁？"、"明天太阳几点升起？"等戏谑性问题测试，往往得不到有效结果</li>
+                </ul>
+                <p>建议提问"正在进行且尚未见分晓"的真实事务，以验证系统准确度。</p>
+              </div>
+            </div>
+
+            <div class="guide-item">
+              <h4>三、赛博占卜的可靠性</h4>
+              <p>• 采用正统塔罗占卜技法，AI模型经多轮精调测试。</p>
+            </div>
+
+            <div class="guide-item">
+              <h4>四、使用须知</h4>
+              <ol>
+                <li>同一问题至少间隔 2 小时再次起局</li>
+                <li>避免一卦多问，以免信息混杂</li>
+                <li>禁止用于证券、期货等高风险投资，后果自负</li>
+                <li>本产品仅供体验与研究，切勿沉迷或迷信</li>
+              </ol>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="question-guide-footer">
+          <button class="understand-btn" @click="closeQuestionGuideModal">
+            我知道了
+          </button>
+        </div>
+      </div>
+    </div>
+
+
 
 
   </section>
@@ -1366,6 +1500,11 @@ type CustomSpread = Spread & {
 // }
 
 
+// 在 script setup 中添加
+const useTemplate = (template: string) => {
+  textValue.value = template
+  closeQuestionGuideModal()
+}
 
 
 // 添加新的状态管理
@@ -1378,8 +1517,8 @@ const customSpreadForm = ref({
   name: '自定义牌阵',
   count: 3,
   positions: ['过去', '现在', '未来'],
-  desc: '自定义占卜牌阵',
-  usage: '通用场景'
+  desc: '(示例:按时间顺序解析问题）',
+  usage: '（填写牌阵适用场景，可不填）'
 })
 const formErrors = ref<Record<string, string>>({})
 
@@ -1402,6 +1541,21 @@ const copySuccess = ref(false)
 // 在现有的 ref 声明附近添加
 // 控制抽牌详情展示区域的显示/隐藏
 const showDivinationDetails = ref(false) // 默认显示
+
+
+
+// 在现有的 ref 声明附近添加
+const showQuestionGuideModal = ref(false)
+
+// 添加打开和关闭弹窗的函数
+const openQuestionGuideModal = () => {
+  showQuestionGuideModal.value = true
+}
+
+const closeQuestionGuideModal = () => {
+  showQuestionGuideModal.value = false
+}
+
 
 
 // 格式化当前时间
@@ -1574,7 +1728,7 @@ const formatAIInputData = computed(() => {
   if (!resStatus.value || cardResult.value.length === 0) return ''
 
   const frontendToApiData = {
-    text: textValue.value || '请为我进行塔罗占卜',
+    text: textValue.value || '请为我进行占卜',
     pms: cardResult.value.map(card => {
       const cardData: any = {
         no: card.no,
@@ -1642,7 +1796,7 @@ const showCopyFeedback = () => {
 
 // 复制基本信息
 const copyBasicInfo = async () => {
-  const basicInfo = `塔罗占卜基本信息
+  const basicInfo = `占卜基本信息
 占卜问题：${textValue.value || '无具体问题'}
 使用牌组：${selectedDeck.value?.name || '标准塔罗牌'}
 选择牌阵：${selectedSpread.value?.name || '标准牌阵'}
@@ -1697,7 +1851,7 @@ const copyAIData = async () => {
 const copyAllDetails = async () => {
   isCopying.value = true
 
-  const allDetails = `塔罗占卜完整记录
+  const allDetails = `占卜完整记录
 ===================
 
 【基本信息】
@@ -3165,9 +3319,8 @@ const handleImageError = (event: Event) => {
 
 .dark-mode {
 
-  background-color: #1a1a1a;
-
-  color: #e0e0e0;
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  color: #F1F5F9;
 
 }
 
@@ -3183,11 +3336,10 @@ const handleImageError = (event: Event) => {
 
 .dark-mode .spread-card {
 
-  background-color: #2d2d2d;
-
-  border-color: #444;
-
-  color: #e0e0e0;
+  background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+  border-color: #475569;
+  color: #E2E8F0; /* 浅色文字 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
 }
 
@@ -3195,7 +3347,10 @@ const handleImageError = (event: Event) => {
 
 .dark-mode .spread-card:hover {
 
-  background-color: #3d3d3d;
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  border-color: #8B5CF6;
+  color: #F1F5F9; /* 更亮的文字 */
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 
 }
 
@@ -3203,33 +3358,33 @@ const handleImageError = (event: Event) => {
 
 .dark-mode .spread-card.active {
 
-  border-color: #f39c12;
-
-  background-color: #3d2a00;
+  border-color: #A78BFA;
+  background: linear-gradient(135deg, #4C1D95 0%, #6B46C1 100%);
+  color: #F8FAFC; /* 确保文字在深紫背景上清晰可见 */
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+  font-weight: 600;
 
 }
 
 .dark-mode .spread-info-bar {
 
-  background-color: #2d2d2d;
-
-  color: #e0e0e0;
+  background: linear-gradient(135deg, #0C4A6E 0%, #075985 100%);
+  border-color: #0EA5E9;
+  color: #E0F2FE;
 
 }
 
 .dark-mode .guide-cards-section {
 
-  background-color: #1e2a3a;
-
-  border-color: #333;
+  background: linear-gradient(135deg, #312E81 0%, #3730A3 100%);
+  border-color: #6366F1;
 
 }
 
 .dark-mode .spread-cards-section {
 
-  background-color: #3a2e1e;
-
-  border-color: #333;
+  background: linear-gradient(135deg, #312E81 0%, #3730A3 100%);
+  border-color: #6366F1;
 
 }
 
@@ -3563,13 +3718,11 @@ const handleImageError = (event: Event) => {
 
 .spread-info-bar {
 
-  position: relative;
-
-  background: #fff8f0;
-
-  padding: 6px;
-
-  border-radius: 4px;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  border: 1px solid #0EA5E9;
+  border-radius: 8px;
+  padding: 12px;
+  color: #0C4A6E;
 
 }
 
@@ -3591,19 +3744,14 @@ const handleImageError = (event: Event) => {
 
 .spread-card {
 
-  background: #fdf6f0;
-
-  border: 1px solid #ccc;
-
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  border: 2px solid #CBD5E1;
   border-radius: 8px;
-
   padding: 12px;
-
-  width: 200px;
-
   cursor: pointer;
-
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  color: #334155; /* 深灰色文字 */
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
 
 }
 
@@ -3617,49 +3765,52 @@ const handleImageError = (event: Event) => {
 
 .spread-card:hover {
 
-  transform: translateY(-4px);
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+  border-color: #8B5CF6;
+  background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
 
 }
 
 .spread-card.active {
 
-  border-color: #f39c12;
-
-  box-shadow: 0 0 0 3px rgba(243,156,18,0.2);
-
+  border-color: #6B46C1;
+  background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+  color: #4C1D95; /* 深紫色文字，确保在浅紫背景上可见 */
+  box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.2);
+  font-weight: 600;
 }
 
 .deck-card {
 
-  background: #fdf6f0;
-
-  border: 1px solid #ccc;
-
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  border: 2px solid #CBD5E1;
   border-radius: 8px;
-
   padding: 12px;
-
   cursor: pointer;
-
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  color: #334155; /* 深灰色文字 */
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
 
 }
 
 .deck-card:hover {
 
   transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+  border-color: #8B5CF6;
+  background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
 }
 
 .deck-card.active {
 
-  border-color: #f39c12;
-
-  box-shadow: 0 0 0 2px rgba(243,156,18,0.3);
+  border-color: #6B46C1;
+  background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+  color: #4C1D95; /* 深紫色文字，确保在浅紫背景上可见 */
+  box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.2);
+  font-weight: 600;
 
 }
 
@@ -3848,9 +3999,11 @@ const handleImageError = (event: Event) => {
 
   font-weight: bold;
 
-  color: #8b4513;
-
-  border-bottom: 2px solid #deb887;
+  color: #6B46C1; /* 深紫色替代棕色 */
+  border-bottom: 2px solid #A78BFA; /* 浅紫色边框 */
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 
   padding-bottom: 8px;
 
@@ -3898,13 +4051,18 @@ const handleImageError = (event: Event) => {
 
 .guide-cards-section {
 
-  background: #f0f8ff;
-
+  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+  border: 2px solid #6366F1;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .spread-cards-section {
 
-  background: #fff8f0;
+  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+  border: 2px solid #6366F1;
+  border-radius: 8px;
+  padding: 16px;
 
 }
 
@@ -3944,7 +4102,9 @@ const handleImageError = (event: Event) => {
 
   .spread-card, .deck-card {
 
-    width: 100%;
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+    border: 2px solid #CBD5E1;
+    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
 
   }
 
@@ -4048,11 +4208,10 @@ label {
 
 .dark-mode .w-full {
 
-  background-color: #f39c12 !important; /* 橙色背景 */
-
-  color: #1a1a1a !important; /* 深色文字，保证对比度 */
-
-  border: none;
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
+  transition: all 0.3s ease;
 
 }
 
@@ -4060,9 +4219,9 @@ label {
 
 .dark-mode .w-full:hover {
 
-  background-color: #d35400 !important; /* hover 更深的橙色 */
-
-  color: #fff !important; /* hover 时文字变白 */
+  background: linear-gradient(135deg, #553C9A 0%, #7C3AED 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4);
 
 }
 
@@ -5103,13 +5262,21 @@ label {
 }
 
 .result-container .guide-cards-section {
-  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-  border-color: #3498db;
+  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+  border-color: #6366F1;
+  margin-bottom: 32px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #6366F1;
 }
 
 .result-container .spread-cards-section {
-  background: linear-gradient(135deg, #fff8f0 0%, #ffe6d9 100%);
-  border-color: #f39c12;
+  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+  border-color: #6366F1;
+  margin-bottom: 32px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #6366F1;
 }
 
 .result-container .cards-section-title {
@@ -5244,13 +5411,13 @@ label {
 }
 
 .dark-mode .result-container .guide-cards-section {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #312E81 0%, #3730A3 100%);
+  border-color: #6366F1;
 }
 
 .dark-mode .result-container .spread-cards-section {
-  background: linear-gradient(135deg, #92400e 0%, #a16207 100%);
-  border-color: #f59e0b;
+  background: linear-gradient(135deg, #312E81 0%, #3730A3 100%);
+  border-color: #6366F1;
 }
 
 .dark-mode .result-container .cards-section-title {
@@ -5700,8 +5867,8 @@ label {
 }
 
 .dark-mode .section-title {
-  color: #f1f5f9;
-  border-bottom-color: #444;
+  color: #A78BFA;
+  border-bottom-color: #6B46C1;
 }
 
 .dark-mode .upright-section .section-title {
@@ -5881,6 +6048,489 @@ label {
   }
 }
 
+.swipe-hint {
+  text-align: center;
+  padding: 16px;
+  margin: 16px 0;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px dashed #f39c12;
+  border-radius: 12px;
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+.hint-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.hint-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #d68910;
+}
+
+.hint-icon {
+  font-size: 1.2rem;
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+.hint-subtext {
+  font-size: 0.9rem;
+  color: #b7950b;
+  opacity: 0.8;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* 提问规范弹窗样式 - 修正版 */
+.question-guide-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(2px);
+}
+
+.question-guide-modal {
+  background: white !important;
+  border-radius: 16px !important;
+  width: 90vw !important;
+  max-width: 700px !important;
+  max-height: 85vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 10001 !important;
+}
+
+.question-guide-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 24px 28px !important;
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%) !important;
+  color: white !important;
+  flex-shrink: 0 !important;
+}
+
+.question-guide-header h3 {
+  margin: 0 !important;
+  font-size: 1.4rem !important;
+  font-weight: bold !important;
+}
+
+.question-guide-header .close-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 1.5rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.question-guide-header .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.question-guide-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 24px 28px !important;
+  line-height: 1.6 !important;
+}
+
+.question-guide-footer {
+  padding: 20px 28px !important;
+  background: #F8FAFC !important;
+  border-top: 1px solid #E2E8F0 !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.understand-btn {
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 32px !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3) !important;
+}
+
+.understand-btn:hover {
+  background: linear-gradient(135deg, #553C9A 0%, #7C3AED 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4) !important;
+}
+
+.guide-rules {
+  margin-bottom: 32px !important;
+}
+
+.rules-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+}
+
+.rules-list li {
+
+  padding: 16px 20px !important;
+  margin-bottom: 12px !important;
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%) !important;
+  border-left: 4px solid #6B46C1 !important;
+  border-radius: 8px !important;
+  position: relative !important;
+  font-size: 0.95rem !important;
+  color: #374151 !important;
+}
+
+
+
+.rules-list li strong {
+  color: #1F2937 !important;
+  font-weight: 600 !important;
+}
+
+.examples-section {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  border: 2px solid #F59E0B !important;
+}
+
+.examples-section h4 {
+  margin: 0 0 20px 0 !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  color: #92400E !important;
+}
+
+.examples-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.example-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  background: white !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid transparent !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.example-item:hover {
+  border-color: #F59E0B !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+}
+
+.example-number {
+  flex-shrink: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  background: #F59E0B !important;
+  color: white !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
+}
+
+.example-text {
+  flex: 1 !important;
+  color: #374151 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;
+}
+
+.use-btn {
+  flex-shrink: 0 !important;
+  background: #F59E0B !important;
+  color: white !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  opacity: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.example-item:hover .use-btn {
+  opacity: 1 !important;
+}
+
+/* 深色模式适配 */
+.dark-mode .question-guide-modal {
+  background: #1F2937 !important;
+  color: #F9FAFB !important;
+}
+
+.dark-mode .question-guide-footer {
+  background: #111827 !important;
+  border-top-color: #4B5563 !important;
+}
+
+.dark-mode .rules-list li {
+  background: linear-gradient(135deg, #374151 0%, #4B5563 100%) !important;
+  border-left-color: #8B5CF6 !important;
+  color: #F9FAFB !important;
+}
+
+.dark-mode .rules-list li::before {
+  background: #8B5CF6 !important;
+}
+
+.dark-mode .rules-list li strong {
+  color: #F9FAFB !important;
+}
+
+.dark-mode .examples-section {
+  background: linear-gradient(135deg, #92400E 0%, #B45309 100%) !important;
+  border-color: #F59E0B !important;
+}
+
+.dark-mode .examples-section h4 {
+  color: #FEF3C7 !important;
+}
+
+.dark-mode .example-item {
+  background: #1F2937 !important;
+  color: #F9FAFB !important;
+}
+
+.dark-mode .example-item:hover {
+  border-color: #FBBF24 !important;
+}
+
+.dark-mode .example-text {
+  color: #F9FAFB !important;
+}
+
+.dark-mode .example-number {
+  background: #FBBF24 !important;
+  color: #1F2937 !important;
+}
+
+.dark-mode .use-btn {
+  background: #FBBF24 !important;
+  color: #1F2937 !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .question-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .question-guide-btn {
+    align-self: flex-end;
+    margin-top: -8px;
+  }
+
+  .question-guide-modal {
+    width: 95vw !important;
+    max-height: 90vh !important;
+  }
+
+  .question-guide-header,
+  .question-guide-content,
+  .question-guide-footer {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .rules-list li {
+    padding: 14px 16px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .examples-section {
+    padding: 20px !important;
+  }
+
+  .example-item {
+    padding: 12px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .use-btn {
+    opacity: 1 !important;
+    align-self: flex-end !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-guide-header h3 {
+    font-size: 1.2rem !important;
+  }
+
+  .rules-list li {
+    padding: 12px 14px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .rules-list li::before {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .example-text {
+    font-size: 0.85rem !important;
+  }
+
+  .example-number {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 0.7rem !important;
+  }
+}
+/* 使用指南区域样式 */
+.usage-guide-section {
+  margin: 24px 0 32px 0 !important;
+  padding: 24px !important;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%) !important;
+  border: 2px solid #0EA5E9 !important;
+  border-radius: 12px !important;
+}
+
+.usage-guide-section h3 {
+  margin: 0 0 20px 0 !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  color: #0C4A6E !important;
+  text-align: center !important;
+  border-bottom: 2px solid #0EA5E9 !important;
+  padding-bottom: 10px !important;
+}
+
+.guide-item {
+  margin-bottom: 20px !important;
+}
+
+.guide-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+.guide-item h4 {
+  margin: 0 0 12px 0 !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  color: #075985 !important;
+}
+
+.guide-item p {
+  margin: 0 0 8px 0 !important;
+  line-height: 1.5 !important;
+  color: #0F172A !important;
+  font-size: 0.9rem !important;
+}
+
+.guide-item ol,
+.guide-item ul {
+  margin: 8px 0 !important;
+  padding-left: 20px !important;
+}
+
+.guide-item ol li,
+.guide-item ul li {
+  margin-bottom: 4px !important;
+  line-height: 1.4 !important;
+  color: #0F172A !important;
+  font-size: 0.9rem !important;
+}
+
+.sub-item {
+  margin-bottom: 16px !important;
+}
+
+.sub-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 深色模式适配 */
+.dark-mode .usage-guide-section {
+  background: linear-gradient(135deg, #0C4A6E 0%, #075985 100%) !important;
+  border-color: #0EA5E9 !important;
+}
+
+.dark-mode .usage-guide-section h3 {
+  color: #E0F2FE !important;
+  border-bottom-color: #0EA5E9 !important;
+}
+
+.dark-mode .guide-item h4 {
+  color: #BAE6FD !important;
+}
+
+.dark-mode .guide-item p,
+.dark-mode .guide-item ol li,
+.dark-mode .guide-item ul li {
+  color: #F0F9FF !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .usage-guide-section {
+    padding: 20px !important;
+  }
+
+  .usage-guide-section h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .guide-item h4 {
+    font-size: 0.95rem !important;
+  }
+
+  .guide-item p,
+  .guide-item ol li,
+  .guide-item ul li {
+    font-size: 0.85rem !important;
+  }
+}
 
 
 </style>
