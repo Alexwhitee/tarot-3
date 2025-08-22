@@ -1268,7 +1268,7 @@
 
 const a = `你是塔罗师`;
 
-export async function onRequestPost({ request }) {
+export async function onRequestPost({ request, env }) {
   console.log('收到占卜请求');
 
   try {
