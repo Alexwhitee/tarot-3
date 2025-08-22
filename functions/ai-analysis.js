@@ -49,7 +49,7 @@ export async function onRequestPost({ request, env }) {
       'gpt-4.1-nano-2025-04-14',
       'claude-3-haiku-20240307',
       'gemini-2.0-flash',
-      'qwen-turbo-1101',
+      'qwen-plus',
       'claude-sonnet-4-20250514-thinking'
     ];
 

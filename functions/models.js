@@ -90,22 +90,22 @@ export async function onRequestGet({ request, env }) {
       {
         key: 'gpt-4.1-nano-2025-04-14',
         name: 'GPT-4.1 Nano',
-        description: 'OpenAI轻量级模型，快速响应 (价格: 0.4)'
+        description: 'OpenAI轻量级模型，快速响应'
       },
       {
         key: 'claude-3-haiku-20240307',
         name: 'Claude-3 Haiku',
-        description: 'Anthropic快速模型，简洁高效 (价格: 1.25)'
+        description: 'Anthropic快速模型，简洁高效'
       },
       {
         key: 'gemini-2.0-flash',
         name: 'Gemini-2.0 Flash',
-        description: 'Google新一代快速模型 (价格: 0.4)'
+        description: 'Google新一代快速模型'
       },
       {
-        key: 'qwen-turbo-1101',
-        name: 'Qwen Turbo',
-        description: '阿里通义千问加速版 (价格: 0.6)'
+        key: 'qwen-plus',
+        name: 'qwen-plus',
+        description: '阿里通义千问加速版'
       }
     ]
   }), {

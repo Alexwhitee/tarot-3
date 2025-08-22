@@ -449,12 +449,12 @@
           >
             <div class="model-header">
               <span class="model-name">{{ model.name }}</span>
-              <span class="model-badge" :class="model.tier">{{ model.tierLabel }}</span>
+
             </div>
             <p class="model-desc">{{ model.description }}</p>
             <div class="model-features">
-              <span class="feature-tag">{{ model.speed }}</span>
-              <span class="feature-tag">{{ model.accuracy }}</span>
+
+
             </div>
           </div>
         </div>
@@ -2219,8 +2219,8 @@ const availableModels = ref([
     description: 'Google新一代快速模型',
   },
   {
-    key: 'qwen-turbo-1101',
-    name: 'Qwen Turbo',
+    key: 'qwen-plus',
+    name: 'qwen-plus',
     description: '阿里通义千问加速版',
   },
   {
