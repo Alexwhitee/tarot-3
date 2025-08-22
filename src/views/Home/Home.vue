@@ -2249,7 +2249,7 @@ const getAIAnalysis = async () => {
   isWaitingForAIAnalysis.value = true
   aiAnalysisResult.value = '' // 清空之前的结果
   try {
-    const res = await fetch('/api/ai-analysis', { // 使用新的端点
+    const res = await fetch('/ai-analysis', { // 使用新的端点
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
