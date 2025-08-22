@@ -570,42 +570,138 @@
             </Button>
           </div>
         </div>
+        <div style="background: #ffeb3b; padding: 10px; margin: 10px 0; font-size: 14px; border: 2px solid #f57c00;">
+          <strong>调试信息:</strong><br>
+          当前索引: {{ currentSlideIndex }}<br>
+          总卡片数: {{ aiAnalysisResults.length }}<br>
+          滑块位置: {{ sliderPosition }}%<br>
+          卡片偏移: {{ slideOffset }}px<br>
+          卡片宽度: {{ cardWidth }}<br>
+          容器引用: {{ sliderContainer ? '已获取' : '未获取' }}<br>
+          Transform值: translateX(-{{ slideOffset }}px)
+        </div>
         <!-- 上方滑轨 -->
+<!--        <div class="slider-controls top">-->
+<!--          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>-->
+<!--          <div class="slider-track" ref="topSliderTrack">-->
+<!--            <div-->
+<!--              class="slider-thumb"-->
+<!--              :style="{ left: sliderPosition + '%' }"-->
+<!--              @mousedown="startDrag"-->
+<!--            ></div>-->
+<!--          </div>-->
+<!--          <div class="boundary-indicator" :class="{-->
+<!--            'at-start': currentSlideIndex === 0,-->
+<!--            'at-end': currentSlideIndex === aiAnalysisResults.length - 1-->
+<!--          }">-->
+<!--            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>-->
+<!--            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; 结果滑动容器 &ndash;&gt;-->
+<!--        <div-->
+<!--          class="results-slider-container"-->
+<!--          ref="sliderContainer"-->
+
+<!--        >-->
+<!--          <div-->
+<!--            class="results-slider"-->
+<!--            :style="{ transform: `translateX(-${slideOffset}px)` }"-->
+<!--          >-->
+<!--            <div-->
+<!--              v-for="(result, index) in aiAnalysisResults"-->
+<!--              :key="index"-->
+<!--              class="model-result-card"-->
+<!--            >-->
+<!--              <div class="card-header">-->
+<!--                <h5 class="model-name">{{ getModelName(selectedModelKeys[index]) }}</h5>-->
+<!--                <Button-->
+<!--                  class="copy-single-btn"-->
+<!--                  :class="{ copied: copySingleStatus[index] }"-->
+<!--                  @click="copySingleResult(index)"-->
+<!--                >-->
+<!--                  {{ copySingleStatus[index] ? '已复制' : '复制' }}-->
+<!--                </Button>-->
+<!--              </div>-->
+<!--&lt;!&ndash;              <div class="result-content">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <p class="error-message">分析失败</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <Button class="retry-btn" @click="retryModel(index)">&ndash;&gt;-->
+<!--&lt;!&ndash;                    重试&ndash;&gt;-->
+<!--&lt;!&ndash;                  </Button>&ndash;&gt;-->
+<!--              <div class="result-content">-->
+<!--                <div v-if="aiAnalysisResults[index] === 'ANALYSIS_FAILED'" class="error-content">-->
+<!--                  <p class="error-message">分析失败</p>-->
+<!--                  <Button class="retry-btn" @click="retryModel(index)">-->
+<!--                    重试-->
+<!--                  </Button>-->
+
+<!--                </div>-->
+<!--&lt;!&ndash;                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--                <div v-else class="success-content markdown-content" v-html="renderedResults[index] || ''"></div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; 下方滑轨 &ndash;&gt;-->
+<!--        <div class="slider-controls bottom">-->
+<!--          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>-->
+<!--          <div class="slider-track" ref="bottomSliderTrack">-->
+<!--            <div-->
+<!--              class="slider-thumb"-->
+<!--              :style="{ left: sliderPosition + '%' }"-->
+<!--              @mousedown="startDrag"-->
+<!--            ></div>-->
+<!--          </div>-->
+<!--          <div class="boundary-indicator" :class="{-->
+<!--            'at-start': currentSlideIndex === 0,-->
+<!--            'at-end': currentSlideIndex === aiAnalysisResults.length - 1-->
+<!--          }">-->
+<!--            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>-->
+<!--            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+
+        <!-- 替换现有的滑轨控制器 -->
+        <!-- 上方滑动条 -->
         <div class="slider-controls top">
-          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
-          <div class="slider-track" ref="topSliderTrack">
-            <div
-              class="slider-thumb"
-              :style="{ left: sliderPosition + '%' }"
-              @mousedown="startDrag"
-            ></div>
-          </div>
+          <div class="position-indicator">{{ currentPositionDisplay }}/{{ aiAnalysisResults.length }}</div>
+          <input
+            class="ai-results-slider"
+            type="range"
+            min="0"
+            :max="sliderMax"
+            v-model.number="viewOffset"
+
+          />
           <div class="boundary-indicator" :class="{
-            'at-start': currentSlideIndex === 0,
-            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
-          }">
-            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
-            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+    'at-start': isAtStart,
+    'at-end': isAtEnd
+  }">
+            <span v-if="isAtStart">◀ 已到最左边</span>
+            <span v-else-if="isAtEnd">已到最右边 ▶</span>
           </div>
         </div>
-        <!-- 结果滑动容器 -->
+
+        <!-- 结果滑动容器 - 移除原有的事件监听 -->
         <div
           class="results-slider-container"
           ref="sliderContainer"
-          @scroll="onSliderScroll"
-          @touchstart="onTouchStart"
-          @touchmove="onTouchMove"
-          @touchend="onTouchEnd"
         >
           <div
             class="results-slider"
-            :style="{ transform: `translateX(-${slideOffset}px)` }"
+            :style="{ transform: `translateX(-${viewOffset}px)` }"
           >
             <div
               v-for="(result, index) in aiAnalysisResults"
               :key="index"
               class="model-result-card"
+              ref="cardRefs"
             >
+              <!-- 卡片内容保持不变 -->
               <div class="card-header">
                 <h5 class="model-name">{{ getModelName(selectedModelKeys[index]) }}</h5>
                 <Button
@@ -616,47 +712,41 @@
                   {{ copySingleStatus[index] ? '已复制' : '复制' }}
                 </Button>
               </div>
-<!--              <div class="result-content">-->
-<!--                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">-->
-<!--                  <p class="error-message">分析失败</p>-->
-<!--                  <Button class="retry-btn" @click="retryModel(index)">-->
-<!--                    重试-->
-<!--                  </Button>-->
               <div class="result-content">
                 <div v-if="aiAnalysisResults[index] === 'ANALYSIS_FAILED'" class="error-content">
                   <p class="error-message">分析失败</p>
                   <Button class="retry-btn" @click="retryModel(index)">
                     重试
                   </Button>
-
                 </div>
-<!--                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>-->
-<!--              </div>-->
                 <div v-else class="success-content markdown-content" v-html="renderedResults[index] || ''"></div>
               </div>
             </div>
           </div>
         </div>
-        <!-- 下方滑轨 -->
+
+        <!-- 下方滑动条 -->
         <div class="slider-controls bottom">
-          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
-          <div class="slider-track" ref="bottomSliderTrack">
-            <div
-              class="slider-thumb"
-              :style="{ left: sliderPosition + '%' }"
-              @mousedown="startDrag"
-            ></div>
-          </div>
+          <div class="position-indicator">{{ currentPositionDisplay }}/{{ aiAnalysisResults.length }}</div>
+          <input
+            class="ai-results-slider"
+            type="range"
+            min="0"
+            :max="sliderMax"
+            v-model.number="viewOffset"
+            @input="onSliderInput"
+          />
           <div class="boundary-indicator" :class="{
-            'at-start': currentSlideIndex === 0,
-            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
-          }">
-            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
-            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+    'at-start': isAtStart,
+    'at-end': isAtEnd
+  }">
+            <span v-if="isAtStart">◀ 已到最左边</span>
+            <span v-else-if="isAtEnd">已到最右边 ▶</span>
           </div>
         </div>
       </div>
-      <!-- 重新开始按钮 -->
+
+        <!-- 重新开始按钮 -->
       <div class="result-actions">
         <Button class="restart-btn" @click="resetFn">重新开始</Button>
       </div>
@@ -798,7 +888,7 @@ active: selectCardArr.includes(i.no),
             @click="selectCard(i.no)"
             :style="{
 transform: `translateX(${(index * cardPartialWidth) - viewOffset}px) ${selectCardArr.includes(i.no) ? 'translateY(-160px)' : ''}`,
-width: cardWidth + 'px',
+width: cardWidth2 + 'px',
 zIndex: selectCardArr.includes(i.no) ? 100 : index
 }"
           >
@@ -1182,7 +1272,7 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
                   <h4 class="section-title">象征元素</h4>
                   <div class="symbolic-elements">
                     <div class="element-group">
-                      <span class="element-label">人物：</span>
+                      <span class="element-label">人物:</span>
                       <span class="element-content">{{ selectedCardDetail.symbolic_elements.characters.join('、') }}</span>
                     </div>
                     <div class="element-group">
@@ -1190,15 +1280,15 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
                       <span class="element-content">{{ selectedCardDetail.symbolic_elements.props.join('、') }}</span>
                     </div>
                     <div class="element-group">
-                      <span class="element-label">环境：</span>
+                      <span class="element-label">环境:</span>
                       <span class="element-content">{{ selectedCardDetail.symbolic_elements.environment.join('、') }}</span>
                     </div>
                     <div class="element-group">
-                      <span class="element-label">时间：</span>
+                      <span class="element-label">时间:</span>
                       <span class="element-content">{{ selectedCardDetail.symbolic_elements.time_hint }}</span>
                     </div>
                     <div class="element-group">
-                      <span class="element-label">方向：</span>
+                      <span class="element-label">方向:</span>
                       <span class="element-content">{{ selectedCardDetail.symbolic_elements.direction }}</span>
                     </div>
                   </div>
@@ -2596,7 +2686,7 @@ const sliderContainer = ref<HTMLElement | null>(null)
 const topSliderTrack = ref<HTMLElement | null>(null)
 const bottomSliderTrack = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
- const cardWidth = ref(88) // 每个卡片的固定宽度
+ const cardWidth = ref(130) // 每个卡片的固定宽度
 const cardsPerView = ref(2) // 当前视图显示的卡片数量
 // 复制状态
 const copyAllStatus = ref(false)
@@ -2605,9 +2695,14 @@ const copySingleStatus = ref<boolean[]>([])
 const touchStartX = ref(0)
 const touchStartOffset = ref(0)
 // 计算滑轨位置
+// const sliderPosition = computed(() => {
+//   if (aiAnalysisResults.value.length <= 1) return 0
+//   return (currentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
+// })
 const sliderPosition = computed(() => {
-  if (aiAnalysisResults.value.length <= 1) return 0
-  return (currentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
+  const totalCards = aiAnalysisResults.value.length
+  if (totalCards <= 1) return 50 // 单张卡片时滑块居中
+  return (currentSlideIndex.value / (totalCards - 1)) * 100
 })
 // 可用模型列表
 const availableModels = ref([
@@ -2939,8 +3034,34 @@ const getAIAnalysis = async () => {
     isWaitingForAIAnalysis.value = false
     progressText.value = ''
     console.log('🔍 AI分析流程结束')
+
+
+    await nextTick()
+    resetSliderState()
   }
 }
+
+// 监听窗口大小变化
+const handleResize = () => {
+  updateContainerWidth()
+  // 确保偏移量不超过新的最大值
+  if (viewOffset.value > sliderMax.value) {
+    viewOffset.value = sliderMax.value
+  }
+}
+// 生命周期钩子
+onMounted(() => {
+  updateContainerWidth()
+  window.addEventListener('resize', handleResize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+// 监听AI结果变化，更新容器宽度
+watch(aiAnalysisResults, async () => {
+  await nextTick()
+  updateContainerWidth()
+}, { flush: 'post' })
 // // 滑动相关函数
 // const updateSlideOffset = () => {
 //   const containerWidth = sliderContainer.value?.clientWidth || 0
@@ -3010,14 +3131,175 @@ const getAIAnalysis = async () => {
 // }
 
 // 滑动相关函数
+// const updateSlideOffset = () => {
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   const containerWidth = container?.clientWidth || 0
+//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+//   const targetOffset = (currentSlideIndex.value * cardWidth.value)
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
+// const updateSlideOffset = () => {
+//   console.log('updateSlideOffset 被调用了', currentSlideIndex.value) // 添加这行调试
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//
+//   const containerWidth = container.clientWidth || 0
+//   const cardTotalWidth = cardWidth.value // 每个卡片的宽度
+//   const totalCardsWidth = aiAnalysisResults.value.length * cardTotalWidth
+//   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//   // 计算目标偏移量
+//   const targetOffset = currentSlideIndex.value * cardTotalWidth
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
+
+// const updateSlideOffset = () => {
+//   console.log('updateSlideOffset 被调用了', currentSlideIndex.value) // 添加这行调试
+//
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   console.log('container:', container) // 添加这行调试
+//
+//   if (!container) {
+//     console.log('container 为空，退出函数') // 添加这行调试
+//     return
+//   }
+//
+//   const containerWidth = container.clientWidth || 0
+//   const cardTotalWidth = cardWidth.value
+//   const totalCardsWidth = aiAnalysisResults.value.length * cardTotalWidth
+//   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//   const targetOffset = currentSlideIndex.slideOffset.value = Math.min(targetOffset, maxOffset)
+//
+//   console.log('计算结果:', { // 添加这行调试
+//     containerWidth,
+//     cardTotalWidth,
+//     totalCardsWidth,
+//     maxOffset,
+//     targetOffset,
+//     finalOffset: slideOffset.value
+//   })
+// }
+// const updateSlideOffset = () => {
+//   console.log('updateSlideOffset 被调用了', currentSlideIndex.value)
+//
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   console.log('container:', container)
+//
+//   if (!container) {
+//     console.log('container 为空，使用默认宽度')
+//     // 使用默认容器宽度
+//     const containerWidth = 700 // 临时使用固定宽度
+//     const cardTotalWidth = cardWidth.value // 350
+//     const totalCardsWidth = aiAnalysisResults.value.length * cardTotalWidth
+//     const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//     const targetOffset = currentSlideIndex.value * cardTotalWidth
+//     slideOffset.value = Math.min(targetOffset, maxOffset)
+//
+//     console.log('使用默认宽度计算结果:', {
+//       containerWidth,
+//       cardTotalWidth,
+//       totalCardsWidth,
+//       maxOffset,
+//       targetOffset,
+//       finalOffset: slideOffset.value
+//     })
+//     return
+//   }
+//
+//   const containerWidth = container.clientWidth || 0
+//   const cardTotalWidth = cardWidth.value
+//   const totalCardsWidth = aiAnalysisResults.value.length * cardTotalWidth
+//   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//   const targetOffset = currentSlideIndex.value * cardTotalWidth
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+//
+//   console.log('正常计算结果:', {
+//     containerWidth,
+//     cardTotalWidth,
+//     totalCardsWidth,
+//     maxOffset,
+//     targetOffset,
+//     finalOffset: slideOffset.value
+//   })
+// }
+
+// const updateSlideOffset = () => {
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//
+//   // 动态获取AI卡片的实际宽度
+//   const firstCard = container.querySelector('.model-result-card') as HTMLElement
+//   const actualCardWidth = firstCard ? firstCard.offsetWidth + 16 : 350 // +16是gap间距
+//
+//   const containerWidth = container.clientWidth
+//   const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth
+//   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//   const targetOffset = currentSlideIndex.value * actualCardWidth
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
+// const updateSlideOffset = () => {
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//
+//   // 获取实际的卡片宽度
+//   const firstCard = container.querySelector('.model-result-card') as HTMLElement
+//   if (!firstCard) return
+//
+//   const actualCardWidth = firstCard.offsetWidth
+//   const cardGap = 16 // CSS中设置的gap
+//   const containerWidth = container.clientWidth
+//
+//   // 计算总宽度（包括间距）
+//   const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
+//     (aiAnalysisResults.value.length - 1) * cardGap
+//
+//   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//
+//   console.log('滑轨计算调试:', {
+//     actualCardWidth,
+//     containerWidth,
+//     totalCardsWidth,
+//     maxOffset,
+//     cardsCount: aiAnalysisResults.value.length
+//   })
+//
+//   // 如果maxOffset为0，说明不需要滚动
+//   if (maxOffset === 0) {
+//     console.log('不需要滚动，所有卡片都能显示在容器内')
+//     slideOffset.value = 0
+//     return
+//   }
+//
+//   const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
 const updateSlideOffset = () => {
   const container = sliderContainer.value as HTMLDivElement | null
-  const containerWidth = container?.clientWidth || 0
-  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-  const targetOffset = (currentSlideIndex.value * cardWidth.value)
+  if (!container) return
+  // 如果只有一张卡片，不需要偏移
+  if (aiAnalysisResults.value.length <= 1) {
+    slideOffset.value = 0
+    return
+  }
+  const firstCard = container.querySelector('.model-result-card') as HTMLElement
+  if (!firstCard) return
+  const actualCardWidth = firstCard.offsetWidth
+  const cardGap = 16
+  const containerWidth = container.clientWidth
+  const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
+    (aiAnalysisResults.value.length - 1) * cardGap
+  const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+  if (maxOffset === 0) {
+    slideOffset.value = 0
+    return
+  }
+  const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
   slideOffset.value = Math.min(targetOffset, maxOffset)
 }
-
 const onSliderScroll = () => {
   if (isDragging.value) return
 
@@ -3037,21 +3319,50 @@ const startDrag = (event: MouseEvent) => {
   event.preventDefault()
 }
 
+// const onDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return
+//
+//   const track = (topSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
+//   if (!track) return
+//
+//   const rect = track.getBoundingClientRect()
+//   const x = event.clientX - rect.left
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+//   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+//
+//   currentSlideIndex.value = newIndex
+//   updateSlideOffset()
+// }
+
+// const onDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return  // 修复：添加了 (!is 和缺少的 d
+//
+//   const track = (topSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
+//   if (!track) return
+//   const rect = track.getBoundingClientRect()
+//   const x = event.clientX - rect.left
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+//
+//   // 修复索引计算
+//   const maxIndex = Math.max(0, aiAnalysisResults.value.length - 1)
+//   const newIndex = Math.round((percentage / 100) * maxIndex)
+//   currentSlideIndex.value = newIndex
+//   updateSlideOffset()
+// }
 const onDrag = (event: MouseEvent) => {
   if (!isDragging.value) return
-
   const track = (topSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
   if (!track) return
-
+  // 如果只有一张卡片，禁用拖拽
+  if (aiAnalysisResults.value.length <= 1) return
   const rect = track.getBoundingClientRect()
   const x = event.clientX - rect.left
   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-  const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
-
+  const maxIndex = Math.max(0, aiAnalysisResults.value.length - 1)
+  const newIndex = Math.round((percentage / 100) * maxIndex)
   currentSlideIndex.value = newIndex
   updateSlideOffset()
 }
-
 const endDrag = () => {
   isDragging.value = false
   document.removeEventListener('mousemove', onDrag)
@@ -3381,26 +3692,105 @@ const renderAllResults = async () => {
 }
 
 // 卡牌条相关
+
+
+const viewOffset = ref(0)  // 滑动条偏移量
+const containerWidth = ref(0)  // 容器宽度
+const cardRefs = ref([])  // 卡片元素引用
+// 计算卡片总宽度
+const totalCardsWidth = computed(() => {
+  if (aiAnalysisResults.value.length === 0) return 0
+
+  // 动态获取卡片宽度
+  const firstCard = cardRefs.value?.[0]
+  if (!firstCard) return 0
+
+  const cardWidth = firstCard.offsetWidth
+  const cardGap = 16 // CSS中设置的gap
+
+  return aiAnalysisResults.value.length * cardWidth +
+    Math.max(0, aiAnalysisResults.value.length - 1) * cardGap
+})
+// 计算滑动条最大值
+const sliderMax = computed(() => {
+  if (aiAnalysisResults.value.length <= 1) {
+    // 单卡片时返回容器宽度的20%
+    return Math.floor(containerWidth.value * 0.2)
+  }
+  return Math.max(0, totalCardsWidth.value - containerWidth.value)
+})
+// 计算当前位置显示
+const currentPositionDisplay = computed(() => {
+  if (aiAnalysisResults.value.length <= 1) return 1
+
+  if (sliderMax.value === 0) return 1
+
+  // 根据偏移量计算当前位置
+  const progress = viewOffset.value / sliderMax.value
+  const position = Math.round(progress * (aiAnalysisResults.value.length - 1)) + 1
+  return Math.min(position, aiAnalysisResults.value.length)
+})
+// 边界检测
+const isAtStart = computed(() => viewOffset.value <= 0)
+const isAtEnd = computed(() => viewOffset.value >= sliderMax.value)
+// 滑动条输入处理
+const onSliderInput = () => {
+  // 单卡片时不移动卡片
+  if (aiAnalysisResults.value.length <= 1) {
+    return
+  }
+  // 多卡片时，viewOffset已经通过v-model自动更新
+}
+// 更新容器宽度
+// const updateContainerWidth = () => {
+//   const container = sliderContainer.value
+//   if (container) {
+//     containerWidth.value = container.clientWidth
+//   }
+// }
+
+const updateContainerWidth = () => {
+  const container = sliderContainer.value
+  if (container && 'clientWidth' in container) {
+    containerWidth.value = container.clientWidth
+  }
+}
+
+// 重置滑动状态
+const resetSliderState = () => {
+  viewOffset.value = 0
+  updateContainerWidth()
+}
+
+
+
+
+
+
+
+
+
+
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
 const cardWidth2 = 88
 let isDragging2 = false
 let dragStartX = 0
 
-const viewOffset = ref(0)
+//const viewOffset = ref(0)
 let dragStartOffset = 0
-const containerWidth = ref(0)
+//const containerWidth = ref(0)
 
 const cardPartialWidth = cardWidth2 * 0.6
 
-const totalCardsWidth = computed(() => {
-  const deck = displayDeck.value
-  if (!deck || deck.length === 0) return 0
-  return (deck.length - 1) * cardPartialWidth + cardWidth2
-})
-
-const sliderMax = computed(() => {
-  return Math.max(0, totalCardsWidth.value - containerWidth.value)
-})
+// const totalCardsWidth = computed(() => {
+//   const deck = displayDeck.value
+//   if (!deck || deck.length === 0) return 0
+//   return (deck.length - 1) * cardPartialWidth + cardWidth2
+// })
+//
+// const sliderMax = computed(() => {
+//   return Math.max(0, totalCardsWidth.value - containerWidth.value)
+// })
 
 const onWheelWithShift = (e: WheelEvent) => {
   if (e.shiftKey && isSpreadConfirmed.value) {
@@ -3423,20 +3813,36 @@ const totalCardCount = computed(() =>
 //     containerWidth.value = cardStripWrapper.value.clientWidth;
 //   }
 // });
+// const onTouchMove = (event: TouchEvent) => {
+//   const currentX = event.touches[0].clientX
+//   const deltaX = touchStartX.value - currentX
+//   const newOffset = touchStartOffset.value + deltaX
+//   const container = sliderContainer.value
+//   // 使用类型守卫确保 container 是 HTMLElement
+//   if (!container || !('clientWidth' in container)) return
+//
+//   const containerWidth = container.clientWidth || 0
+//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+//   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+//   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+// }
+// 修复触摸移动逻辑
 const onTouchMove = (event: TouchEvent) => {
+  if (!isDragging2.value) return // 添加拖拽状态检查
+
   const currentX = event.touches[0].clientX
   const deltaX = touchStartX.value - currentX
   const newOffset = touchStartOffset.value + deltaX
-  const container = sliderContainer.value
-  // 使用类型守卫确保 container 是 HTMLElement
-  if (!container || !('clientWidth' in container)) return
 
+  const container = sliderContainer.value as HTMLDivElement | null
+  if (!container) return
   const containerWidth = container.clientWidth || 0
-  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+  const totalCardsWidth = aiAnalysisResults.value.length * cardWidth.value
+  const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+
   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
 }
-
 onBeforeUnmount(() => {
   window.removeEventListener('wheel', onWheelWithShift);
   if (typedInstance) {
@@ -8463,7 +8869,8 @@ label {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .model-result-card {
-    flex: 0 0 calc(100vw - 32px);
+    /* 或者 */
+    flex: 0 0 80vw; /* 占屏幕80%宽度 */
   }
 
   .results-header {
@@ -8748,4 +9155,151 @@ label {
 .dark-mode .markdown-content hr {
   border-top-color: #4b5563;
 }
+
+/* 确保移动端滑轨可见 */
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  margin: 16px 0;
+  min-height: 40px; /* 确保有足够高度 */
+}
+
+
+.slider-track {
+  flex: 1;
+  height: 8px; /* 移动端增加高度 */
+  background: #e5e7eb;
+  border-radius: 4px; /* 增加圆角 */
+  position: relative;
+  cursor: pointer;
+  min-height: 8px; /* 确保最小高度 */
+}
+
+.slider-thumb {
+  position: absolute;
+  top: -4px; /* 调整位置 */
+  width: 10px; /* 移动端增加大小 */
+  height: 16px;
+  background: #f59e0b;
+  border-radius: 50%;
+  cursor: grab;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10; /* 确保在最上层 */
+}
+
+/* 移动端特殊适配 */
+@media (max-width: 768px) {
+  .slider-controls {
+    padding: 16px 0; /* 增加移动端内边距 */
+    gap: 12px;
+  }
+
+  .slider-track {
+    height: 12px; /* 移动端更大的触摸区域 */
+    border-radius: 6px;
+  }
+
+  .slider-thumb {
+    width: 20px;
+    height: 20px;
+    top: -4px;
+  }
+
+  .position-indicator {
+    font-size: 16px; /* 移动端增大字体 */
+    min-width: 80px;
+  }
+
+  .boundary-indicator {
+    font-size: 14px; /* 移动端增大字体 */
+    min-width: 140px;
+  }
+}
+
+/* 深色模式确保可见性 */
+.dark-mode .slider-track {
+  background: #4b5563;
+  border: 1px solid #6b7280; /* 添加边框增强可见性 */
+}
+
+.dark-mode .slider-thumb {
+  background: #f59e0b;
+  border: 2px solid #ffffff; /* 添加白色边框 */
+}
+/* AI结果滑动条样式 - 复用抽牌区域样式 */
+.ai-results-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.ai-results-slider:hover {
+  opacity: 1;
+}
+
+.ai-results-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #f39c12;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.ai-results-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #f39c12;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
+
+/* 单卡片时的特殊样式 */
+.results-slider-container.single-card .results-slider {
+  justify-content: center;
+}
+
+.results-slider-container.single-card .model-result-card {
+  margin: 0 auto;
+}
+
+/* 深色模式适配 */
+.dark-mode .ai-results-slider {
+  background: #444;
+}
+
+.dark-mode .ai-results-slider::-webkit-slider-thumb {
+  background: #f39c12;
+}
+
+.dark-mode .ai-results-slider::-moz-range-thumb {
+  background: #f39c12;
+}
+
+/* 响应式设计 - 手机端单卡片优化 */
+@media (max-width: 768px) {
+  .results-slider-container.single-card .model-result-card {
+    flex: 0 0 94vw; /* 手机端单卡片占90%屏宽 */
+    max-width: 400px; /* 最大宽度限制 */
+  }
+}
+
+@media (max-width: 480px) {
+  .results-slider-container.single-card .model-result-card {
+    flex: 0 0 95vw; /* 小屏手机占95%屏宽 */
+    max-width: 350px;
+  }
+}
+
 </style>
