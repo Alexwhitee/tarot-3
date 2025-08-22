@@ -570,16 +570,7 @@
             </Button>
           </div>
         </div>
-        <div style="background: #ffeb3b; padding: 10px; margin: 10px 0; font-size: 14px; border: 2px solid #f57c00;">
-          <strong>调试信息:</strong><br>
-          当前索引: {{ currentSlideIndex }}<br>
-          总卡片数: {{ aiAnalysisResults.length }}<br>
-          滑块位置: {{ sliderPosition }}%<br>
-          卡片偏移: {{ slideOffset }}px<br>
-          卡片宽度: {{ cardWidth }}<br>
-          容器引用: {{ sliderContainer ? '已获取' : '未获取' }}<br>
-          Transform值: translateX(-{{ slideOffset }}px)
-        </div>
+
         <!-- 上方滑轨 -->
 <!--        <div class="slider-controls top">-->
 <!--          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>-->
@@ -3308,6 +3299,16 @@ const updateSlideOffset = () => {
   const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
   slideOffset.value = Math.min(targetOffset, maxOffset)
 }
+// const onSliderScroll = () => {
+//   if (isDragging.value) return
+//
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//
+//   const scrollLeft = container.scrollLeft
+//   const newIndex = Math.round(scrollLeft / cardWidth.value)
+//   currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+// }
 const onSliderScroll = () => {
   if (isDragging.value) return
 
@@ -3315,9 +3316,14 @@ const onSliderScroll = () => {
   if (!container) return
 
   const scrollLeft = container.scrollLeft
-  const newIndex = Math.round(scrollLeft / cardWidth.value)
+  const cardWidthValue = Number(cardWidth.value || 350) // 确保是数字类型
+
+  if (cardWidthValue === 0) return // 避免除零错误
+
+  const newIndex = Math.round(scrollLeft / cardWidthValue)
   currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
 }
+
 
 // 滑轨拖拽
 const startDrag = (event: MouseEvent) => {
