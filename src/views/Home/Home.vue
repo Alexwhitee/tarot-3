@@ -2690,6 +2690,30 @@ const availableModels = ref([
     key: 'kimi-k2-250711',
     name: 'Kimi-K2',
     description: 'Moonshot超长上下文模型'
+  },{
+    key: 'gpt-4.1-nano-2025-04-14',
+    name: 'GPT-4.1 Nano',
+    description: 'OpenAI轻量级模型，快速响应',
+  },
+  {
+    key: 'claude-3-haiku-20240307',
+    name: 'Claude-3 Haiku',
+    description: 'Anthropic快速模型，简洁高效',
+  },
+  {
+    key: 'gemini-2.0-flash',
+    name: 'Gemini-2.0 Flash',
+    description: 'Google新一代快速模型',
+  },
+  {
+    key: 'qwen-plus',
+    name: 'qwen-plus',
+    description: '阿里通义千问加速版',
+  },
+  {
+    key: 'claude-sonnet-4-20250514-thinking',
+    name: 'claude-sonnet-4-thinking',
+    description: 'Anthropic旗舰思维链模型，深度推理',
   }
 ])
 // 响应式布局检测
@@ -2855,8 +2879,11 @@ const getAIAnalysis = async () => {
                   actions: card.cardAnalysis.actions,
                   story_hint: card.cardAnalysis.story_hint,
                   branches: card.cardAnalysis.branches,
-                  possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
-                  element_relations: card.cardAnalysis.element_relations
+                  possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+                }
+                   // element_relations: card.cardAnalysis.element_relations
+                  if (card.cardAnalysis.element_relations) {
+                  cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
                 }
               }
               return cardData
