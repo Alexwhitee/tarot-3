@@ -616,14 +616,23 @@
                   {{ copySingleStatus[index] ? '已复制' : '复制' }}
                 </Button>
               </div>
+<!--              <div class="result-content">-->
+<!--                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">-->
+<!--                  <p class="error-message">分析失败</p>-->
+<!--                  <Button class="retry-btn" @click="retryModel(index)">-->
+<!--                    重试-->
+<!--                  </Button>-->
               <div class="result-content">
-                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">
+                <div v-if="aiAnalysisResults[index] === 'ANALYSIS_FAILED'" class="error-content">
                   <p class="error-message">分析失败</p>
                   <Button class="retry-btn" @click="retryModel(index)">
                     重试
                   </Button>
+
                 </div>
-                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>
+<!--                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>-->
+<!--              </div>-->
+                <div v-else class="success-content markdown-content" v-html="renderedResults[index] || ''"></div>
               </div>
             </div>
           </div>
@@ -2710,6 +2719,102 @@ const getModelName = (key: string) => {
   return model ? model.name : key
 }
 // AI分析函数
+// const getAIAnalysis = async () => {
+//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
+//     console.error('缺少必要参数进行AI分析')
+//     return
+//   }
+//   console.log('=== 开始AI分析流程 ===')
+//   isWaitingForAIAnalysis.value = true
+//   aiAnalysisResults.value = []
+//   copySingleStatus.value = []
+//   progressPercentage.value = 0
+//   currentSlideIndex.value = 0
+//   slideOffset.value = 0
+//   try {
+//     const totalModels = selectedModelKeys.value.length
+//     let completedModels = 0
+//     progressText.value = `正在分析 (0/${totalModels})`
+//     const promises = selectedModelKeys.value.map(async (modelKey, index) => {
+//       try {
+//         const res = await fetch('/api/ai-analysis', {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json'
+//           },
+//           body: JSON.stringify({
+//             text: textValue.value,
+//             model: modelKey,
+//             pms: cardResult.value.map((card: CardResult) => {
+//               const cardData: any = {
+//                 no: card.no,
+//                 name: card.name,
+//                 type: card.type,
+//                 isReversed: card.isReversed
+//               }
+//               if (card.cardAnalysis) {
+//                 cardData.cardAnalysis = {
+//                   symbols: card.cardAnalysis.symbols,
+//                   actions: card.cardAnalysis.actions,
+//                   story_hint: card.cardAnalysis.story_hint,
+//                   branches: card.cardAnalysis.branches,
+//                   possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
+//                   element_relations: card.cardAnalysis.element_relations
+//                 }
+//               }
+//               return cardData
+//             }),
+//             spread: {
+//               key: selectedSpread.value?.key || '',
+//               name: selectedSpread.value?.name || '标准牌阵',
+//               desc: selectedSpread.value?.desc || '',
+//               positions: selectedSpread.value?.positions || []
+//             },
+//             deck: {
+//               key: selectedDeck.value?.key || '',
+//               name: selectedDeck.value?.name || '标准塔罗牌'
+//             }
+//           })
+//         })
+//         if (!res.ok) {
+//           throw new Error(`模型 ${modelKey} 请求失败`)
+//         }
+//         const resText = await res.text()
+//         const content = parseApiResponse(resText)
+//
+//         completedModels++
+//         progressPercentage.value = (completedModels / totalModels) * 100
+//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
+//
+//         return content
+//       } catch (error) {
+//         console.error(`模型 ${modelKey} 分析失败:`, error)
+//         completedModels++
+//         progressPercentage.value = (completedModels / totalModels) * 100
+//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
+//         return 'ANALYSIS_FAILED'
+//       }
+//     })
+//     const results = await Promise.allSettled(promises)
+//
+//     results.forEach((result) => {
+//       if (result.status === 'fulfilled') {
+//         aiAnalysisResults.value.push(result.value)
+//       } else {
+//         aiAnalysisResults.value.push('ANALYSIS_FAILED')
+//       }
+//       copySingleStatus.value.push(false)
+//     })
+//     console.log('=== AI分析成功完成 ===')
+//   } catch (error) {
+//     console.error('🔍 AI分析失败:', error)
+//   } finally {
+//     isWaitingForAIAnalysis.value = false
+//     progressText.value = ''
+//     console.log('🔍 AI分析流程结束')
+//   }
+// }
+
 const getAIAnalysis = async () => {
   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
     console.error('缺少必要参数进行AI分析')
@@ -2718,6 +2823,7 @@ const getAIAnalysis = async () => {
   console.log('=== 开始AI分析流程 ===')
   isWaitingForAIAnalysis.value = true
   aiAnalysisResults.value = []
+  renderedResults.value = [] // 清空渲染结果
   copySingleStatus.value = []
   progressPercentage.value = 0
   currentSlideIndex.value = 0
@@ -2788,6 +2894,7 @@ const getAIAnalysis = async () => {
     })
     const results = await Promise.allSettled(promises)
 
+    // 处理结果
     results.forEach((result) => {
       if (result.status === 'fulfilled') {
         aiAnalysisResults.value.push(result.value)
@@ -2796,6 +2903,8 @@ const getAIAnalysis = async () => {
       }
       copySingleStatus.value.push(false)
     })
+    // 渲染所有Markdown结果
+    await renderAllResults()
     console.log('=== AI分析成功完成 ===')
   } catch (error) {
     console.error('🔍 AI分析失败:', error)
@@ -3006,6 +3115,65 @@ const exportResults = () => {
   URL.revokeObjectURL(url)
 }
 // 重试单个模型
+// const retryModel = async (index: number) => {
+//   const modelKey = selectedModelKeys.value[index]
+//
+//   try {
+//     const res = await fetch('/api/ai-analysis', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         text: textValue.value,
+//         model: modelKey,
+//         pms: cardResult.value.map((card: CardResult) => {
+//           const cardData: any = {
+//             no: card.no,
+//             name: card.name,
+//             type: card.type,
+//             isReversed: card.isReversed
+//           }
+//           if (card.cardAnalysis) {
+//             cardData.cardAnalysis = {
+//               symbols: card.cardAnalysis.symbols,
+//               actions: card.cardAnalysis.actions,
+//               story_hint: card.cardAnalysis.story_hint,
+//               branches: card.cardAnalysis.branches,
+//               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
+//               element_relations: card.cardAnalysis.element_relations
+//             }
+//           }
+//           return cardData
+//         }),
+//         spread: {
+//           key: selectedSpread.value?.key || '',
+//           name: selectedSpread.value?.name || '标准牌阵',
+//           desc: selectedSpread.value?.desc || '',
+//           positions: selectedSpread.value?.positions || []
+//         },
+//         deck: {
+//           key: selectedDeck.value?.key || '',
+//           name: selectedDeck.value?.name || '标准塔罗牌'
+//         }
+//       })
+//     })
+//     if (!res.ok) {
+//       throw new Error(`模型 ${modelKey} 请求失败`)
+//     }
+//     const resText = await res.text()
+//     const content = parseApiResponse(resText)
+//
+//     aiAnalysisResults.value[index] = content
+//
+//   } catch (error) {
+//     console.error(`重试模型 ${modelKey} 失败:`, error)
+//     aiAnalysisResults.value[index] = 'ANALYSIS_FAILED'
+//   }
+// }
+
+
+
 const retryModel = async (index: number) => {
   const modelKey = selectedModelKeys.value[index]
 
@@ -3055,20 +3223,57 @@ const retryModel = async (index: number) => {
     const resText = await res.text()
     const content = parseApiResponse(resText)
 
+    // 更新原始结果
     aiAnalysisResults.value[index] = content
+
+    // 重新渲染这个结果
+    renderedResults.value[index] = await renderMarkdownAsync(content)
 
   } catch (error) {
     console.error(`重试模型 ${modelKey} 失败:`, error)
     aiAnalysisResults.value[index] = 'ANALYSIS_FAILED'
+    renderedResults.value[index] = 'ANALYSIS_FAILED'
   }
 }
 // 格式化分析结果
-const formatAnalysisResult = (result: string): string => {
-  // 将换行符转换为<br>标签，保持格式
-  return result.replace(/\n/g, '<br>')
+// const formatAnalysisResult = (result: string): string => {
+//   // 将换行符转换为<br>标签，保持格式
+//   return result.replace(/\n/g, '<br>')
+// }
+// const renderMarkdown = (content: string): string => {
+//   if (!content || content === 'ANALYSIS_FAILED') {
+//     return content
+//   }
+//
+//   try {
+//     // 使用marked解析Markdown
+//     return marked(content)
+//   } catch (error) {
+//     console.error('Markdown渲染失败:', error)
+//     // 降级处理：简单的换行转换
+//     return content.replace(/\n/g, '<br>')
+//   }
+// }
+// 存储渲染后的内容
+const renderedResults = ref<string[]>([])
+// 异步渲染Markdown
+const renderMarkdownAsync = async (content: string): Promise<string> => {
+  if (!content || content === 'ANALYSIS_FAILED') {
+    return content
+  }
+  try {
+    const result = await marked(content)
+    return result
+  } catch (error) {
+    console.error('Markdown渲染失败:', error)
+    return content.replace(/\n/g, '<br>')
+  }
 }
-
-
+// 渲染所有结果
+const renderAllResults = async () => {
+  const promises = aiAnalysisResults.value.map(result => renderMarkdownAsync(result))
+  renderedResults.value = await Promise.all(promises)
+}
 
 // 卡牌条相关
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
@@ -3268,6 +3473,7 @@ const resetFn = () => {
 // 新增：重置AI相关状态
   selectedModelKeys.value = []
   aiAnalysisResults.value = []
+  renderedResults.value = [] // 新增：重置渲染结果
   isWaitingForAIAnalysis.value = false
   progressPercentage.value = 0
   progressText.value = ''
@@ -3369,40 +3575,59 @@ const renderIMG = (no: number): string => {
 //   return responseText
 // }
 
+// const parseApiResponse = (responseText: string): string => {
+//   console.log('🔍 parseApiResponse 输入:', responseText.substring(0, 500))
+//
+//   try {
+//     const jsonData = JSON.parse(responseText)
+//     console.log('🔍 JSON 解析成功，数据键:', Object.keys(jsonData))
+//
+//     // 直接返回content字段
+//     if (jsonData.content) {
+//       console.log('🔍 找到直接 content 字段')
+//       return jsonData.content
+//     }
+//
+//     // 处理智谱API的嵌套结构
+//     if (jsonData.choices &&
+//       jsonData.choices[0] &&
+//       jsonData.choices[0].message &&
+//       jsonData.choices[0].message.content) {
+//       console.log('🔍 找到智谱 API 嵌套结构的 content')
+//       const content = jsonData.choices[0].message.content
+//       console.log('🔍 提取的 content:', content)
+//       return content
+//     }
+//
+//     console.warn('🔍 未找到预期的 content 结构，完整数据:', jsonData)
+//     return ''
+//   } catch (e) {
+//     console.error('🔍 JSON 解析失败:', e)
+//     console.log('🔍 作为纯文本返回')
+//     return responseText
+//   }
+// }
+
 const parseApiResponse = (responseText: string): string => {
-  console.log('🔍 parseApiResponse 输入:', responseText.substring(0, 500))
-
   try {
-    const jsonData = JSON.parse(responseText)
-    console.log('🔍 JSON 解析成功，数据键:', Object.keys(jsonData))
-
-    // 直接返回content字段
-    if (jsonData.content) {
-      console.log('🔍 找到直接 content 字段')
-      return jsonData.content
+    // 如果响应是JSON格式
+    const jsonResponse = JSON.parse(responseText)
+    if (jsonResponse.content) {
+      return jsonResponse.content
     }
-
-    // 处理智谱API的嵌套结构
-    if (jsonData.choices &&
-      jsonData.choices[0] &&
-      jsonData.choices[0].message &&
-      jsonData.choices[0].message.content) {
-      console.log('🔍 找到智谱 API 嵌套结构的 content')
-      const content = jsonData.choices[0].message.content
-      console.log('🔍 提取的 content:', content)
-      return content
+    if (jsonResponse.message) {
+      return jsonResponse.message
     }
-
-    console.warn('🔍 未找到预期的 content 结构，完整数据:', jsonData)
-    return ''
-  } catch (e) {
-    console.error('🔍 JSON 解析失败:', e)
-    console.log('🔍 作为纯文本返回')
+    if (jsonResponse.text) {
+      return jsonResponse.text
+    }
+    // 如果是其他格式，返回整个对象的字符串
+    return JSON.stringify(jsonResponse, null, 2)
+  } catch (error) {
+    // 如果不是JSON，直接返回原始文本
     return responseText
   }
 }
-
-
 
 // const getRes = async () => {
 //   if (!selectedSpread.value) return
@@ -8227,5 +8452,168 @@ label {
 }
 .dark-mode .result-content::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
+}
+
+
+.markdown-content {
+  line-height: 1.6;
+  color: #374151;
+  font-size: 14px;
+}
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  margin: 16px 0 8px 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.markdown-content h1 {
+  font-size: 20px;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+.markdown-content h2 {
+  font-size: 18px;
+  color: #374151;
+}
+.markdown-content h3 {
+  font-size: 16px;
+  color: #4b5563;
+}
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-size: 14px;
+  color: #6b7280;
+}
+.markdown-content p {
+  margin: 8px 0;
+}
+.markdown-content strong {
+  font-weight: 600;
+  color: #1f2937;
+}
+.markdown-content em {
+  font-style: italic;
+  color: #4b5563;
+}
+.markdown-content ul,
+.markdown-content ol {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+.markdown-content li {
+  margin: 4px 0;
+}
+.markdown-content blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-left: 4px solid #f59e0b;
+  font-style: italic;
+  color: #6b7280;
+}
+.markdown-content code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: #e11d48;
+}
+.markdown-content pre {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+.markdown-content a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  text-align: left;
+}
+.markdown-content th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 24px 0;
+}
+/* 深色模式下的Markdown样式 */
+.dark-mode .markdown-content {
+  color: #e5e7eb;
+}
+.dark-mode .markdown-content h1 {
+  color: #f9fafb;
+  border-bottom-color: #4b5563;
+}
+.dark-mode .markdown-content h2 {
+  color: #f3f4f6;
+}
+.dark-mode .markdown-content h3 {
+  color: #e5e7eb;
+}
+.dark-mode .markdown-content h4,
+.dark-mode .markdown-content h5,
+.dark-mode .markdown-content h6 {
+  color: #d1d5db;
+}
+.dark-mode .markdown-content strong {
+  color: #f9fafb;
+}
+.dark-mode .markdown-content em {
+  color: #d1d5db;
+}
+.dark-mode .markdown-content blockquote {
+  background: #374151;
+  color: #d1d5db;
+  border-left-color: #f59e0b;
+}
+.dark-mode .markdown-content code {
+  background: #4b5563;
+  color: #fbbf24;
+}
+.dark-mode .markdown-content pre {
+  background: #111827;
+  color: #f9fafb;
+}
+.dark-mode .markdown-content a {
+  color: #60a5fa;
+}
+.dark-mode .markdown-content th,
+.dark-mode .markdown-content td {
+  border-color: #4b5563;
+}
+.dark-mode .markdown-content th {
+  background: #374151;
+}
+.dark-mode .markdown-content hr {
+  border-top-color: #4b5563;
 }
 </style>
