@@ -734,7 +734,7 @@
             min="0"
             :max="sliderMax"
             v-model.number="viewOffset"
-            @input="onSliderInput"
+
           />
           <div class="boundary-indicator" :class="{
     'at-start': isAtStart,
