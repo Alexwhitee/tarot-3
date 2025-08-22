@@ -2858,7 +2858,7 @@ const getAIAnalysis = async () => {
     progressText.value = `正在分析 (0/${totalModels})`
     const promises = selectedModelKeys.value.map(async (modelKey, index) => {
       try {
-        const res = await fetch('/api/ai-analysis', {
+        const res = await fetch('/ai-analysis', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -3283,7 +3283,7 @@ const retryModel = async (index: number) => {
   const modelKey = selectedModelKeys.value[index]
 
   try {
-    const res = await fetch('/api/ai-analysis', {
+    const res = await fetch('/ai-analysis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
