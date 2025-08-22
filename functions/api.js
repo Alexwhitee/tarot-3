@@ -1408,7 +1408,7 @@ ${spreadCards.map((card, index) => {
     //   })
     // };
 
-   
+
     const apiRequestBody = {
       messages: [
         { role: "system", content: systemPrompt },
@@ -1452,7 +1452,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
       method: "POST",
       headers: {
-        "authorization": "Bearer sk-L8W2WtnCtdwG6nctF975D0E770144dE5Be3123Fa16720a03",
+        "authorization": "Bearer ${import.meta.env.VITE_OPENAI_API_KEY_GLM}",
         "content-type": "application/json"
       },
       body: JSON.stringify(apiRequestBody)
