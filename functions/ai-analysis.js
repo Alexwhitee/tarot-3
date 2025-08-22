@@ -214,7 +214,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://api.wlai.vip/v1/chat/completions", {
       "method": "POST",
       "headers": {
-        "Authorization": `Bearer ${env.VITE_OPENAI_API_KEY_GLM}`, // 需要在环境变量中设置
+        "Authorization": `Bearer ${env.VITE_OPENAI_API_KEY}`, // 需要在环境变量中设置
         "Content-Type": "application/json"
       },
       "body": JSON.stringify(apiRequestBody)
