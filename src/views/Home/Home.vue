@@ -433,10 +433,93 @@
 <!--    </div>-->
 
 
+<!--      &lt;!&ndash; 新增：总体进度条 &ndash;&gt;-->
+<!--      <div class="progress-bar">-->
+<!--        <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） &ndash;&gt;-->
+<!--      <div v-if="!hasAIAnalysis" class="ai-model-selection-section">-->
+<!--        <div class="section-header">-->
+<!--          <h4 class="cards-section-title">选择AI模型进行解析</h4>-->
+<!--        </div>-->
+
+<!--        <div class="model-selection-grid">-->
+<!--          <div-->
+<!--            v-for="model in availableModels"-->
+<!--            :key="model.key"-->
+<!--            class="model-option"-->
+<!--            :class="{ active: selectedModelKeys.includes(model.key) }"-->
+<!--            @click="toggleModelSelection(model.key)"-->
+<!--          >-->
+<!--            <div class="model-header">-->
+<!--              <span class="model-name">{{ model.name }}</span>-->
+<!--            </div>-->
+<!--            <p class="model-desc">{{ model.description }}</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; AI解答按钮 &ndash;&gt;-->
+<!--        <div class="ai-analysis-actions">-->
+<!--          <Button-->
+<!--            class="ai-analysis-btn"-->
+<!--            :disabled="selectedModelKeys.length === 0 || isWaitingForAIAnalysis"-->
+<!--            @click="getAIAnalysis"-->
+<!--          >-->
+<!--            <span v-if="isWaitingForAIAnalysis">AI分析中...</span>-->
+<!--            <span v-else>🤖 AI解答</span>-->
+<!--          </Button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; 占卜结果显示区域 &ndash;&gt;-->
+<!--      <div class="divination-result">-->
+<!--        <div class="result-header">-->
+<!--          <h4 class="result-title">占卜解析</h4>-->
+<!--          <div v-if="hasAIAnalysis" class="used-model-info">-->
+<!--            <span class="model-label">使用模型：</span>-->
+<!--            <span class="model-names">{{ getSelectedModelNames }}</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; AI分析加载状态 &ndash;&gt;-->
+<!--        <div v-if="isWaitingForAIAnalysis" class="analysis-loading">-->
+<!--          <div class="loading-spinner"></div>-->
+<!--          <p class="loading-text">正在为您解析牌面含义，请稍候...</p>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; AI分析结果 &ndash;&gt;-->
+<!--        <div v-else-if="aiAnalysisResults.length > 0" class="results-comparison">-->
+<!--          <div v-for="(result, index) in aiAnalysisResults" :key="index" class="model-result">-->
+<!--            <h5 class="model-name">{{ selectedModelKeys[index] }}</h5>-->
+<!--            <div class="result-content" v-html="result"></div>-->
+<!--            <Button class="retry-btn" @click="retryModel(index)">重试</Button>-->
+<!--          </div>-->
+<!--        </div>-->
+
+
+<!--        &lt;!&ndash; 无结果提示 &ndash;&gt;-->
+<!--        <div v-else class="no-result">-->
+<!--          <p>AI分析出现问题，请重试</p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
+<!--      <div class="result-actions">-->
+<!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+      <!-- 新增：总体进度条 -->
+      <div v-if="isWaitingForAIAnalysis" class="progress-section">
+        <div class="progress-bar">
+          <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>
+        </div>
+        <div class="progress-text">{{ progressText }}</div>
+      </div>
       <!-- 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） -->
-      <div v-if="!hasAIAnalysis" class="ai-model-selection-section">
+      <div v-if="!hasAIAnalysis && !isWaitingForAIAnalysis" class="ai-model-selection-section">
         <div class="section-header">
-          <h4 class="cards-section-title">请选择你的ai卦师进行解析</h4>
+          <h4 class="cards-section-title">选择AI模型进行解析</h4>
+          <div class="selection-info">
+            <span v-if="selectedModelKeys.length > 0" class="selected-count">
+              已选择 {{ selectedModelKeys.length }}/5 个模型
+            </span>
+          </div>
         </div>
 
         <div class="model-selection-grid">
@@ -444,56 +527,124 @@
             v-for="model in availableModels"
             :key="model.key"
             class="model-option"
-            :class="{ active: selectedModelKey === model.key }"
-            @click="selectModel(model.key)"
+            :class="{ active: selectedModelKeys.includes(model.key) }"
+            @click="toggleModelSelection(model.key)"
           >
             <div class="model-header">
               <span class="model-name">{{ model.name }}</span>
-
             </div>
             <p class="model-desc">{{ model.description }}</p>
-            <div class="model-features">
-
-
-            </div>
           </div>
         </div>
         <!-- AI解答按钮 -->
         <div class="ai-analysis-actions">
           <Button
             class="ai-analysis-btn"
-            :disabled="!selectedModelKey || isWaitingForAIAnalysis"
+            :disabled="selectedModelKeys.length === 0"
             @click="getAIAnalysis"
           >
-            <span v-if="isWaitingForAIAnalysis">AI分析中...</span>
-            <span v-else>🤖 AI解答</span>
+            🤖 AI解答 ({{ selectedModelKeys.length }}个模型)
           </Button>
         </div>
       </div>
-      <!-- 占卜结果显示区域 - 修改版 -->
-      <div class="divination-result">
-        <div class="result-header">
-          <h4 class="result-title">占卜解析</h4>
-          <div v-if="hasAIAnalysis && selectedModelKey" class="used-model-info">
-            <span class="model-label">使用模型：</span>
-            <span class="model-name">{{ getModelName(selectedModelKey) }}</span>
+      <!-- AI分析加载状态 -->
+      <div v-if="isWaitingForAIAnalysis" class="analysis-loading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">正在为您解析牌面含义，请稍候...</p>
+      </div>
+      <!-- AI分析结果 -->
+      <div v-else-if="aiAnalysisResults.length > 0" class="ai-results-section">
+        <!-- 顶部操作栏 -->
+        <div class="results-header">
+          <h4 class="result-title">AI占卜解析</h4>
+          <div class="results-actions">
+            <Button
+              class="copy-all-btn"
+              :class="{ copied: copyAllStatus }"
+              @click="copyAllResults"
+            >
+              {{ copyAllStatus ? '已复制' : '复制全部' }}
+            </Button>
+            <Button class="export-btn" @click="exportResults">
+              导出结果
+            </Button>
           </div>
         </div>
-        <!-- AI分析加载状态 -->
-        <div v-if="isWaitingForAIAnalysis" class="analysis-loading">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">{{ getModelName(selectedModelKey) }} 正在为您解析牌面含义，请稍候...</p>
+        <!-- 上方滑轨 -->
+        <div class="slider-controls top">
+          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
+          <div class="slider-track" ref="topSliderTrack">
+            <div
+              class="slider-thumb"
+              :style="{ left: sliderPosition + '%' }"
+              @mousedown="startDrag"
+            ></div>
+          </div>
+          <div class="boundary-indicator" :class="{
+            'at-start': currentSlideIndex === 0,
+            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
+          }">
+            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
+            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+          </div>
         </div>
-        <!-- AI分析结果 -->
-        <div v-else-if="aiAnalysisResult" class="result-content" v-html="aiAnalysisResult"></div>
-        <!-- 未进行AI分析的提示 -->
-        <div v-else-if="!hasAIAnalysis" class="no-analysis-hint">
-          <div class="hint-icon">🔮</div>
-          <p class="hint-text">请选择AI模型并点击"AI解答"获取专业的占卜解析</p>
+        <!-- 结果滑动容器 -->
+        <div
+          class="results-slider-container"
+          ref="sliderContainer"
+          @scroll="onSliderScroll"
+          @touchstart="onTouchStart"
+          @touchmove="onTouchMove"
+          @touchend="onTouchEnd"
+        >
+          <div
+            class="results-slider"
+            :style="{ transform: `translateX(-${slideOffset}px)` }"
+          >
+            <div
+              v-for="(result, index) in aiAnalysisResults"
+              :key="index"
+              class="model-result-card"
+            >
+              <div class="card-header">
+                <h5 class="model-name">{{ getModelName(selectedModelKeys[index]) }}</h5>
+                <Button
+                  class="copy-single-btn"
+                  :class="{ copied: copySingleStatus[index] }"
+                  @click="copySingleResult(index)"
+                >
+                  {{ copySingleStatus[index] ? '已复制' : '复制' }}
+                </Button>
+              </div>
+              <div class="result-content">
+                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">
+                  <p class="error-message">分析失败</p>
+                  <Button class="retry-btn" @click="retryModel(index)">
+                    重试
+                  </Button>
+                </div>
+                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- 无结果提示 -->
-        <div v-else class="no-result">
-          <p>AI分析出现问题，请重试</p>
+        <!-- 下方滑轨 -->
+        <div class="slider-controls bottom">
+          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
+          <div class="slider-track" ref="bottomSliderTrack">
+            <div
+              class="slider-thumb"
+              :style="{ left: sliderPosition + '%' }"
+              @mousedown="startDrag"
+            ></div>
+          </div>
+          <div class="boundary-indicator" :class="{
+            'at-start': currentSlideIndex === 0,
+            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
+          }">
+            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
+            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+          </div>
         </div>
       </div>
       <!-- 重新开始按钮 -->
@@ -1281,7 +1432,7 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
 
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted,onBeforeUnmount } from 'vue'
 import vh from 'vh-plugin'
 import { marked } from 'marked'
 import Typed from 'typed.js'
@@ -1575,6 +1726,9 @@ const useTemplate = (template: string) => {
   textValue.value = template
   closeQuestionGuideModal()
 }
+
+
+
 
 
 // 添加新的状态管理
@@ -2114,14 +2268,339 @@ const initShuffledDeck = () => {
   // 重置逆位状态
   cardReversedStates.value = {}
 }
+//
+// // 在现有的 ref 声明中添加新的状态
+// const selectedModelKeys = ref<string[]>([])
+// const aiAnalysisResults = ref<string[]>([])
+// const isWaitingForAIAnalysis = ref(false)
+// const hasAIAnalysis = computed(() => aiAnalysisResults.value.length > 0)
+// const progressPercentage = ref(0)
+// // 可用模型列表
+// // 在 home.vue 的 script setup 中更新
+// const availableModels = ref([
+//   {
+//     key: 'glm-4.5-flash',
+//     name: 'GLM-4.5 Flash',
+//     description: '智谱超快响应模型，速度与质量并重'
+//   },
+//   {
+//     key: 'gpt-5-2025-08-07',
+//     name: 'GPT-5',
+//     description: 'OpenAI最新旗舰模型，理解能力卓越'
+//   },
+//   {
+//     key: 'o3',
+//     name: 'O3',
+//     description: 'OpenAI推理专家模型，逻辑分析强'
+//   },
+//   {
+//     key: 'claude-3-7-sonnet-20250219-thinking',
+//     name: 'Claude-3.7 Sonnet',
+//     description: 'Anthropic思维链模型，深度推理'
+//   },
+//   {
+//     key: 'gemini-2.5-flash',
+//     name: 'Gemini-2.5 Flash',
+//     description: 'Google快速多模态模型'
+//   },
+//   {
+//     key: 'gemini-2.5-pro',
+//     name: 'Gemini-2.5 Pro',
+//     description: 'Google专业级多模态模型'
+//   },
+//   {
+//     key: 'grok-4',
+//     name: 'Grok-4',
+//     description: 'xAI最新模型，创新思维强'
+//   },
+//   {
+//     key: 'grok-3-deepsearch',
+//     name: 'Grok-3 DeepSearch',
+//     description: 'xAI深度搜索增强模型'
+//   },
+//   {
+//     key: 'qwen3-235b-a22b',
+//     name: 'Qwen3-235B',
+//     description: '阿里通义千问超大参数模型'
+//   },
+//   {
+//     key: 'qwen3-235b-a22b-think',
+//     name: 'Qwen3-235B Think',
+//     description: '阿里通义千问思维链版本'
+//   },
+//   {
+//     key: 'deepseek-r1',
+//     name: 'DeepSeek-R1',
+//     description: 'DeepSeek推理专用模型'
+//   },
+//   {
+//     key: 'deepseek-v3',
+//     name: 'DeepSeek-V3',
+//     description: 'DeepSeek第三代通用模型'
+//   },
+//   {
+//     key: 'doubao-1.5-pro-256k',
+//     name: 'Doubao-1.5 Pro',
+//     description: '字节豆包长文本处理模型'
+//   },
+//   {
+//     key: 'glm-4.5',
+//     name: 'GLM-4.5',
+//     description: '智谱标准版模型，平衡性能'
+//   },
+//   {
+//     key: 'hunyuan-standard-256K',
+//     name: 'Hunyuan Standard',
+//     description: '腾讯混元标准版长文本模型'
+//   },
+//   {
+//     key: 'kimi-k2-250711',
+//     name: 'Kimi-K2',
+//     description: 'Moonshot超长上下文模型'
+//   },
+//   {
+//     key: 'gpt-4.1-nano-2025-04-14',
+//     name: 'GPT-4.1 Nano',
+//     description: 'OpenAI轻量级模型，快速响应',
+//   },
+//   {
+//     key: 'claude-3-haiku-20240307',
+//     name: 'Claude-3 Haiku',
+//     description: 'Anthropic快速模型，简洁高效',
+//   },
+//   {
+//     key: 'gemini-2.0-flash',
+//     name: 'Gemini-2.0 Flash',
+//     description: 'Google新一代快速模型',
+//   },
+//   {
+//     key: 'qwen-plus',
+//     name: 'qwen-plus',
+//     description: '阿里通义千问加速版',
+//   },
+//   {
+//     key: 'claude-sonnet-4-20250514-thinking',
+//     name: 'claude-sonnet-4-thinking',
+//     description: 'Anthropic旗舰思维链模型，深度推理',
+//   }
+// ])
+//
+// // 选择模型
+// const selectModel = (key: string) => {
+//   selectedModelKey.value = key
+// }
+// // 获取模型名称
+// const getModelName = (key: string) => {
+//   const model = availableModels.value.find(m => m.key === key)
+//   return model ? model.name : key
+// }
+// // 新增：AI分析函数（独立于原有的getRes）
+// // const getAIAnalysis = async () => {
+// //   if (!selectedModelKey.value || !resStatus.value || cardResult.value.length === 0) {
+// //     console.error('缺少必要参数进行AI分析')
+// //     return
+// //   }
+// //   console.log('=== 开始AI分析流程 ===')
+// //   isWaitingForAIAnalysis.value = true
+// //   aiAnalysisResult.value = '' // 清空之前的结果
+// //   try {
+// //     const res = await fetch('/ai-analysis', { // 使用新的端点
+// //       method: 'POST',
+// //       headers: {
+// //         'Content-Type': 'application/json'
+// //       },
+// //       body: JSON.stringify({
+// //         text: textValue.value,
+// //         model: selectedModelKey.value, // 传递选择的模型
+// //         pms: cardResult.value.map((card: CardResult) => {
+// //           const cardData: any = {
+// //             no: card.no,
+// //             name: card.name,
+// //             type: card.type,
+// //             isReversed: card.isReversed
+// //           }
+// //           // 如果有 cardAnalysis，则添加相关字段
+// //           if (card.cardAnalysis) {
+// //             cardData.cardAnalysis = {
+// //               symbols: card.cardAnalysis.symbols,
+// //               actions: card.cardAnalysis.actions,
+// //               story_hint: card.cardAnalysis.story_hint,
+// //               branches: card.cardAnalysis.branches,
+// //               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+// //             }
+// //             // 只有当 element_relations 存在时才添加
+// //             if (card.cardAnalysis.element_relations) {
+// //               cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+// //             }
+// //           }
+// //           return cardData
+// //         }),
+// //         spread: {
+// //           key: selectedSpread.value?.key || '',
+// //           name: selectedSpread.value?.name || '标准牌阵',
+// //           desc: selectedSpread.value?.desc || '',
+// //           positions: selectedSpread.value?.positions || []
+// //         },
+// //         deck: {
+// //           key: selectedDeck.value?.key || '',
+// //           name: selectedDeck.value?.name || '标准塔罗牌'
+// //         }
+// //       })
+// //     })
+// //     if (!res.ok) {
+// //       const errorData = await res.json()
+// //       console.error('AI分析API错误响应:', errorData)
+// //       throw new Error(`AI分析失败: ${res.statusText}`)
+// //     }
+// //     const resText = await res.text()
+// //     console.log('🔍 AI分析API原始响应:', resText)
+// //     const content = parseApiResponse(resText)
+// //     console.log('🔍 AI分析提取的内容:', content)
+// //     if (!content || content.length === 0) {
+// //       throw new Error('未能提取到有效的AI分析内容')
+// //     }
+// //     const html = await parseMdToHtml(content)
+// //     console.log('🔍 AI分析Markdown转换为HTML:', html)
+// //     // 设置AI分析结果
+// //     aiAnalysisResult.value = html
+// //     console.log('🔍 AI分析结果已设置')
+// //     await nextTick()
+// //     console.log('🔍 AI分析DOM已更新')
+// //     console.log('=== AI分析成功完成 ===')
+// //   } catch (error) {
+// //     console.error('🔍 AI分析失败:', error)
+// //     aiAnalysisResult.value = '<p style="color: #e74c3c;">AI分析失败，请重试</p>'
+// //   } finally {
+// //     isWaitingForAIAnalysis.value = false
+// //     console.log('🔍 AI分析流程结束')
+// //   }
+// // }
+//
+// // 切换模型选择
+// const toggleModelSelection = (key: string) => {
+//   if (selectedModelKeys.value.includes(key)) {
+//     selectedModelKeys.value = selectedModelKeys.value.filter(k => k !== key)
+//   } else {
+//     if (selectedModelKeys.value.length < 5) {
+//       selectedModelKeys.value.push(key)
+//     } else {
+//       alert('最多只能选择5个模型')
+//     }
+//   }
+// }
+// // 获取选中的模型名称
+// const getSelectedModelNames = computed(() => {
+//   return selectedModelKeys.value.join(', ')
+// })
+//
+// // AI分析函数
+// const getAIAnalysis = async () => {
+//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
+//     console.error('缺少必要参数进行AI分析')
+//     return
+//   }
+//   console.log('=== 开始AI分析流程 ===')
+//   isWaitingForAIAnalysis.value = true
+//   aiAnalysisResults.value = [] // 清空之前的结果
+//   progressPercentage.value = 0 // 重置进度
+//   try {
+//     const promises = selectedModelKeys.value.map(async (modelKey) => {
+//       const res = await fetch('/api/ai-analysis', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//           text: textValue.value,
+//           model: modelKey,
+//           pms: cardResult.value.map((card: CardResult) => {
+//             const cardData: any = {
+//               no: card.no,
+//               name: card.name,
+//               type: card.type,
+//               isReversed: card.isReversed
+//             }
+//             // 如果有 cardAnalysis，则添加相关字段
+//             if (card.cardAnalysis) {
+//               cardData.cardAnalysis = {
+//                 symbols: card.cardAnalysis.symbols,
+//                 actions: card.cardAnalysis.actions,
+//                 story_hint: card.cardAnalysis.story_hint,
+//                 branches: card.cardAnalysis.branches,
+//                 possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+//               }
+//             }
+//             return cardData
+//           }),
+//           spread: {
+//             key: selectedSpread.value?.key || '',
+//             name: selectedSpread.value?.name || '标准牌阵',
+//             desc: selectedSpread.value?.desc || '',
+//             positions: selectedSpread.value?.positions || []
+//           },
+//           deck: {
+//             key: selectedDeck.value?.key || '',
+//             name: selectedDeck.value?.name || '标准塔罗牌'
+//           }
+//         })
+//       })
+//       if (!res.ok) {
+//         throw new Error(`模型 ${modelKey} 请求失败`)
+//       }
+//       const resText = await res.text()
+//       const content = parseApiResponse(resText)
+//       return content
+//     })
+//     // 显示总体进度
+//     const totalModels = selectedModelKeys.value.length
+//     const results = await Promise.allSettled(promises)
+//     results.forEach((result, index) => {
+//       if (result.status === 'fulfilled') {
+//         aiAnalysisResults.value.push(result.value)
+//       } else {
+//         console.error(`模型 ${selectedModelKeys.value[index]} 分析失败:`, result.reason)
+//         aiAnalysisResults.value.push('<p style="color: #e74c3c;">分析失败，请重试</p>')
+//       }
+//       progressPercentage.value = ((index + 1) / totalModels) * 100 // 更新进度
+//     })
+//     console.log('=== AI分析成功完成 ===')
+//   } catch (error) {
+//     console.error('🔍 AI分析失败:', error)
+//     aiAnalysisResults.value.push('<p style="color: #e74c3c;">AI分析失败，请重试</p>')
+//   } finally {
+//     isWaitingForAIAnalysis.value = false
+//     console.log('🔍 AI分析流程结束')
+//   }
+// }
 
 
-const selectedModelKey = ref('')
-const aiAnalysisResult = ref('')
+const selectedModelKeys = ref<string[]>([])
+const aiAnalysisResults = ref<string[]>([])
 const isWaitingForAIAnalysis = ref(false)
-const hasAIAnalysis = computed(() => !!aiAnalysisResult.value)
+const progressPercentage = ref(0)
+const progressText = ref('')
+const hasAIAnalysis = computed(() => aiAnalysisResults.value.length > 0)
+// 滑动相关状态
+const currentSlideIndex = ref(0)
+const slideOffset = ref(0)
+const sliderContainer = ref<HTMLElement | null>(null)
+const topSliderTrack = ref<HTMLElement | null>(null)
+const bottomSliderTrack = ref<HTMLElement | null>(null)
+// const isDragging = ref(false)
+// const cardWidth = ref(350) // 每个卡片的固定宽度
+const cardsPerView = ref(2) // 当前视图显示的卡片数量
+// 复制状态
+const copyAllStatus = ref(false)
+const copySingleStatus = ref<boolean[]>([])
+// 触摸相关
+const touchStartX = ref(0)
+const touchStartOffset = ref(0)
+// 计算滑轨位置
+const sliderPosition = computed(() => {
+  if (aiAnalysisResults.value.length <= 1) return 0
+  return (currentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
+})
 // 可用模型列表
-// 在 home.vue 的 script setup 中更新
 const availableModels = ref([
   {
     key: 'glm-4.5-flash',
@@ -2202,61 +2681,343 @@ const availableModels = ref([
     key: 'kimi-k2-250711',
     name: 'Kimi-K2',
     description: 'Moonshot超长上下文模型'
-  },
-  {
-    key: 'gpt-4.1-nano-2025-04-14',
-    name: 'GPT-4.1 Nano',
-    description: 'OpenAI轻量级模型，快速响应',
-  },
-  {
-    key: 'claude-3-haiku-20240307',
-    name: 'Claude-3 Haiku',
-    description: 'Anthropic快速模型，简洁高效',
-  },
-  {
-    key: 'gemini-2.0-flash',
-    name: 'Gemini-2.0 Flash',
-    description: 'Google新一代快速模型',
-  },
-  {
-    key: 'qwen-plus',
-    name: 'qwen-plus',
-    description: '阿里通义千问加速版',
-  },
-  {
-    key: 'claude-sonnet-4-20250514-thinking',
-    name: 'claude-sonnet-4-thinking',
-    description: 'Anthropic旗舰思维链模型，深度推理',
   }
 ])
-
-// 选择模型
-const selectModel = (key: string) => {
-  selectedModelKey.value = key
+// 响应式布局检测
+const updateCardsPerView = () => {
+  const width = window.innerWidth
+  if (width < 768) {
+    cardsPerView.value = 1 // 手机端
+  } else {
+    cardsPerView.value = 2 // 桌面端和平板端
+  }
+}
+// 切换模型选择
+const toggleModelSelection = (key: string) => {
+  if (selectedModelKeys.value.includes(key)) {
+    selectedModelKeys.value = selectedModelKeys.value.filter(k => k !== key)
+  } else {
+    if (selectedModelKeys.value.length < 5) {
+      selectedModelKeys.value.push(key)
+    } else {
+      alert('最多只能选择5个模型')
+    }
+  }
 }
 // 获取模型名称
 const getModelName = (key: string) => {
   const model = availableModels.value.find(m => m.key === key)
   return model ? model.name : key
 }
-// 新增：AI分析函数（独立于原有的getRes）
+// AI分析函数
 const getAIAnalysis = async () => {
-  if (!selectedModelKey.value || !resStatus.value || cardResult.value.length === 0) {
+  if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
     console.error('缺少必要参数进行AI分析')
     return
   }
   console.log('=== 开始AI分析流程 ===')
   isWaitingForAIAnalysis.value = true
-  aiAnalysisResult.value = '' // 清空之前的结果
+  aiAnalysisResults.value = []
+  copySingleStatus.value = []
+  progressPercentage.value = 0
+  currentSlideIndex.value = 0
+  slideOffset.value = 0
   try {
-    const res = await fetch('/ai-analysis', { // 使用新的端点
+    const totalModels = selectedModelKeys.value.length
+    let completedModels = 0
+    progressText.value = `正在分析 (0/${totalModels})`
+    const promises = selectedModelKeys.value.map(async (modelKey, index) => {
+      try {
+        const res = await fetch('/api/ai-analysis', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text: textValue.value,
+            model: modelKey,
+            pms: cardResult.value.map((card: CardResult) => {
+              const cardData: any = {
+                no: card.no,
+                name: card.name,
+                type: card.type,
+                isReversed: card.isReversed
+              }
+              if (card.cardAnalysis) {
+                cardData.cardAnalysis = {
+                  symbols: card.cardAnalysis.symbols,
+                  actions: card.cardAnalysis.actions,
+                  story_hint: card.cardAnalysis.story_hint,
+                  branches: card.cardAnalysis.branches,
+                  possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
+                  element_relations: card.cardAnalysis.element_relations
+                }
+              }
+              return cardData
+            }),
+            spread: {
+              key: selectedSpread.value?.key || '',
+              name: selectedSpread.value?.name || '标准牌阵',
+              desc: selectedSpread.value?.desc || '',
+              positions: selectedSpread.value?.positions || []
+            },
+            deck: {
+              key: selectedDeck.value?.key || '',
+              name: selectedDeck.value?.name || '标准塔罗牌'
+            }
+          })
+        })
+        if (!res.ok) {
+          throw new Error(`模型 ${modelKey} 请求失败`)
+        }
+        const resText = await res.text()
+        const content = parseApiResponse(resText)
+
+        completedModels++
+        progressPercentage.value = (completedModels / totalModels) * 100
+        progressText.value = `正在分析 (${completedModels}/${totalModels})`
+
+        return content
+      } catch (error) {
+        console.error(`模型 ${modelKey} 分析失败:`, error)
+        completedModels++
+        progressPercentage.value = (completedModels / totalModels) * 100
+        progressText.value = `正在分析 (${completedModels}/${totalModels})`
+        return 'ANALYSIS_FAILED'
+      }
+    })
+    const results = await Promise.allSettled(promises)
+
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        aiAnalysisResults.value.push(result.value)
+      } else {
+        aiAnalysisResults.value.push('ANALYSIS_FAILED')
+      }
+      copySingleStatus.value.push(false)
+    })
+    console.log('=== AI分析成功完成 ===')
+  } catch (error) {
+    console.error('🔍 AI分析失败:', error)
+  } finally {
+    isWaitingForAIAnalysis.value = false
+    progressText.value = ''
+    console.log('🔍 AI分析流程结束')
+  }
+}
+// 滑动相关函数
+const updateSlideOffset = () => {
+  const containerWidth = sliderContainer.value?.clientWidth || 0
+  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+  const targetOffset = (currentSlideIndex.value * cardWidth.value)
+  slideOffset.value = Math.min(targetOffset, maxOffset)
+}
+const onSliderScroll = () => {
+  if (isDragging.value) return
+
+  const container = sliderContainer.value
+  if (!container) return
+
+  const scrollLeft = container.scrollLeft
+  const newIndex = Math.round(scrollLeft / cardWidth.value)
+  currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+}
+// 滑轨拖拽
+const startDrag = (event: MouseEvent) => {
+  isDragging.value = true
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', endDrag)
+  event.preventDefault()
+}
+const onDrag = (event: MouseEvent) => {
+  if (!isDragging.value) return
+
+  const track = topSliderTrack.value || bottomSliderTrack.value
+  if (!track) return
+
+  const rect = track.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+  const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+
+  currentSlideIndex.value = newIndex
+  updateSlideOffset()
+}
+const endDrag = () => {
+  isDragging.value = false
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', endDrag)
+}
+// 触摸事件
+const onTouchStart = (event: TouchEvent) => {
+  touchStartX.value = event.touches[0].clientX
+  touchStartOffset.value = slideOffset.value
+}
+const onTouchMove = (event: TouchEvent) => {
+  const currentX = event.touches[0].clientX
+  const deltaX = touchStartX.value - currentX
+  const newOffset = touchStartOffset.value + deltaX
+
+  const containerWidth = sliderContainer.value?.clientWidth || 0
+  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+
+  slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+  currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+}
+const onTouchEnd = () => {
+  updateSlideOffset()
+}
+// 键盘事件
+const onKeyDown = (event: KeyboardEvent) => {
+  if (!hasAIAnalysis.value) return
+
+  if (event.key === 'ArrowLeft') {
+    currentSlideIndex.value = Math.max(0, currentSlideIndex.value - 1)
+    updateSlideOffset()
+    event.preventDefault()
+  } else if (event.key === 'ArrowRight') {
+    currentSlideIndex.value = Math.min(aiAnalysisResults.value.length - 1, currentSlideIndex.value + 1)
+    updateSlideOffset()
+    event.preventDefault()
+  }
+}
+// 复制功能
+const copyToClipboard2 = async (text: string): Promise<boolean> => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return true
+    } else {
+      // 降级方案
+      const textArea = document.createElement('textarea')
+      textArea.value = text
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      const result = document.execCommand('copy')
+      textArea.remove()
+      return result
+    }
+  } catch (err) {
+    console.error('复制失败:', err)
+    return false
+  }
+}
+// 复制单个结果
+const copySingleResult = async (index: number) => {
+  const modelName = getModelName(selectedModelKeys.value[index])
+  const result = aiAnalysisResults.value[index]
+
+  let content = `模型: ${modelName}\n\n`
+
+  if (result === 'ANALYSIS_FAILED') {
+    content += '分析失败'
+  } else {
+    content += result.replace(/<[^>]*>/g, '') // 移除HTML标签
+  }
+
+  const success = await copyToClipboard2(content)
+
+  if (success) {
+    copySingleStatus.value[index] = true
+    setTimeout(() => {
+      copySingleStatus.value[index] = false
+    }, 2000)
+  } else {
+    alert('浏览器不支持复制API')
+  }
+}
+// 复制全部结果
+const copyAllResults = async () => {
+  let content = generateFullContent()
+
+  const success = await copyToClipboard2(content)
+
+  if (success) {
+    copyAllStatus.value = true
+    setTimeout(() => {
+      copyAllStatus.value = false
+    }, 2000)
+  } else {
+    alert('浏览器不支持复制API')
+  }
+}
+// 生成完整内容
+const generateFullContent = (): string => {
+  let content = ''
+
+  // 添加占卜基本信息
+  content += `【占卜问题】\n${textValue.value || '无具体问题'}\n\n`
+
+  // 添加牌阵信息
+  content += `【牌阵信息】\n`
+  content += `牌阵名称：${selectedSpread.value?.name || '标准牌阵'}\n`
+  if (selectedSpread.value?.desc) {
+    content += `牌阵说明：${selectedSpread.value.desc}\n`
+  }
+  content += '\n'
+
+  // 添加抽牌详情
+  content += `【抽牌详情】\n`
+  const spreadCards = cardResult.value.filter(card => card.type === 'spread')
+  spreadCards.forEach((card, index) => {
+    const positionName = selectedSpread.value?.positions?.[index] || `第${index + 1}位`
+    content += `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}\n`
+  })
+  content += '\n'
+
+  // 添加AI分析结果
+  content += `【AI分析结果】\n\n`
+
+  aiAnalysisResults.value.forEach((result, index) => {
+    const modelName = getModelName(selectedModelKeys.value[index])
+    content += `模型${index + 1}: ${modelName}\n`
+
+    if (result === 'ANALYSIS_FAILED') {
+      content += '分析失败\n\n'
+    } else {
+      content += result.replace(/<[^>]*>/g, '') + '\n\n' // 移除HTML标签
+    }
+  })
+
+  return content
+}
+// 导出结果
+const exportResults = () => {
+  const content = generateFullContent()
+  const questionPrefix = textValue.value ? textValue.value.substring(0, 10) : '占卜结果'
+  const date = new Date().toISOString().split('T')[0]
+  const filename = `塔罗占卜_${questionPrefix}_${date}.txt`
+
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+
+  URL.revokeObjectURL(url)
+}
+// 重试单个模型
+const retryModel = async (index: number) => {
+  const modelKey = selectedModelKeys.value[index]
+
+  try {
+    const res = await fetch('/api/ai-analysis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         text: textValue.value,
-        model: selectedModelKey.value, // 传递选择的模型
+        model: modelKey,
         pms: cardResult.value.map((card: CardResult) => {
           const cardData: any = {
             no: card.no,
@@ -2264,18 +3025,14 @@ const getAIAnalysis = async () => {
             type: card.type,
             isReversed: card.isReversed
           }
-          // 如果有 cardAnalysis，则添加相关字段
           if (card.cardAnalysis) {
             cardData.cardAnalysis = {
               symbols: card.cardAnalysis.symbols,
               actions: card.cardAnalysis.actions,
               story_hint: card.cardAnalysis.story_hint,
               branches: card.cardAnalysis.branches,
-              possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-            }
-            // 只有当 element_relations 存在时才添加
-            if (card.cardAnalysis.element_relations) {
-              cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+              possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
+              element_relations: card.cardAnalysis.element_relations
             }
           }
           return cardData
@@ -2293,33 +3050,26 @@ const getAIAnalysis = async () => {
       })
     })
     if (!res.ok) {
-      const errorData = await res.json()
-      console.error('AI分析API错误响应:', errorData)
-      throw new Error(`AI分析失败: ${res.statusText}`)
+      throw new Error(`模型 ${modelKey} 请求失败`)
     }
     const resText = await res.text()
-    console.log('🔍 AI分析API原始响应:', resText)
     const content = parseApiResponse(resText)
-    console.log('🔍 AI分析提取的内容:', content)
-    if (!content || content.length === 0) {
-      throw new Error('未能提取到有效的AI分析内容')
-    }
-    const html = await parseMdToHtml(content)
-    console.log('🔍 AI分析Markdown转换为HTML:', html)
-    // 设置AI分析结果
-    aiAnalysisResult.value = html
-    console.log('🔍 AI分析结果已设置')
-    await nextTick()
-    console.log('🔍 AI分析DOM已更新')
-    console.log('=== AI分析成功完成 ===')
+
+    aiAnalysisResults.value[index] = content
+
   } catch (error) {
-    console.error('🔍 AI分析失败:', error)
-    aiAnalysisResult.value = '<p style="color: #e74c3c;">AI分析失败，请重试</p>'
-  } finally {
-    isWaitingForAIAnalysis.value = false
-    console.log('🔍 AI分析流程结束')
+    console.error(`重试模型 ${modelKey} 失败:`, error)
+    aiAnalysisResults.value[index] = 'ANALYSIS_FAILED'
   }
 }
+// 格式化分析结果
+const formatAnalysisResult = (result: string): string => {
+  // 将换行符转换为<br>标签，保持格式
+  return result.replace(/\n/g, '<br>')
+}
+
+
+
 // 卡牌条相关
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
 const cardWidth = 88
@@ -2515,12 +3265,16 @@ const resetFn = () => {
   textValue.value = ''
 
 
-  // 新增：重置AI相关状态
-  selectedModelKey.value = ''
-  aiAnalysisResult.value = ''
+// 新增：重置AI相关状态
+  selectedModelKeys.value = []
+  aiAnalysisResults.value = []
   isWaitingForAIAnalysis.value = false
-
-
+  progressPercentage.value = 0
+  progressText.value = ''
+  currentSlideIndex.value = 0
+  slideOffset.value = 0
+  copyAllStatus.value = false
+  copySingleStatus.value = []
   // 重置查看牌面相关状态
   showCardViewModal.value = false
   selectedViewDeck.value = ''
@@ -2541,7 +3295,17 @@ const resetFn = () => {
   }
   initShuffledDeck()
 }
-
+onMounted(() => {
+  updateCardsPerView()
+  window.addEventListener('resize', updateCardsPerView)
+  document.addEventListener('keydown', onKeyDown)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', updateCardsPerView)
+  document.removeEventListener('keydown', onKeyDown)
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', endDrag)
+})
 
 // 图片渲染
 const base = import.meta.env.BASE_URL
@@ -6885,4 +7649,583 @@ label {
   background-color: #C41C24;
 }
 
+
+/* AI模型选择区域样式 */
+.ai-model-selection-section {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 2px solid #F59E0B;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.model-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.model-option {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+}
+.model-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  border-color: #F59E0B;
+}
+.model-option.active {
+  border-color: #D97706;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6,0.3);
+}
+.ai-analysis-actions {
+  text-align: center;
+}
+.ai-analysis-btn {
+  background-color: #F59E0B;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.ai-analysis-btn:hover {
+  background-color: #D97706;
+}
+/* 总体进度条样式 */
+.progress-bar {
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.progress {
+  height: 8px;
+  background: #f59e0b;
+  transition: width 0.3s ease;
+}
+/* 结果展示样式 */
+.results-comparison {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+}
+.model-result {
+  flex: 0 0 300px; /* 固定宽度 */
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.retry-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.retry-btn:hover {
+  background: #c0392b;
+}
+/* 深色模式适配 */
+.dark-mode .ai-model-selection-section {
+  background: #2d2d2d;
+  border-color: #444;
+}
+.dark-mode .model-option {
+  background: #3d3d3d;
+  border-color: #555;
+  color: #e0e0e0;
+}
+.dark-mode .model-option:hover {
+  border-color: #f39c12;
+}
+.dark-mode .model-option.active {
+  border-color: #D97706;
+  background: #4d4d4d;
+}
+.dark-mode .progress-bar {
+  background: #444;
+}
+.dark-mode .progress {
+  background: #f59e0b;
+}
+.dark-mode .model-result {
+  background: #3d3d3d;
+  border-color: #555;
+  color: #e0e0e0;
+}
+.dark-mode .retry-btn {
+  background: #e74c3c;
+}
+.dark-mode .retry-btn:hover {
+  background: #c0392b;
+}
+
+
+
+
+
+/* 现有样式保持不变，新增以下样式 */
+/* 进度条样式 */
+.progress-section {
+  margin-bottom: 24px;
+  text-align: center;
+}
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  transition: width 0.3s ease;
+}
+.progress-text {
+  font-size: 14px;
+  color: #666;
+}
+/* AI模型选择区域样式 */
+.ai-model-selection-section {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 2px solid #F59E0B;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.selection-info {
+  font-size: 14px;
+  color: #666;
+}
+.selected-count {
+  background: #f59e0b;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-weight: 500;
+}
+.model-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.model-option {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+}
+.model-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  border-color: #F59E0B;
+}
+.model-option.active {
+  border-color: #D97706;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.3);
+}
+.model-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.model-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+.model-desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+.ai-analysis-actions {
+  text-align: center;
+}
+.ai-analysis-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+.ai-analysis-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+.ai-analysis-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* AI分析结果区域样式 */
+.ai-results-section {
+  margin-bottom: 32px;
+}
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+.result-title {
+  margin: 0;
+  color: #1f2937;
+  font-size: 18px;
+}
+.results-actions {
+  display: flex;
+  gap: 12px;
+}
+.copy-all-btn, .export-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.copy-all-btn {
+  background: #10b981;
+  color: white;
+}
+.copy-all-btn:hover {
+  background: #059669;
+}
+.copy-all-btn.copied {
+  background: #6b7280;
+}
+.export-btn {
+  background: #3b82f6;
+  color: white;
+}
+.export-btn:hover {
+  background: #2563eb;
+}
+/* 滑轨控制器样式 */
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  margin: 16px 0;
+}
+.slider-controls.top {
+  border-bottom: 1px solid #e5e7eb;
+}
+.slider-controls.bottom {
+  border-top: 1px solid #e5e7eb;
+}
+.position-indicator {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  min-width: 60px;
+  text-align: center;
+}
+.slider-track {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+}
+.slider-thumb {
+  position: absolute;
+  top: -3px;
+  width: 12px;
+  height: 12px;
+  background: #f59e0b;
+  border-radius: 50%;
+  cursor: grab;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.slider-thumb:hover {
+  transform: scale(1.2);
+}
+.slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.3);
+}
+.boundary-indicator {
+  font-size: 12px;
+  color: #9ca3af;
+  min-width: 120px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.boundary-indicator.at-start,
+.boundary-indicator.at-end {
+  color: #f59e0b;
+  font-weight: 600;
+}
+/* 结果滑动容器样式 */
+.results-slider-container {
+  overflow: hidden;
+  position: relative;
+}
+.results-slider {
+  display: flex;
+  transition: transform 0.3s ease;
+  gap: 16px;
+}
+.model-result-card {
+  flex: 0 0 350px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.model-result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e5e7eb;
+}
+.card-header .model-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+.copy-single-btn {
+  padding: 6px 12px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.copy-single-btn:hover {
+  background: #059669;
+}
+.copy-single-btn.copied {
+  background: #6b7280;
+}
+.result-content {
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.success-content {
+  line-height: 1.6;
+  color: #374151;
+  font-size: 14px;
+}
+.error-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+.error-message {
+  color: #ef4444;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+.retry-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.retry-btn:hover {
+  background: #dc2626;
+}
+/* 加载状态样式 */
+.analysis-loading {
+  text-align: center;
+  padding: 60px 20px;
+}
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #f59e0b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loading-text {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .model-result-card {
+    flex: 0 0 calc(100vw - 32px);
+  }
+
+  .results-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .results-actions {
+    justify-content: center;
+  }
+
+  .slider-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .position-indicator {
+    order: -1;
+  }
+
+  .model-selection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .model-result-card {
+    flex: 0 0 calc(50vw - 24px);
+  }
+}
+/* 深色模式适配 */
+.dark-mode .ai-model-selection-section {
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  border-color: #6b7280;
+}
+.dark-mode .model-option {
+  background: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+.dark-mode .model-option:hover {
+  border-color: #f59e0b;
+}
+.dark-mode .model-option.active {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%);
+}
+.dark-mode .model-name {
+  color: #f9fafb;
+}
+.dark-mode .model-desc {
+  color: #d1d5db;
+}
+.dark-mode .results-header {
+  background: #374151;
+  border-color: #4b5563;
+}
+.dark-mode .result-title {
+  color: #f9fafb;
+}
+.dark-mode .model-result-card {
+  background: #374151;
+  border-color: #4b5563;
+}
+.dark-mode .card-header {
+  background: #4b5563;
+  border-color: #6b7280;
+}
+.dark-mode .card-header .model-name {
+  color: #f9fafb;
+}
+.dark-mode .success-content {
+  color: #e5e7eb;
+}
+.dark-mode .progress-bar {
+  background: #4b5563;
+}
+.dark-mode .progress-text {
+  color: #d1d5db;
+}
+.dark-mode .slider-track {
+  background: #4b5563;
+}
+.dark-mode .position-indicator {
+  color: #d1d5db;
+}
+.dark-mode .boundary-indicator {
+  color: #9ca3af;
+}
+.dark-mode .boundary-indicator.at-start,
+.dark-mode .boundary-indicator.at-end {
+  color: #f59e0b;
+}
+.dark-mode .selected-count {
+  background: #f59e0b;
+  color: #1f2937;
+}
+/* 滚动条样式 */
+.result-content::-webkit-scrollbar {
+  width: 6px;
+}
+.result-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.result-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+.result-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+.dark-mode .result-content::-webkit-scrollbar-track {
+  background: #4b5563;
+}
+.dark-mode .result-content::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+.dark-mode .result-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
 </style>
