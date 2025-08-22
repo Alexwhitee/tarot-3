@@ -3276,29 +3276,29 @@ watch(aiAnalysisResults, async () => {
 //   const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
 //   slideOffset.value = Math.min(targetOffset, maxOffset)
 // }
-const updateSlideOffset = () => {
-  const container = sliderContainer.value as HTMLDivElement | null
-  if (!container) return
-  // 如果只有一张卡片，不需要偏移
-  if (aiAnalysisResults.value.length <= 1) {
-    slideOffset.value = 0
-    return
-  }
-  const firstCard = container.querySelector('.model-result-card') as HTMLElement
-  if (!firstCard) return
-  const actualCardWidth = firstCard.offsetWidth
-  const cardGap = 16
-  const containerWidth = container.clientWidth
-  // const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
-  //   (aiAnalysisResults.value.length - 1) * cardGap
-  const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
-  if (maxOffset === 0) {
-    slideOffset.value = 0
-    return
-  }
-  const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
-  slideOffset.value = Math.min(targetOffset, maxOffset)
-}
+// const updateSlideOffset = () => {
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//   // 如果只有一张卡片，不需要偏移
+//   if (aiAnalysisResults.value.length <= 1) {
+//     slideOffset.value = 0
+//     return
+//   }
+//   const firstCard = container.querySelector('.model-result-card') as HTMLElement
+//   if (!firstCard) return
+//   const actualCardWidth = firstCard.offsetWidth
+//   const cardGap = 16
+//   const containerWidth = container.clientWidth
+//   // const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
+//   //   (aiAnalysisResults.value.length - 1) * cardGap
+//   //const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
+//   // if (maxOffset === 0) {
+//   //   slideOffset.value = 0
+//   //   return
+//   // }
+//   const targetOffset = currentSlideIndex.value * (actualCardWidth + cardGap)
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
 // const onSliderScroll = () => {
 //   if (isDragging.value) return
 //
@@ -3375,7 +3375,7 @@ const onDrag = (event: MouseEvent) => {
   const maxIndex = Math.max(0, aiAnalysisResults.value.length - 1)
   const newIndex = Math.round((percentage / 100) * maxIndex)
   currentSlideIndex.value = newIndex
-  updateSlideOffset()
+  //updateSlideOffset()
 }
 const endDrag = () => {
   isDragging.value = false
@@ -3402,9 +3402,9 @@ const onTouchStart = (event: TouchEvent) => {
 //   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
 // }
 
-const onTouchEnd = () => {
-  updateSlideOffset()
-}
+// const onTouchEnd = () => {
+//   updateSlideOffset()
+// }
 
 // 键盘事件
 const onKeyDown = (event: KeyboardEvent) => {
@@ -3412,11 +3412,11 @@ const onKeyDown = (event: KeyboardEvent) => {
 
   if (event.key === 'ArrowLeft') {
     currentSlideIndex.value = Math.max(0, currentSlideIndex.value - 1)
-    updateSlideOffset()
+    //updateSlideOffset()
     event.preventDefault()
   } else if (event.key === 'ArrowRight') {
     currentSlideIndex.value = Math.min(aiAnalysisResults.value.length - 1, currentSlideIndex.value + 1)
-    updateSlideOffset()
+    //updateSlideOffset()
     event.preventDefault()
   }
 }
