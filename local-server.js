@@ -840,47 +840,104 @@ app.post('/', async (req, res) => {
       return String(value);
     };
 
-    const userMessage = `【占卜问题】
-${text || '请为我进行塔罗占卜'}
+//     const userMessage = `【占卜问题】
+// ${text || '请为我进行塔罗占卜'}
+//
+// 【使用牌组】
+// ${deck?.name || '标准塔罗牌'}
+//
+// 【牌阵信息】
+// 牌阵名称：${spread?.name || '标准牌阵'}
+// 牌阵说明：${spread?.desc || ''}
+//
+// 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
+// ${spreadCards.map((card, index) => {
+//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+//       const analysis = card.cardAnalysis || {};
+//
+//       let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+//
+// 象征元素：
+// - 卦中人象：${safeJoin(analysis.symbols?.characters)}
+// - 卦中物象：${safeJoin(analysis.symbols?.props)}
+// - 卦象场域：${safeJoin(analysis.symbols?.environment)}
+// - 时机节点：${analysis.symbols?.time_hint || ''}
+// - 气运走向：${analysis.symbols?.direction || ''}
+//
+// 卦象动态：${safeJoin(analysis.actions)}
+// 卦象脉络：${analysis.story_hint || ''}
+// 择机抉择：${safeJoin(analysis.branches)}
+// 应世对照：${analysis.possible_real_world_mapping || ''}`;
+//
+//       // 如果有五行关系数据，则添加到分析中
+//       if (analysis.element_relations) {
+//         cardInfo += `
+// 五行生克：${analysis.element_relations.element || ''}
+// - 生成：${safeJoin(analysis.element_relations.generates)}
+// - 克制：${safeJoin(analysis.element_relations.overcomes)}
+// - 被生：${safeJoin(analysis.element_relations.generated_by)}
+// - 被克：${safeJoin(analysis.element_relations.overcome_by)}`;
+//       }
+//
+//       return cardInfo;
+//     }).join('\n\n')}`;
+// 替换原来的 userMessage 字符串构建部分
+    const userMessage = {
+      question: text || '请为我进行塔罗占卜',
+      deck: {
+        name: deck?.name || '标准塔罗牌'
+      },
+      spread: {
+        name: spread?.name || '标准牌阵',
+        description: spread?.desc || '',
+        positions: spread?.positions || [],
+        total_cards: spreadCards.length
+      },
+      cards: spreadCards.map((card, index) => {
+        const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+        const analysis = card.cardAnalysis || {};
 
-【使用牌组】
-${deck?.name || '标准塔罗牌'}
+        return {
+          position: positionName,
+          name: card.name,
+          orientation: card.isReversed ? '逆位' : '正位',
+          symbols: {
+            characters: analysis.symbols?.characters || [],
+            props: analysis.symbols?.props || [],
+            environment: analysis.symbols?.environment || [],
+            time_hint: analysis.symbols?.time_hint || '',
+            direction: analysis.symbols?.direction || ''
+          },
+          actions: analysis.actions || [],
+          story_hint: analysis.story_hint || '',
+          branches: analysis.branches || [],
+          real_world_mapping: analysis.possible_real_world_mapping || '',
+          ...(analysis.element_relations && {
+            element_relations: {
+              element: analysis.element_relations.element || '',
+              generates: analysis.element_relations.generates || [],
+              overcomes: analysis.element_relations.overcomes || [],
+              generated_by: analysis.element_relations.generated_by || [],
+              overcome_by: analysis.element_relations.overcome_by || []
+            }
+          })
+        };
+      })
+    };
 
-【牌阵信息】
-牌阵名称：${spread?.name || '标准牌阵'}
-牌阵说明：${spread?.desc || ''}
+// 构建消息数组
+//     const messages = [
+//       {
+//         "role": "system",
+//         "content": systemPrompt
+//       },
+//       {
+//         "role": "user",
+//         "content": JSON.stringify(userMessage, null, 2) // 将JSON对象转为格式化字符串
+//       }
+//     ];
 
-【牌阵布局与象征分析】（共${spreadCards.length}张牌）
-${spreadCards.map((card, index) => {
-      const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-      const analysis = card.cardAnalysis || {};
 
-      let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
-
-象征元素：
-- 卦中人象：${safeJoin(analysis.symbols?.characters)}
-- 卦中物象：${safeJoin(analysis.symbols?.props)}
-- 卦象场域：${safeJoin(analysis.symbols?.environment)}
-- 时机节点：${analysis.symbols?.time_hint || ''}
-- 气运走向：${analysis.symbols?.direction || ''}
-
-卦象动态：${safeJoin(analysis.actions)}
-卦象脉络：${analysis.story_hint || ''}
-择机抉择：${safeJoin(analysis.branches)}
-应世对照：${analysis.possible_real_world_mapping || ''}`;
-
-      // 如果有五行关系数据，则添加到分析中
-      if (analysis.element_relations) {
-        cardInfo += `
-五行生克：${analysis.element_relations.element || ''}
-- 生成：${safeJoin(analysis.element_relations.generates)}
-- 克制：${safeJoin(analysis.element_relations.overcomes)}
-- 被生：${safeJoin(analysis.element_relations.generated_by)}
-- 被克：${safeJoin(analysis.element_relations.overcome_by)}`;
-      }
-
-      return cardInfo;
-    }).join('\n\n')}`;
 
     // 构建单次对话的消息数组
     const messages = [
@@ -916,7 +973,7 @@ ${spreadCards.map((card, index) => {
 
     // 云雾 API 请求
     const apiRequestBody = {
-      "model": "gpt-4o-mini",  // 云雾支持的模型
+      "model": "o3",  // 云雾支持的模型
       "messages": messages,
       "temperature": 0.6,
       "max_tokens": 5000,
