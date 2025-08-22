@@ -2914,13 +2914,97 @@ const getAIAnalysis = async () => {
     console.log('🔍 AI分析流程结束')
   }
 }
+// // 滑动相关函数
+// const updateSlideOffset = () => {
+//   const containerWidth = sliderContainer.value?.clientWidth || 0
+//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+//   const targetOffset = (currentSlideIndex.value * cardWidth.value)
+//   slideOffset.value = Math.min(targetOffset, maxOffset)
+// }
+// const onSliderScroll = () => {
+//   if (isDragging.value) return
+//
+//   const container = sliderContainer.value
+//   if (!container) return
+//
+//   const scrollLeft = container.scrollLeft
+//   const newIndex = Math.round(scrollLeft / cardWidth.value)
+//   currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+// }
+// // 滑轨拖拽
+// const startDrag = (event: MouseEvent) => {
+//   isDragging.value = true
+//   document.addEventListener('mousemove', onDrag)
+//   document.addEventListener('mouseup', endDrag)
+//   event.preventDefault()
+// }
+// const onDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return
+//
+//   const track = topSliderTrack.value || bottomSliderTrack.value
+//   if (!track) return
+//
+//   const rect = track.getBoundingClientRect()
+//   const x = event.clientX - rect.left
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+//   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+//
+//   currentSlideIndex.value = newIndex
+//   updateSlideOffset()
+// }
+// const endDrag = () => {
+//   isDragging.value = false
+//   document.removeEventListener('mousemove', onDrag)
+//   document.removeEventListener('mouseup', endDrag)
+// }
+// // 触摸事件
+// const onTouchStart = (event: TouchEvent) => {
+//   touchStartX.value = event.touches[0].clientX
+//   touchStartOffset.value = slideOffset.value
+// }
+// const onTouchMove = (event: TouchEvent) => {
+//   const currentX = event.touches[0].clientX
+//   const deltaX = touchStartX.value - currentX
+//   const newOffset = touchStartOffset.value + deltaX
+//
+//   const containerWidth = sliderContainer.value?.clientWidth || 0
+//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+//
+//   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+//   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+// }
+
+
+
+//
+// // 📌 响应式状态
+// const sliderContainer = ref<HTMLDivElement | null>(null) // 滑动容器
+// const aiAnalysisResults = ref<any[]>([])                 // 卡片数据
+// const cardWidth = ref(88)                                // 卡片宽度(px)
+// const currentSlideIndex = ref(0)                         // 当前索引
+// const slideOffset = ref(0)                               // 偏移量
+//
+// // 📌 拖拽状态
+// const isDragging = ref(false)
+// const topSliderTrack = ref<HTMLDivElement | null>(null)
+// const bottomSliderTrack = ref<HTMLDivElement | null>(null)
+//
+// // 📌 触摸事件状态
+// const touchStartX = ref(0)
+// const touchStartOffset = ref(0)
+
+
 // 滑动相关函数
 const updateSlideOffset = () => {
   const containerWidth = sliderContainer.value?.clientWidth || 0
-  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-  const targetOffset = (currentSlideIndex.value * cardWidth.value)
+  const maxOffset = Math.max(
+    0,
+    (aiAnalysisResults.value.length * cardWidth.value) - containerWidth
+  )
+  const targetOffset = currentSlideIndex.value * cardWidth.value
   slideOffset.value = Math.min(targetOffset, maxOffset)
 }
+
 const onSliderScroll = () => {
   if (isDragging.value) return
 
@@ -2929,8 +3013,12 @@ const onSliderScroll = () => {
 
   const scrollLeft = container.scrollLeft
   const newIndex = Math.round(scrollLeft / cardWidth.value)
-  currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+  currentSlideIndex.value = Math.max(
+    0,
+    Math.min(newIndex, aiAnalysisResults.value.length - 1)
+  )
 }
+
 // 滑轨拖拽
 const startDrag = (event: MouseEvent) => {
   isDragging.value = true
@@ -2938,6 +3026,7 @@ const startDrag = (event: MouseEvent) => {
   document.addEventListener('mouseup', endDrag)
   event.preventDefault()
 }
+
 const onDrag = (event: MouseEvent) => {
   if (!isDragging.value) return
 
@@ -2947,28 +3036,36 @@ const onDrag = (event: MouseEvent) => {
   const rect = track.getBoundingClientRect()
   const x = event.clientX - rect.left
   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-  const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+  const newIndex = Math.round(
+    (percentage / 100) * (aiAnalysisResults.value.length - 1)
+  )
 
   currentSlideIndex.value = newIndex
   updateSlideOffset()
 }
+
 const endDrag = () => {
   isDragging.value = false
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', endDrag)
 }
+
 // 触摸事件
 const onTouchStart = (event: TouchEvent) => {
   touchStartX.value = event.touches[0].clientX
   touchStartOffset.value = slideOffset.value
 }
+
 const onTouchMove = (event: TouchEvent) => {
   const currentX = event.touches[0].clientX
   const deltaX = touchStartX.value - currentX
   const newOffset = touchStartOffset.value + deltaX
 
   const containerWidth = sliderContainer.value?.clientWidth || 0
-  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+  const maxOffset = Math.max(
+    0,
+    (aiAnalysisResults.value.length * cardWidth.value) - containerWidth
+  )
 
   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
