@@ -779,6 +779,8 @@ const systemPrompt = `## **[身份与目标]**
 你的任务是通过牌面符号（**卦象脉络 story_hint**、**卦象动态 actions**、**卦中人象 characters**、**卦中物象 props**、**卦象场域 environment**、**五行生克 element_relations** 等）结合**牌阵结构和每个位置的功能**，推演事件发展脉络，并生成客观、明确的占卜问题答案。
 `;
 
+
+
 app.post('/', async (req, res) => {
   console.log('收到占卜请求');
 
@@ -840,106 +842,50 @@ app.post('/', async (req, res) => {
       return String(value);
     };
 
-//     const userMessage = `【占卜问题】
-// ${text || '请为我进行塔罗占卜'}
-//
-// 【使用牌组】
-// ${deck?.name || '标准塔罗牌'}
-//
-// 【牌阵信息】
-// 牌阵名称：${spread?.name || '标准牌阵'}
-// 牌阵说明：${spread?.desc || ''}
-//
-// 【牌阵布局与象征分析】（共${spreadCards.length}张牌）
-// ${spreadCards.map((card, index) => {
-//       const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-//       const analysis = card.cardAnalysis || {};
-//
-//       let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
-//
-// 象征元素：
-// - 卦中人象：${safeJoin(analysis.symbols?.characters)}
-// - 卦中物象：${safeJoin(analysis.symbols?.props)}
-// - 卦象场域：${safeJoin(analysis.symbols?.environment)}
-// - 时机节点：${analysis.symbols?.time_hint || ''}
-// - 气运走向：${analysis.symbols?.direction || ''}
-//
-// 卦象动态：${safeJoin(analysis.actions)}
-// 卦象脉络：${analysis.story_hint || ''}
-// 择机抉择：${safeJoin(analysis.branches)}
-// 应世对照：${analysis.possible_real_world_mapping || ''}`;
-//
-//       // 如果有五行关系数据，则添加到分析中
-//       if (analysis.element_relations) {
-//         cardInfo += `
-// 五行生克：${analysis.element_relations.element || ''}
-// - 生成：${safeJoin(analysis.element_relations.generates)}
-// - 克制：${safeJoin(analysis.element_relations.overcomes)}
-// - 被生：${safeJoin(analysis.element_relations.generated_by)}
-// - 被克：${safeJoin(analysis.element_relations.overcome_by)}`;
-//       }
-//
-//       return cardInfo;
-//     }).join('\n\n')}`;
-// 替换原来的 userMessage 字符串构建部分
-    const userMessage = {
-      question: text || '请为我进行塔罗占卜',
-      deck: {
-        name: deck?.name || '标准塔罗牌'
-      },
-      spread: {
-        name: spread?.name || '标准牌阵',
-        description: spread?.desc || '',
-        positions: spread?.positions || [],
-        total_cards: spreadCards.length
-      },
-      cards: spreadCards.map((card, index) => {
-        const positionName = spread?.positions?.[index] || `第${index + 1}位`;
-        const analysis = card.cardAnalysis || {};
+    const userMessage = `【占卜问题】
+${text || '请为我进行塔罗占卜'}
 
-        return {
-          position: positionName,
-          name: card.name,
-          orientation: card.isReversed ? '逆位' : '正位',
-          symbols: {
-            characters: analysis.symbols?.characters || [],
-            props: analysis.symbols?.props || [],
-            environment: analysis.symbols?.environment || [],
-            time_hint: analysis.symbols?.time_hint || '',
-            direction: analysis.symbols?.direction || ''
-          },
-          actions: analysis.actions || [],
-          story_hint: analysis.story_hint || '',
-          branches: analysis.branches || [],
-          real_world_mapping: analysis.possible_real_world_mapping || '',
-          ...(analysis.element_relations && {
-            element_relations: {
-              element: analysis.element_relations.element || '',
-              generates: analysis.element_relations.generates || [],
-              overcomes: analysis.element_relations.overcomes || [],
-              generated_by: analysis.element_relations.generated_by || [],
-              overcome_by: analysis.element_relations.overcome_by || []
-            }
-          })
-        };
-      })
-    };
+【使用牌组】
+${deck?.name || '标准塔罗牌'}
 
-// 构建消息数组
-//     const messages = [
-//       {
-//         "role": "system",
-//         "content": systemPrompt
-//       },
-//       {
-//         "role": "user",
-//         "content": JSON.stringify(userMessage, null, 2) // 将JSON对象转为格式化字符串
-//       }
-//     ];
+【牌阵信息】
+牌阵名称：${spread?.name || '标准牌阵'}
+牌阵说明：${spread?.desc || ''}
+
+【牌阵布局与象征分析】（共${spreadCards.length}张牌）
+${spreadCards.map((card, index) => {
+      const positionName = spread?.positions?.[index] || `第${index + 1}位`;
+      const analysis = card.cardAnalysis || {};
+
+      let cardInfo = `${positionName}：${card.name}${card.isReversed ? '（逆位）' : '（正位）'}
+
+象征元素：
+- 卦中人象：${safeJoin(analysis.symbols?.characters)}
+- 卦中物象：${safeJoin(analysis.symbols?.props)}
+- 卦象场域：${safeJoin(analysis.symbols?.environment)}
+- 时机节点：${analysis.symbols?.time_hint || ''}
+- 气运走向：${analysis.symbols?.direction || ''}
+
+卦象动态：${safeJoin(analysis.actions)}
+卦象脉络：${analysis.story_hint || ''}
+择机抉择：${safeJoin(analysis.branches)}
+应世对照：${analysis.possible_real_world_mapping || ''}`;
+
+      // 如果有五行关系数据，则添加到分析中
+      if (analysis.element_relations) {
+        cardInfo += `
+五行生克：${analysis.element_relations.element || ''}
+- 生成：${safeJoin(analysis.element_relations.generates)}
+- 克制：${safeJoin(analysis.element_relations.overcomes)}
+- 被生：${safeJoin(analysis.element_relations.generated_by)}
+- 被克：${safeJoin(analysis.element_relations.overcome_by)}`;
+      }
+
+      return cardInfo;
+    }).join('\n\n')}`;
 
 
 
-    // 构建单次对话的消息数组
     const messages = [
       {
         "role": "system",
@@ -947,9 +893,12 @@ app.post('/', async (req, res) => {
       },
       {
         "role": "user",
-        "content": userMessage
+        "content": JSON.stringify(userMessage, null, 2) // 将JSON对象转为格式化字符串
       }
     ];
+
+
+
 
     // ===== 重要：打印传给AI的完整信息 =====
     console.log('\n\n==================== 传给AI的完整信息 ====================');
@@ -973,7 +922,7 @@ app.post('/', async (req, res) => {
 
     // 云雾 API 请求
     const apiRequestBody = {
-      "model": "o3",  // 云雾支持的模型
+      "model": "glm-4.5",  // 云雾支持的模型
       "messages": messages,
       "temperature": 0.6,
       "max_tokens": 5000,
@@ -993,7 +942,8 @@ app.post('/', async (req, res) => {
     const response = await fetch("https://api.wlai.vip/v1/chat/completions", {
       "method": "POST",
       "headers": {
-        "Authorization": "Bearer ",
+        "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+        // "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       "body": JSON.stringify(apiRequestBody)
