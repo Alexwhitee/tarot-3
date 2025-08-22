@@ -1452,7 +1452,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
       method: "POST",
       headers: {
-        "authorization": "Bearer ${import.meta.env.VITE_OPENAI_API_KEY_GLM}",
+        "authorization": "Bearer ${env.VITE_OPENAI_API_KEY_GLM}",
         "content-type": "application/json"
       },
       body: JSON.stringify(apiRequestBody)
