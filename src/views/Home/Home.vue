@@ -699,7 +699,7 @@
               v-for="(result, index) in aiAnalysisResults"
               :key="index"
               class="model-result-card"
-              ref="cardRefs"
+
             >
               <!-- 卡片内容保持不变 -->
               <div class="card-header">
@@ -1828,7 +1828,8 @@ const useTemplate = (template: string) => {
 
 
 
-
+// 使用响应式状态存储总宽度
+const totalCardsWidth = ref(0)
 
 // 添加新的状态管理
 const cardReversedStates = ref<Record<number, boolean>>({}) // 跟踪每张卡牌的逆位状态
@@ -3038,6 +3039,9 @@ const getAIAnalysis = async () => {
 
     await nextTick()
     resetSliderState()
+    await nextTick()
+    await updateTotalWidth()
+    resetSliderState()
   }
 }
 
@@ -3058,8 +3062,12 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 // 监听AI结果变化，更新容器宽度
+// watch(aiAnalysisResults, async () => {
+//   await nextTick()
+//   updateContainerWidth()
+// }, { flush: 'post' })
 watch(aiAnalysisResults, async () => {
-  await nextTick()
+  await updateTotalWidth()
   updateContainerWidth()
 }, { flush: 'post' })
 // // 滑动相关函数
@@ -3290,8 +3298,8 @@ const updateSlideOffset = () => {
   const actualCardWidth = firstCard.offsetWidth
   const cardGap = 16
   const containerWidth = container.clientWidth
-  const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
-    (aiAnalysisResults.value.length - 1) * cardGap
+  // const totalCardsWidth = aiAnalysisResults.value.length * actualCardWidth +
+  //   (aiAnalysisResults.value.length - 1) * cardGap
   const maxOffset = Math.max(0, totalCardsWidth - containerWidth)
   if (maxOffset === 0) {
     slideOffset.value = 0
@@ -3431,6 +3439,36 @@ const copyToClipboard2 = async (text: string): Promise<boolean> => {
     return false
   }
 }
+
+
+
+// 添加一个专门的函数来计算宽度
+const calculateTotalWidth = (): number => {
+  if (aiAnalysisResults.value.length === 0) return 0
+
+  const container = sliderContainer.value as HTMLDivElement | null
+  if (!container) return 0
+
+  const firstCard = container.querySelector('.model-result-card') as HTMLDivElement
+  if (!firstCard) {
+    // 如果还没有渲染，返回估算值
+    return aiAnalysisResults.value.length * 350 + Math.max(0, aiAnalysisResults.value.length - 1) * 16
+  }
+
+  const cardWidth = firstCard.offsetWidth
+  const cardGap = 16
+
+  return aiAnalysisResults.value.length * cardWidth +
+    Math.max(0, aiAnalysisResults.value.length - 1) * cardGap
+}
+
+// 更新总宽度的函数
+const updateTotalWidth = async () => {
+  await nextTick() // 等待DOM更新
+  totalCardsWidth.value = calculateTotalWidth()
+}
+
+
 // 复制单个结果
 const copySingleResult = async (index: number) => {
   const modelName = getModelName(selectedModelKeys.value[index])
@@ -3698,23 +3736,30 @@ const viewOffset = ref(0)  // 滑动条偏移量
 const containerWidth = ref(0)  // 容器宽度
 const cardRefs = ref([])  // 卡片元素引用
 // 计算卡片总宽度
-const totalCardsWidth = computed(() => {
-  if (aiAnalysisResults.value.length === 0) return 0
-
-  // 动态获取卡片宽度
-  const firstCard = cardRefs.value?.[0]
-  if (!firstCard) return 0
-
-  const cardWidth = firstCard.offsetWidth
-  const cardGap = 16 // CSS中设置的gap
-
-  return aiAnalysisResults.value.length * cardWidth +
-    Math.max(0, aiAnalysisResults.value.length - 1) * cardGap
-})
+// const totalCardsWidth = computed(() => {
+//   if (aiAnalysisResults.value.length === 0) return 0
+//
+//   // 动态获取卡片宽度
+//   const firstCard = cardRefs.value?.[0]
+//   if (!firstCard) return 0
+//
+//   const cardWidth = firstCard.offsetWidth
+//   const cardGap = 16 // CSS中设置的gap
+//
+//   return aiAnalysisResults.value.length * cardWidth +
+//     Math.max(0, aiAnalysisResults.value.length - 1) * cardGap
+// })
 // 计算滑动条最大值
+// const sliderMax = computed(() => {
+//   if (aiAnalysisResults.value.length <= 1) {
+//     // 单卡片时返回容器宽度的20%
+//     return Math.floor(containerWidth.value * 0.2)
+//   }
+//   return Math.max(0, totalCardsWidth.value - containerWidth.value)
+// })
+
 const sliderMax = computed(() => {
   if (aiAnalysisResults.value.length <= 1) {
-    // 单卡片时返回容器宽度的20%
     return Math.floor(containerWidth.value * 0.2)
   }
   return Math.max(0, totalCardsWidth.value - containerWidth.value)
