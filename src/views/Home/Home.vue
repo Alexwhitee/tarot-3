@@ -405,27 +405,97 @@
       </div>
 
 
-      <!-- 占卜结果显示区域 -->
-      <div class="divination-result">
-        <h4 class="result-title">占卜解析</h4>
+<!--      &lt;!&ndash; 占卜结果显示区域 &ndash;&gt;-->
+<!--      <div class="divination-result">-->
+<!--        <h4 class="result-title">占卜解析</h4>-->
 
 
 
-        <!-- 加载状态 - 只在文字区域显示 -->
-        <div v-if="isWaitingForAnalysis" class="analysis-loading">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">AI正在为您解析牌面含义，请稍候...</p>
+<!--        &lt;!&ndash; 加载状态 - 只在文字区域显示 &ndash;&gt;-->
+<!--        <div v-if="isWaitingForAnalysis" class="analysis-loading">-->
+<!--          <div class="loading-spinner"></div>-->
+<!--          <p class="loading-text">AI正在为您解析牌面含义，请稍候...</p>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 分析结果 &ndash;&gt;-->
+<!--        <div v-else-if="firstDivinationResult" class="result-content" v-html="firstDivinationResult"></div>-->
+
+<!--        &lt;!&ndash; 无结果提示 &ndash;&gt;-->
+<!--        <div v-else class="no-result">-->
+<!--          <p>暂无分析结果</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
+<!--      <div class="result-actions">-->
+<!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+      <!-- 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） -->
+      <div v-if="!hasAIAnalysis" class="ai-model-selection-section">
+        <div class="section-header">
+          <h4 class="cards-section-title">请选择你的ai卦师进行解析</h4>
         </div>
 
-        <!-- 分析结果 -->
-        <div v-else-if="firstDivinationResult" class="result-content" v-html="firstDivinationResult"></div>
-
-        <!-- 无结果提示 -->
-        <div v-else class="no-result">
-          <p>暂无分析结果</p>
+        <div class="model-selection-grid">
+          <div
+            v-for="model in availableModels"
+            :key="model.key"
+            class="model-option"
+            :class="{ active: selectedModelKey === model.key }"
+            @click="selectModel(model.key)"
+          >
+            <div class="model-header">
+              <span class="model-name">{{ model.name }}</span>
+              <span class="model-badge" :class="model.tier">{{ model.tierLabel }}</span>
+            </div>
+            <p class="model-desc">{{ model.description }}</p>
+            <div class="model-features">
+              <span class="feature-tag">{{ model.speed }}</span>
+              <span class="feature-tag">{{ model.accuracy }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- AI解答按钮 -->
+        <div class="ai-analysis-actions">
+          <Button
+            class="ai-analysis-btn"
+            :disabled="!selectedModelKey || isWaitingForAIAnalysis"
+            @click="getAIAnalysis"
+          >
+            <span v-if="isWaitingForAIAnalysis">AI分析中...</span>
+            <span v-else>🤖 AI解答</span>
+          </Button>
         </div>
       </div>
-
+      <!-- 占卜结果显示区域 - 修改版 -->
+      <div class="divination-result">
+        <div class="result-header">
+          <h4 class="result-title">占卜解析</h4>
+          <div v-if="hasAIAnalysis && selectedModelKey" class="used-model-info">
+            <span class="model-label">使用模型：</span>
+            <span class="model-name">{{ getModelName(selectedModelKey) }}</span>
+          </div>
+        </div>
+        <!-- AI分析加载状态 -->
+        <div v-if="isWaitingForAIAnalysis" class="analysis-loading">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">{{ getModelName(selectedModelKey) }} 正在为您解析牌面含义，请稍候...</p>
+        </div>
+        <!-- AI分析结果 -->
+        <div v-else-if="aiAnalysisResult" class="result-content" v-html="aiAnalysisResult"></div>
+        <!-- 未进行AI分析的提示 -->
+        <div v-else-if="!hasAIAnalysis" class="no-analysis-hint">
+          <div class="hint-icon">🔮</div>
+          <p class="hint-text">请选择AI模型并点击"AI解答"获取专业的占卜解析</p>
+        </div>
+        <!-- 无结果提示 -->
+        <div v-else class="no-result">
+          <p>AI分析出现问题，请重试</p>
+        </div>
+      </div>
       <!-- 重新开始按钮 -->
       <div class="result-actions">
         <Button class="restart-btn" @click="resetFn">重新开始</Button>
@@ -2046,6 +2116,210 @@ const initShuffledDeck = () => {
 }
 
 
+const selectedModelKey = ref('')
+const aiAnalysisResult = ref('')
+const isWaitingForAIAnalysis = ref(false)
+const hasAIAnalysis = computed(() => !!aiAnalysisResult.value)
+// 可用模型列表
+// 在 home.vue 的 script setup 中更新
+const availableModels = ref([
+  {
+    key: 'glm-4.5-flash',
+    name: 'GLM-4.5 Flash',
+    description: '智谱超快响应模型，速度与质量并重'
+  },
+  {
+    key: 'gpt-5-2025-08-07',
+    name: 'GPT-5',
+    description: 'OpenAI最新旗舰模型，理解能力卓越'
+  },
+  {
+    key: 'o3',
+    name: 'O3',
+    description: 'OpenAI推理专家模型，逻辑分析强'
+  },
+  {
+    key: 'claude-3-7-sonnet-20250219-thinking',
+    name: 'Claude-3.7 Sonnet',
+    description: 'Anthropic思维链模型，深度推理'
+  },
+  {
+    key: 'gemini-2.5-flash',
+    name: 'Gemini-2.5 Flash',
+    description: 'Google快速多模态模型'
+  },
+  {
+    key: 'gemini-2.5-pro',
+    name: 'Gemini-2.5 Pro',
+    description: 'Google专业级多模态模型'
+  },
+  {
+    key: 'grok-4',
+    name: 'Grok-4',
+    description: 'xAI最新模型，创新思维强'
+  },
+  {
+    key: 'grok-3-deepsearch',
+    name: 'Grok-3 DeepSearch',
+    description: 'xAI深度搜索增强模型'
+  },
+  {
+    key: 'qwen3-235b-a22b',
+    name: 'Qwen3-235B',
+    description: '阿里通义千问超大参数模型'
+  },
+  {
+    key: 'qwen3-235b-a22b-think',
+    name: 'Qwen3-235B Think',
+    description: '阿里通义千问思维链版本'
+  },
+  {
+    key: 'deepseek-r1',
+    name: 'DeepSeek-R1',
+    description: 'DeepSeek推理专用模型'
+  },
+  {
+    key: 'deepseek-v3',
+    name: 'DeepSeek-V3',
+    description: 'DeepSeek第三代通用模型'
+  },
+  {
+    key: 'doubao-1.5-pro-256k',
+    name: 'Doubao-1.5 Pro',
+    description: '字节豆包长文本处理模型'
+  },
+  {
+    key: 'glm-4.5',
+    name: 'GLM-4.5',
+    description: '智谱标准版模型，平衡性能'
+  },
+  {
+    key: 'hunyuan-standard-256K',
+    name: 'Hunyuan Standard',
+    description: '腾讯混元标准版长文本模型'
+  },
+  {
+    key: 'kimi-k2-250711',
+    name: 'Kimi-K2',
+    description: 'Moonshot超长上下文模型'
+  },
+  {
+    key: 'gpt-4.1-nano-2025-04-14',
+    name: 'GPT-4.1 Nano',
+    description: 'OpenAI轻量级模型，快速响应',
+  },
+  {
+    key: 'claude-3-haiku-20240307',
+    name: 'Claude-3 Haiku',
+    description: 'Anthropic快速模型，简洁高效',
+  },
+  {
+    key: 'gemini-2.0-flash',
+    name: 'Gemini-2.0 Flash',
+    description: 'Google新一代快速模型',
+  },
+  {
+    key: 'qwen-turbo-1101',
+    name: 'Qwen Turbo',
+    description: '阿里通义千问加速版',
+  },
+  {
+    key: 'claude-sonnet-4-20250514-thinking',
+    name: 'claude-sonnet-4-thinking',
+    description: 'Anthropic旗舰思维链模型，深度推理',
+  }
+])
+
+// 选择模型
+const selectModel = (key: string) => {
+  selectedModelKey.value = key
+}
+// 获取模型名称
+const getModelName = (key: string) => {
+  const model = availableModels.value.find(m => m.key === key)
+  return model ? model.name : key
+}
+// 新增：AI分析函数（独立于原有的getRes）
+const getAIAnalysis = async () => {
+  if (!selectedModelKey.value || !resStatus.value || cardResult.value.length === 0) {
+    console.error('缺少必要参数进行AI分析')
+    return
+  }
+  console.log('=== 开始AI分析流程 ===')
+  isWaitingForAIAnalysis.value = true
+  aiAnalysisResult.value = '' // 清空之前的结果
+  try {
+    const res = await fetch('/api/ai-analysis', { // 使用新的端点
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: textValue.value,
+        model: selectedModelKey.value, // 传递选择的模型
+        pms: cardResult.value.map((card: CardResult) => {
+          const cardData: any = {
+            no: card.no,
+            name: card.name,
+            type: card.type,
+            isReversed: card.isReversed
+          }
+          // 如果有 cardAnalysis，则添加相关字段
+          if (card.cardAnalysis) {
+            cardData.cardAnalysis = {
+              symbols: card.cardAnalysis.symbols,
+              actions: card.cardAnalysis.actions,
+              story_hint: card.cardAnalysis.story_hint,
+              branches: card.cardAnalysis.branches,
+              possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+            }
+            // 只有当 element_relations 存在时才添加
+            if (card.cardAnalysis.element_relations) {
+              cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+            }
+          }
+          return cardData
+        }),
+        spread: {
+          key: selectedSpread.value?.key || '',
+          name: selectedSpread.value?.name || '标准牌阵',
+          desc: selectedSpread.value?.desc || '',
+          positions: selectedSpread.value?.positions || []
+        },
+        deck: {
+          key: selectedDeck.value?.key || '',
+          name: selectedDeck.value?.name || '标准塔罗牌'
+        }
+      })
+    })
+    if (!res.ok) {
+      const errorData = await res.json()
+      console.error('AI分析API错误响应:', errorData)
+      throw new Error(`AI分析失败: ${res.statusText}`)
+    }
+    const resText = await res.text()
+    console.log('🔍 AI分析API原始响应:', resText)
+    const content = parseApiResponse(resText)
+    console.log('🔍 AI分析提取的内容:', content)
+    if (!content || content.length === 0) {
+      throw new Error('未能提取到有效的AI分析内容')
+    }
+    const html = await parseMdToHtml(content)
+    console.log('🔍 AI分析Markdown转换为HTML:', html)
+    // 设置AI分析结果
+    aiAnalysisResult.value = html
+    console.log('🔍 AI分析结果已设置')
+    await nextTick()
+    console.log('🔍 AI分析DOM已更新')
+    console.log('=== AI分析成功完成 ===')
+  } catch (error) {
+    console.error('🔍 AI分析失败:', error)
+    aiAnalysisResult.value = '<p style="color: #e74c3c;">AI分析失败，请重试</p>'
+  } finally {
+    isWaitingForAIAnalysis.value = false
+    console.log('🔍 AI分析流程结束')
+  }
+}
 // 卡牌条相关
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
 const cardWidth = 88
@@ -2239,6 +2513,12 @@ const resetFn = () => {
   showCustomSpreadModal.value = false
   formErrors.value = {}
   textValue.value = ''
+
+
+  // 新增：重置AI相关状态
+  selectedModelKey.value = ''
+  aiAnalysisResult.value = ''
+  isWaitingForAIAnalysis.value = false
 
 
   // 重置查看牌面相关状态
@@ -2676,92 +2956,92 @@ const getRes = async () => {
   // 立即显示抽牌结果
   resStatus.value = true
   loadingStatus.value = false
-
-  // 清空之前的分析结果
-  firstDivinationResult.value = ''
-
-  try {
-    // API 调用代码...
-    const res = await fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text: textValue.value,
-        pms: cardResult.value.map((card: CardResult) => {
-          const cardData: any = {
-            no: card.no,
-            name: card.name,
-            type: card.type,
-            isReversed: card.isReversed
-          }
-
-          // 如果有 cardAnalysis，则添加相关字段
-          if (card.cardAnalysis) {
-            cardData.cardAnalysis = {
-              symbols: card.cardAnalysis.symbols,
-              actions: card.cardAnalysis.actions,
-              story_hint: card.cardAnalysis.story_hint,
-              branches: card.cardAnalysis.branches,
-              possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-            }
-
-            // 只有当 element_relations 存在时才添加
-            if (card.cardAnalysis.element_relations) {
-              cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-            }
-          }
-
-          return cardData
-        }),
-        spread: {
-          key: selectedSpread.value.key,
-          name: selectedSpread.value.name,
-          count: selectedSpread.value.count,
-          positions: selectedSpread.value.positions ?? []
-        },
-        deck: {
-          key: selectedDeck.value?.key ?? '',
-          name: selectedDeck.value?.name ?? ''
-        }
-      })
-    })
-
-  //   // 处理响应...
+  console.log('=== 占卜流程完成（等待AI分析）===')
+  // // 清空之前的分析结果
+  // firstDivinationResult.value = ''
+  //
+  // try {
+  //   // API 调用代码...
+  //   const res = await fetch('/api', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       text: textValue.value,
+  //       pms: cardResult.value.map((card: CardResult) => {
+  //         const cardData: any = {
+  //           no: card.no,
+  //           name: card.name,
+  //           type: card.type,
+  //           isReversed: card.isReversed
+  //         }
+  //
+  //         // 如果有 cardAnalysis，则添加相关字段
+  //         if (card.cardAnalysis) {
+  //           cardData.cardAnalysis = {
+  //             symbols: card.cardAnalysis.symbols,
+  //             actions: card.cardAnalysis.actions,
+  //             story_hint: card.cardAnalysis.story_hint,
+  //             branches: card.cardAnalysis.branches,
+  //             possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+  //           }
+  //
+  //           // 只有当 element_relations 存在时才添加
+  //           if (card.cardAnalysis.element_relations) {
+  //             cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+  //           }
+  //         }
+  //
+  //         return cardData
+  //       }),
+  //       spread: {
+  //         key: selectedSpread.value.key,
+  //         name: selectedSpread.value.name,
+  //         count: selectedSpread.value.count,
+  //         positions: selectedSpread.value.positions ?? []
+  //       },
+  //       deck: {
+  //         key: selectedDeck.value?.key ?? '',
+  //         name: selectedDeck.value?.name ?? ''
+  //       }
+  //     })
+  //   })
+  //
+  // //   // 处理响应...
+  // // } catch (error) {
+  // //   console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+  // //   firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
+  // // } finally {
+  // //   isWaitingForAnalysis.value = false
+  // // }
+  //   if (!res.ok) {
+  //     const errorData = await res.json()
+  //     console.error('API 错误响应数据:', errorData)
+  //     throw new Error(`API response was not ok: ${res.statusText}`)
+  //   }
+  //   const resText = await res.text()
+  //   console.log('🔍 API 原始响应文本:', resText) // 添加调试日志
+  //
+  //   const content = parseApiResponse(resText)
+  //   console.log('🔍 parseApiResponse 提取的内容:', content) // 添加调试日志
+  //   if (!content || content.length === 0) {
+  //     throw new Error('未能提取到有效内容')
+  //   }
+  //   const html = await parseMdToHtml(content)
+  //   console.log('🔍 Markdown 转换为 HTML:', html) // 添加调试日志
+  //   // 🔥 关键：确保这里正确赋值
+  //   firstDivinationResult.value = html
+  //   console.log('🔍 firstDivinationResult.value 已设置:', firstDivinationResult.value) // 添加调试日志
+  //   await nextTick()
+  //   console.log('🔍 DOM 已更新')
   // } catch (error) {
-  //   console.error('=== 占卜请求失败，进入 catch 块 ===', error)
+  //   console.error('🔍 占卜请求失败:', error)
   //   firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
   // } finally {
   //   isWaitingForAnalysis.value = false
+  //   console.log('🔍 最终状态 - isWaitingForAnalysis:', isWaitingForAnalysis.value, 'resStatus:', resStatus.value)
   // }
-    if (!res.ok) {
-      const errorData = await res.json()
-      console.error('API 错误响应数据:', errorData)
-      throw new Error(`API response was not ok: ${res.statusText}`)
-    }
-    const resText = await res.text()
-    console.log('🔍 API 原始响应文本:', resText) // 添加调试日志
-
-    const content = parseApiResponse(resText)
-    console.log('🔍 parseApiResponse 提取的内容:', content) // 添加调试日志
-    if (!content || content.length === 0) {
-      throw new Error('未能提取到有效内容')
-    }
-    const html = await parseMdToHtml(content)
-    console.log('🔍 Markdown 转换为 HTML:', html) // 添加调试日志
-    // 🔥 关键：确保这里正确赋值
-    firstDivinationResult.value = html
-    console.log('🔍 firstDivinationResult.value 已设置:', firstDivinationResult.value) // 添加调试日志
-    await nextTick()
-    console.log('🔍 DOM 已更新')
-  } catch (error) {
-    console.error('🔍 占卜请求失败:', error)
-    firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
-  } finally {
-    isWaitingForAnalysis.value = false
-    console.log('🔍 最终状态 - isWaitingForAnalysis:', isWaitingForAnalysis.value, 'resStatus:', resStatus.value)
-  }
 }
 
 
@@ -6532,5 +6812,77 @@ label {
   }
 }
 
+/* 现有样式保持不变，新增以下样式 */
+/* AI模型选择区域样式 */
+.ai-model-selection-section {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border: 2px solid #F59E0B;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.model-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.model-option {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.model-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+  border-color: #F59E0B;
+}
+.model-option.active {
+  border-color: #D97706;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6,0.3);
+}
+.ai-analysis-actions {
+  text-align: center;
+}
+.ai-analysis-btn {
+  background-color: #F59E0B;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.ai-analysis-btn:hover {
+  background-color: #D97706;
+}
+.analysis-loading {
+  text-align: center;
+}
+.no-analysis-hint, .no-result {
+  text-align: center;
+  color: #999;
+}
+.result-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.restart-btn {
+  background-color: #FF4D4F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.restart-btn:hover {
+  background-color: #C41C24;
+}
 
 </style>
