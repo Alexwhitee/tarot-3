@@ -2595,8 +2595,8 @@ const slideOffset = ref(0)
 const sliderContainer = ref<HTMLElement | null>(null)
 const topSliderTrack = ref<HTMLElement | null>(null)
 const bottomSliderTrack = ref<HTMLElement | null>(null)
-// const isDragging = ref(false)
-// const cardWidth = ref(350) // 每个卡片的固定宽度
+const isDragging = ref(false)
+ const cardWidth = ref(88) // 每个卡片的固定宽度
 const cardsPerView = ref(2) // 当前视图显示的卡片数量
 // 复制状态
 const copyAllStatus = ref(false)
@@ -2973,50 +2973,33 @@ const getAIAnalysis = async () => {
 //   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
 //   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
 // }
-
-
-
 //
-// // 📌 响应式状态
-// const sliderContainer = ref<HTMLDivElement | null>(null) // 滑动容器
-// const aiAnalysisResults = ref<any[]>([])                 // 卡片数据
-// const cardWidth = ref(88)                                // 卡片宽度(px)
-// const currentSlideIndex = ref(0)                         // 当前索引
-// const slideOffset = ref(0)                               // 偏移量
 //
-// // 📌 拖拽状态
-// const isDragging = ref(false)
-// const topSliderTrack = ref<HTMLDivElement | null>(null)
-// const bottomSliderTrack = ref<HTMLDivElement | null>(null)
 //
-// // 📌 触摸事件状态
-// const touchStartX = ref(0)
-// const touchStartOffset = ref(0)
-
+//
+//
+// const onTouchEnd = () => {
+//   updateSlideOffset()
+// }
 
 // 滑动相关函数
 const updateSlideOffset = () => {
-  const containerWidth = sliderContainer.value?.clientWidth || 0
-  const maxOffset = Math.max(
-    0,
-    (aiAnalysisResults.value.length * cardWidth.value) - containerWidth
-  )
-  const targetOffset = currentSlideIndex.value * cardWidth.value
+  const container = sliderContainer.value as HTMLDivElement | null
+  const containerWidth = container?.clientWidth || 0
+  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+  const targetOffset = (currentSlideIndex.value * cardWidth.value)
   slideOffset.value = Math.min(targetOffset, maxOffset)
 }
 
 const onSliderScroll = () => {
   if (isDragging.value) return
 
-  const container = sliderContainer.value
+  const container = sliderContainer.value as HTMLDivElement | null
   if (!container) return
 
   const scrollLeft = container.scrollLeft
   const newIndex = Math.round(scrollLeft / cardWidth.value)
-  currentSlideIndex.value = Math.max(
-    0,
-    Math.min(newIndex, aiAnalysisResults.value.length - 1)
-  )
+  currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
 }
 
 // 滑轨拖拽
@@ -3030,15 +3013,13 @@ const startDrag = (event: MouseEvent) => {
 const onDrag = (event: MouseEvent) => {
   if (!isDragging.value) return
 
-  const track = topSliderTrack.value || bottomSliderTrack.value
+  const track = (topSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
   if (!track) return
 
   const rect = track.getBoundingClientRect()
   const x = event.clientX - rect.left
   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-  const newIndex = Math.round(
-    (percentage / 100) * (aiAnalysisResults.value.length - 1)
-  )
+  const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
 
   currentSlideIndex.value = newIndex
   updateSlideOffset()
@@ -3056,23 +3037,23 @@ const onTouchStart = (event: TouchEvent) => {
   touchStartOffset.value = slideOffset.value
 }
 
-const onTouchMove = (event: TouchEvent) => {
-  const currentX = event.touches[0].clientX
-  const deltaX = touchStartX.value - currentX
-  const newOffset = touchStartOffset.value + deltaX
+// const onTouchMove = (event: TouchEvent) => {
+//   const currentX = event.touches[0].clientX
+//   const deltaX = touchStartX.value - currentX
+//   const newOffset = touchStartOffset.value + deltaX
+//
+//   const container = sliderContainer.value as HTMLDivElement | null
+//   const containerWidth = container?.clientWidth || 0
+//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+//
+//   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+//   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+// }
 
-  const containerWidth = sliderContainer.value?.clientWidth || 0
-  const maxOffset = Math.max(
-    0,
-    (aiAnalysisResults.value.length * cardWidth.value) - containerWidth
-  )
-
-  slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-  currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
-}
 const onTouchEnd = () => {
   updateSlideOffset()
 }
+
 // 键盘事件
 const onKeyDown = (event: KeyboardEvent) => {
   if (!hasAIAnalysis.value) return
@@ -3374,20 +3355,20 @@ const renderAllResults = async () => {
 
 // 卡牌条相关
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
-const cardWidth = 88
-let isDragging = false
+const cardWidth2 = 88
+let isDragging2 = false
 let dragStartX = 0
 
 const viewOffset = ref(0)
 let dragStartOffset = 0
 const containerWidth = ref(0)
 
-const cardPartialWidth = cardWidth * 0.6
+const cardPartialWidth = cardWidth2 * 0.6
 
 const totalCardsWidth = computed(() => {
   const deck = displayDeck.value
   if (!deck || deck.length === 0) return 0
-  return (deck.length - 1) * cardPartialWidth + cardWidth
+  return (deck.length - 1) * cardPartialWidth + cardWidth2
 })
 
 const sliderMax = computed(() => {
@@ -3409,12 +3390,25 @@ const totalCardCount = computed(() =>
   (needGuideCards.value ? guideCardCount.value : 0) + (selectedSpread.value?.count ?? 0)
 )
 
-onMounted(() => {
-  window.addEventListener('wheel', onWheelWithShift, { passive: false });
-  if (cardStripWrapper.value) {
-    containerWidth.value = cardStripWrapper.value.clientWidth;
-  }
-});
+// onMounted(() => {
+//   window.addEventListener('wheel', onWheelWithShift, { passive: false });
+//   if (cardStripWrapper.value) {
+//     containerWidth.value = cardStripWrapper.value.clientWidth;
+//   }
+// });
+const onTouchMove = (event: TouchEvent) => {
+  const currentX = event.touches[0].clientX
+  const deltaX = touchStartX.value - currentX
+  const newOffset = touchStartOffset.value + deltaX
+  const container = sliderContainer.value
+  // 使用类型守卫确保 container 是 HTMLElement
+  if (!container || !('clientWidth' in container)) return
+
+  const containerWidth = container.clientWidth || 0
+  const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
+  slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+  currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('wheel', onWheelWithShift);
@@ -3427,7 +3421,7 @@ onBeforeUnmount(() => {
 // 拖拽相关
 const onDragStart = (e: MouseEvent | TouchEvent) => {
   const el = cardStripWrapper.value; if (!el) return
-  isDragging = true
+  isDragging2 = true
   dragStartX = 'touches' in e ? e.touches[0].clientX : e.clientX
   dragStartOffset = viewOffset.value
   window.addEventListener('mousemove', onDragMove)
@@ -3438,7 +3432,7 @@ const onDragStart = (e: MouseEvent | TouchEvent) => {
 
 const SCALE = 3
 const onDragMove = (e: MouseEvent | TouchEvent) => {
-  if (!isDragging) return
+  if (!isDragging2) return
   if ('preventDefault' in e) e.preventDefault()
 
   const x = 'touches' in e ? e.touches[0].clientX : e.clientX
@@ -3449,7 +3443,7 @@ const onDragMove = (e: MouseEvent | TouchEvent) => {
 }
 
 const onDragEnd = () => {
-  isDragging = false
+  isDragging2 = false
   window.removeEventListener('mousemove', onDragMove)
   window.removeEventListener('mouseup', onDragEnd)
   window.removeEventListener('touchmove', onDragMove as any)
@@ -3508,6 +3502,17 @@ const spreadCards = computed((): CardResult[] => {
 
 // 确认牌阵
 // 确认牌阵
+// const confirmSpread = async () => {
+//   if (!selectedSpreadKey.value) return
+//   isSpreadConfirmed.value = true
+//   selectCardArr.value = []
+//   cardReversedStates.value = {}
+//
+//   await nextTick()
+//   if (cardStripWrapper.value) {
+//     containerWidth.value = cardStripWrapper.value.clientWidth
+//   }
+// }
 const confirmSpread = async () => {
   if (!selectedSpreadKey.value) return
   isSpreadConfirmed.value = true
@@ -3516,9 +3521,12 @@ const confirmSpread = async () => {
 
   await nextTick()
   if (cardStripWrapper.value) {
-    containerWidth.value = cardStripWrapper.value.clientWidth
+    containerWidth.value = (cardStripWrapper.value as HTMLElement).clientWidth
   }
 }
+
+
+
 
 // 重置功能
 // const resetFn = () => {
