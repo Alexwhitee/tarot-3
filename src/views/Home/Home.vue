@@ -3773,7 +3773,8 @@ const resetSliderState = () => {
 
 const cardStripWrapper = ref<HTMLDivElement | null>(null)
 const cardWidth2 = 88
-let isDragging2 = false
+// let isDragging2 = false
+const isDragging2 = ref(false)
 let dragStartX = 0
 
 //const viewOffset = ref(0)
@@ -3829,7 +3830,6 @@ const totalCardCount = computed(() =>
 // 修复触摸移动逻辑
 const onTouchMove = (event: TouchEvent) => {
   if (!isDragging2.value) return // 添加拖拽状态检查
-
   const currentX = event.touches[0].clientX
   const deltaX = touchStartX.value - currentX
   const newOffset = touchStartOffset.value + deltaX
@@ -3854,7 +3854,8 @@ onBeforeUnmount(() => {
 // 拖拽相关
 const onDragStart = (e: MouseEvent | TouchEvent) => {
   const el = cardStripWrapper.value; if (!el) return
-  isDragging2 = true
+  // isDragging2 = true
+  isDragging2.value = true
   dragStartX = 'touches' in e ? e.touches[0].clientX : e.clientX
   dragStartOffset = viewOffset.value
   window.addEventListener('mousemove', onDragMove)
@@ -3865,7 +3866,7 @@ const onDragStart = (e: MouseEvent | TouchEvent) => {
 
 const SCALE = 3
 const onDragMove = (e: MouseEvent | TouchEvent) => {
-  if (!isDragging2) return
+  if (!isDragging2.value) return
   if ('preventDefault' in e) e.preventDefault()
 
   const x = 'touches' in e ? e.touches[0].clientX : e.clientX
@@ -3876,7 +3877,7 @@ const onDragMove = (e: MouseEvent | TouchEvent) => {
 }
 
 const onDragEnd = () => {
-  isDragging2 = false
+  isDragging2.value = false
   window.removeEventListener('mousemove', onDragMove)
   window.removeEventListener('mouseup', onDragEnd)
   window.removeEventListener('touchmove', onDragMove as any)
