@@ -831,7 +831,7 @@ ${spreadCards.map((card, index) => {
         "temperature": 0.6,
         "max_tokens": 10000,
         "stream": false,
-        "reasoning_effort": "high"  // 添加思考参数
+        "reasoning_effort": "low"  // 添加思考参数
       };
 
       console.log('=== AI分析API请求体信息 ===');
