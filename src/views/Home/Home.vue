@@ -514,7 +514,7 @@
       <!-- 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） -->
       <div v-if="!hasAIAnalysis && !isWaitingForAIAnalysis" class="ai-model-selection-section">
         <div class="section-header">
-          <h4 class="cards-section-title">选择AI模型进行解析</h4>
+          <h4 class="cards-section-title">选择ai卦师进行解析</h4>
           <div class="selection-info">
             <span v-if="selectedModelKeys.length > 0" class="selected-count">
               已选择 {{ selectedModelKeys.length }}/5 个模型
@@ -2289,7 +2289,7 @@ const initShuffledDeck = () => {
 // // 在 home.vue 的 script setup 中更新
 // const availableModels = ref([
 //   {
-//     key: 'glm-4.5-flash',
+//     key: 'grok-4',
 //     name: 'GLM-4.5 Flash',
 //     description: '智谱超快响应模型，速度与质量并重'
 //   },
@@ -2709,9 +2709,9 @@ const availableModels = ref([
     description: 'Google专业级多模态模型，深度思考'
   },
   {
-    key: 'glm-4.5-flash',
-    name: 'GLM-4.5-Flash',
-    description: '智谱快速响应模型，快速'
+    key: 'grok-4',
+    name: 'grok-4',
+    description: 'x快速响应模型，快速'
   },
   {
     key: 'doubao-seed-1-6-250615',

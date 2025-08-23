@@ -286,7 +286,7 @@
 //
 //     // 智谱 API 请求
 //     const apiRequestBody = {
-//       "model": "glm-4.5-flash",
+//       "model": "grok-4",
 //       "messages": messages,
 //       "temperature": 0.7,
 //       "max_tokens": 90000
@@ -570,7 +570,7 @@
 //
 //     // 构建智谱API请求体
 //     const apiRequestBody = {
-//       "model": "glm-4.5-flash",
+//       "model": "grok-4",
 //       "messages": [
 //         { "role": "system", "content": systemPrompt },
 //         { "role": "user", "content": userMessage }
@@ -714,7 +714,7 @@
 // 请严格按照上述牌阵布局进行解析，提供详细占卜解析。`;
 //
 //     const apiRequestBody = {
-//       model: "glm-4.5-flash",
+//       model: "grok-4",
 //       messages: [
 //         { role: "system", content: systemPrompt },
 //         { role: "user", content: userMessage }
@@ -860,7 +860,7 @@
 // 请严格基于上述象征元素进行解析，运用象法技巧，将各牌的符号串联成完整的事件发展脉络，并结合建议分支给出具体可行的行动指导。`;
 //
 //     const apiRequestBody = {
-//       model: "glm-4.5-flash",
+//       model: "grok-4",
 //       messages: [
 //         { role: "system", content: systemPrompt },
 //         { role: "user", content: userMessage }

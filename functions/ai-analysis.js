@@ -29,7 +29,7 @@
 //
 //     // 验证模型是否支持
 //     const supportedModels = [
-//       'glm-4.5-flash',
+//       'grok-4',
 //       'gpt-5-2025-08-07',
 //       'o3',
 //       'claude-3-7-sonnet-20250219-thinking',
@@ -197,7 +197,7 @@
 //       "model": model,  // 使用前端传来的模型参数
 //       "messages": messages,
 //       "temperature": 0.6,
-//       "max_tokens": 30000,
+//       "max_tokens": 10000,
 //       "stream": false
 //     };
 //     console.log('=== AI分析API请求体信息 ===');
@@ -410,8 +410,6 @@ const systemPrompt = `## **[身份与目标]**
 - **理由**：[深度分析该选择与占卜问题的核心关联度，形成A→B→C因果链]
 - **排除**：[未选象征或组合]（原因：[关联度较低、被主导选择覆盖、或仅为背景因素。]）
 
-[如有多重可能性，使用条件分支]
-
 
 **操作要点**：
 
@@ -459,14 +457,12 @@ const systemPrompt = `## **[身份与目标]**
 [概率表述 + 主要结果]（附证据依据，独立段落）
 
 **触发条件**：
-[实现结果的必要条件]（独立段落）
+[实现结果的必要条件]（独立行）
 
 **风险规避**：
 - **主要风险**： [具体风险]（独立行）
 - **预防措施**： [可执行的具体行动]（独立行，含步骤建议）
 
-**条件分支总结**（如适用）：
-[简洁回顾分支与倾向]（用列表或表格，确保每分支独立行）
 
 
 ---
@@ -503,7 +499,6 @@ const systemPrompt = `## **[身份与目标]**
 **问题答案**：[明确回答]（独立段落）
 **倾向结果**：[概率化表述]（独立段落）
 **风险规避**：[具体建议]（独立段落）
-[条件分支总结]（如适用）
 
 ## 象征总结诗
   [四句诗]
@@ -543,7 +538,7 @@ export async function onRequestPost({ request, env }) {
 
     // 验证模型是否支持
     const supportedModels = [
-      'glm-4.5-flash',
+      'grok-4',
       'gpt-5-2025-08-07',
       'o3',
       'gemini-2.5-flash',
@@ -693,7 +688,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 30000,
+        "max_tokens": 10000,
         "stream": false
       };
 
@@ -749,7 +744,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 30000,
+        "max_tokens": 10000,
         "stream": false,
         "thinking": {
           "type": "enabled"  // 开启深度思考模式：enabled/disabled/auto
@@ -781,7 +776,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         // "temperature": 0.6,
-        "max_tokens": 30000,
+        "max_tokens": 10000,
         "stream": false,
         "reasoning_effort": "high"
       };
@@ -801,6 +796,31 @@ ${spreadCards.map((card, index) => {
         },
         "body": JSON.stringify(apiRequestBody)
       });
+    } else if (model.startsWith('gpt-5') || model === 'gpt-5-2025-08-07') {
+      // --- 新增分支 5: 调用 GPT-5 API (不支持 temperature 参数) ---
+      console.log(`正在调用 GPT-5 API 进行AI分析（模型：${model}）...`);
+      const apiRequestBody = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": 10000,
+        "stream": false,
+        "reasoning_effort": "high"
+        // 移除 temperature 参数
+      };
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('温度: 默认值 1 (GPT-5 不支持自定义)');
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
+      response = await fetch("https://api.wlai.vip/v1/chat/completions", {
+        "method": "POST",
+        "headers": {
+          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(apiRequestBody)
+      });
     } else {
       // --- 分支 5: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
       console.log(`正在调用云雾 API进行AI分析（模型：${model}）...`);
@@ -809,7 +829,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 30000,
+        "max_tokens": 10000,
         "stream": false,
         "reasoning_effort": "high"  // 添加思考参数
       };

@@ -28,8 +28,8 @@
 //         description: 'Google专业级多模态模型'
 //       },
 //       {
-//         key: 'glm-4.5-flash',
-//         name: 'GLM-4.5-Flash',
+//         key: 'grok-4',
+//         name: 'grok-4',
 //         description: '智谱最新响应模型'
 //       },
 //       {
