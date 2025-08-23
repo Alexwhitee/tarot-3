@@ -1242,11 +1242,11 @@ const closeQuestionGuideModal = () => {
 
 // ... 你已有的 ref 定义 ...
 
-// --- 新增：键盘持续滚动状态 ---
-const isKeyDown = ref(false); // 标记是否有方向键被按住
-const scrollDirection = ref(0); // -1 代表向左, 1 代表向右
-const animationFrameId = ref<number | null>(null); // 存储 requestAnimationFrame 的 ID，用于取消
-const SCROLL_SPEED = 80; // 滚动速度（像素/帧），可以根据手感调整
+// // --- 新增：键盘持续滚动状态 ---
+// const isKeyDown = ref(false); // 标记是否有方向键被按住
+// const scrollDirection = ref(0); // -1 代表向左, 1 代表向右
+// const animationFrameId = ref<number | null>(null); // 存储 requestAnimationFrame 的 ID，用于取消
+// const SCROLL_SPEED = 80; // 滚动速度（像素/帧），可以根据手感调整
 
 
 
@@ -1813,58 +1813,90 @@ const zsStartDrag = (event: MouseEvent) => {
 
 
 // 滚动动画循环
-const scrollLoop = () => {
-  if (!isKeyDown.value || !zsSliderContainer.value) return;
+// const scrollLoop = () => {
+//   if (!isKeyDown.value || !zsSliderContainer.value) return;
+//
+//   const container = zsSliderContainer.value;
+//   // 按照指定方向和速度进行滚动
+//   container.scrollLeft += scrollDirection.value * SCROLL_SPEED;
+//
+//   // 【重要】同步更新UI指示器（X/Y 和滑块位置）
+//   // 这部分逻辑与 zsOnSliderScroll 类似，确保UI同步
+//   const cardWidthWithGap = 400 + 16;
+//   const newIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+//   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1));
+//
+//   // 请求下一帧动画
+//   animationFrameId.value = requestAnimationFrame(scrollLoop);
+// };
+
+// // 按键按下事件处理器
+// const handleKeyDown = (event: KeyboardEvent) => {
+//   // 如果没有AI结果，或者已经在滚动中，则忽略
+//   if (!hasAIAnalysis.value || isKeyDown.value) return;
+//
+//   if (event.key === 'ArrowLeft') {
+//     event.preventDefault();
+//     isKeyDown.value = true;
+//     scrollDirection.value = -1;
+//     scrollLoop(); // 启动滚动循环
+//   } else if (event.key === 'ArrowRight') {
+//     event.preventDefault();
+//     isKeyDown.value = true;
+//     scrollDirection.value = 1;
+//     scrollLoop(); // 启动滚动循环
+//   }
+// };
+
+// // 按键抬起事件处理器
+// const handleKeyUp = (event: KeyboardEvent) => {
+//   // 只有当松开的键是当前正在滚动的方向键时，才停止
+//   if (
+//     (event.key === 'ArrowLeft' && scrollDirection.value === -1) ||
+//     (event.key === 'ArrowRight' && scrollDirection.value === 1)
+//   ) {
+//     isKeyDown.value = false;
+//     scrollDirection.value = 0;
+//     // 取消动画帧请求，停止循环
+//     if (animationFrameId.value) {
+//       cancelAnimationFrame(animationFrameId.value);
+//       animationFrameId.value = null;
+//     }
+//   }
+// };
+
+// 简化后的键盘事件处理
+const handleKeyboardNavigation = (event: KeyboardEvent) => {
+  if (!hasAIAnalysis.value) return;
 
   const container = zsSliderContainer.value;
-  // 按照指定方向和速度进行滚动
-  container.scrollLeft += scrollDirection.value * SCROLL_SPEED;
+  if (!container) return;
 
-  // 【重要】同步更新UI指示器（X/Y 和滑块位置）
-  // 这部分逻辑与 zsOnSliderScroll 类似，确保UI同步
-  const cardWidthWithGap = 400 + 16;
-  const newIndex = Math.round(container.scrollLeft / cardWidthWithGap);
-  zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1));
+  // 只在左右箭头键时处理
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault(); // 阻止默认滚动行为
 
-  // 请求下一帧动画
-  animationFrameId.value = requestAnimationFrame(scrollLoop);
-};
+    const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
 
-// 按键按下事件处理器
-const handleKeyDown = (event: KeyboardEvent) => {
-  // 如果没有AI结果，或者已经在滚动中，则忽略
-  if (!hasAIAnalysis.value || isKeyDown.value) return;
+    let targetScroll: number;
 
-  if (event.key === 'ArrowLeft') {
-    event.preventDefault();
-    isKeyDown.value = true;
-    scrollDirection.value = -1;
-    scrollLoop(); // 启动滚动循环
-  } else if (event.key === 'ArrowRight') {
-    event.preventDefault();
-    isKeyDown.value = true;
-    scrollDirection.value = 1;
-    scrollLoop(); // 启动滚动循环
-  }
-};
-
-// 按键抬起事件处理器
-const handleKeyUp = (event: KeyboardEvent) => {
-  // 只有当松开的键是当前正在滚动的方向键时，才停止
-  if (
-    (event.key === 'ArrowLeft' && scrollDirection.value === -1) ||
-    (event.key === 'ArrowRight' && scrollDirection.value === 1)
-  ) {
-    isKeyDown.value = false;
-    scrollDirection.value = 0;
-    // 取消动画帧请求，停止循环
-    if (animationFrameId.value) {
-      cancelAnimationFrame(animationFrameId.value);
-      animationFrameId.value = null;
+    if (event.key === 'ArrowLeft') {
+      // 向左滚动一张卡片
+      targetScroll = Math.max(0, currentScroll - cardWidthWithGap);
+    } else {
+      // 向右滚动一张卡片
+      targetScroll = Math.min(maxScroll, currentScroll + cardWidthWithGap);
     }
+
+    // 使用平滑滚动
+    container.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth'
+    });
   }
 };
-
 
 
 
@@ -1919,17 +1951,30 @@ const zsEndDrag = () => {
   document.removeEventListener('mouseleave', zsEndDrag);
 };
 // 关键修正3：`scroll`事件处理器现在只负责更新UI指示器
+// const zsOnSliderScroll = () => {
+//   // 如果是程序化拖动滑轨导致的滚动，可以退出以避免不必要的计算
+//   if (isDragging.value) return;
+//   const container = zsSliderContainer.value;
+//   if (!(container instanceof HTMLElement)) return;
+//   // 这个函数现在唯一的目的就是更新左上角的 "X/Y" 指示器
+//   const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
+//   const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+//   // 确保索引在有效范围内
+//   zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
+// };
+
+
 const zsOnSliderScroll = () => {
-  // 如果是程序化拖动滑轨导致的滚动，可以退出以避免不必要的计算
   if (isDragging.value) return;
   const container = zsSliderContainer.value;
   if (!(container instanceof HTMLElement)) return;
-  // 这个函数现在唯一的目的就是更新左上角的 "X/Y" 指示器
-  const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
+
+  // 保持这个逻辑来更新当前幻灯片索引
+  const cardWidthWithGap = 400 + 16;
   const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
-  // 确保索引在有效范围内
   zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
 };
+
 // 别忘了在组件卸载时清理事件监听器
 onBeforeUnmount(() => {
   // 确保即使组件意外卸载，监听器也被移除
@@ -2201,6 +2246,29 @@ const onWheelWithShift = (e: WheelEvent) => {
     viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
   }
 };
+// const onWheelWithShift = (e: WheelEvent) => {
+//   // 检查事件是否发生在AI结果区域
+//   const aiResultsContainer = zsSliderContainer.value;
+//   if (aiResultsContainer && aiResultsContainer.contains(e.target as Node)) {
+//     if (e.shiftKey && hasAIAnalysis.value) {
+//       e.preventDefault();
+//       const newOffset = viewOffset.value + (e.deltaY > 0 ? 50 : -50);
+//       viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
+//     }
+//     return;
+//   }
+//
+//   // 检查事件是否发生在抽牌区域
+//   const cardStripElement = cardStripWrapper.value;
+//   if (cardStripElement && cardStripElement.contains(e.target as Node)) {
+//     if (e.shiftKey && isSpreadConfirmed.value && !resStatus.value) {
+//       e.preventDefault();
+//       // 为抽牌区域添加水平滚动
+//       const scrollAmount = e.deltaY > 0 ? 100 : -100;
+//       cardStripElement.scrollLeft += scrollAmount;
+//     }
+//   }
+// };
 
 // 指示牌相关
 const needGuideCards = ref(false)
@@ -2243,7 +2311,7 @@ onBeforeUnmount(() => {
 
 
 
-// 拖拽开始
+
 const onDragStart = (e: MouseEvent | TouchEvent) => {
   const el = cardStripWrapper.value;
   if (!el) return
@@ -2256,6 +2324,24 @@ const onDragStart = (e: MouseEvent | TouchEvent) => {
   window.addEventListener('touchmove', onDragMove as any, { passive: false })
   window.addEventListener('touchend', onDragEnd)
 }
+
+// const onDragStart = (e: MouseEvent | TouchEvent) => {
+//   const el = cardStripWrapper.value;
+//   if (!el) return;
+//
+//   // 检查是否在抽牌区域
+//   if (el.contains(e.target as Node)) {
+//     isDragging2.value = true;
+//     dragStartX.value = 'touches' in e ? e.touches[0].clientX : e.clientX;
+//     dragStartOffset.value = viewOffset.value;
+//
+//     window.addEventListener('mousemove', onDragMove);
+//     window.addEventListener('mouseup', onDragEnd);
+//     window.addEventListener('touchmove', onDragMove as any, { passive: false });
+//     window.addEventListener('touchend', onDragEnd);
+//   }
+// };
+
 const SCALE = 3
 // 拖拽移动（重命名）
 const onDragMove = (e: MouseEvent | TouchEvent) => {
@@ -2399,30 +2485,34 @@ const resetFn = () => {
 onMounted(() => {
   updatezsCardsPerView()
   window.addEventListener('resize', updatezsCardsPerView)
-  document.addEventListener('keydown', zsOnKeyDown)
-
+  // document.addEventListener('keydown', zsOnKeyDown)
+  // // 修改为使用被动事件监听器以提高性能
+  // window.addEventListener('wheel', onWheelWithShift, { passive: false });
+  document.addEventListener('keydown', handleKeyboardNavigation);
   updatezsCardsPerView();
   window.addEventListener('resize', updatezsCardsPerView);
 
   // 新增：为整个文档添加键盘事件监听
-  document.addEventListener('keydown', handleKeyDown);
-  document.addEventListener('keyup', handleKeyUp);
+  // document.addEventListener('keydown', handleKeyDown);
+  // document.addEventListener('keyup', handleKeyUp);
 
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', updatezsCardsPerView)
-  document.removeEventListener('keydown', zsOnKeyDown)
-  document.removeEventListener('mousemove', zsOnDrag)
-  document.removeEventListener('mouseup', zsEndDrag)
+  window.removeEventListener('resize', updatezsCardsPerView);
+  window.removeEventListener('wheel', onWheelWithShift);
+  // document.removeEventListener('keydown', zsOnKeyDown)
+  document.removeEventListener('mousemove', zsOnDrag);
+  document.removeEventListener('mouseup', zsEndDrag);
 
   window.removeEventListener('resize', updatezsCardsPerView);
   // 新增：移除键盘事件监听
-  document.removeEventListener('keydown', handleKeyDown);
-  document.removeEventListener('keyup', handleKeyUp);
+  // document.removeEventListener('keydown', handleKeyDown);
+  document.removeEventListener('keydown', handleKeyboardNavigation);
+  // document.removeEventListener('keyup', handleKeyUp);
   // 确保组件卸载时停止任何正在进行的滚动动画
-  if (animationFrameId.value) {
-    cancelAnimationFrame(animationFrameId.value);
-  }
+  // if (animationFrameId.value) {
+  //   cancelAnimationFrame(animationFrameId.value);
+  // }
 })
 
 // 图片渲染
@@ -6887,6 +6977,12 @@ label {
 }
 .dark-mode .markdown-content hr {
   border-top-color: #4b5563;
+}
+.results-slider-container {
+  scroll-behavior: smooth; /* 启用平滑滚动 */
+  -webkit-overflow-scrolling: touch; /* 优化移动端滚动 */
+  overflow-x: auto;
+
 }
 
 
