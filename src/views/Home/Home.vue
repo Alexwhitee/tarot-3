@@ -571,6 +571,7 @@
           </div>
         </div>
         <!-- 上方滑轨 -->
+        <!-- 上方滑轨 -->
         <div class="slider-controls top">
           <div class="position-indicator">{{ zsCurrentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
           <div class="slider-track" ref="zszsBottomSliderTrack">
@@ -581,24 +582,23 @@
             ></div>
           </div>
           <div class="boundary-indicator" :class="{
-            'at-start': zsCurrentSlideIndex === 0,
-            'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
-          }">
+          'at-start': zsCurrentSlideIndex === 0,
+          'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
+        }">
             <span v-if="zsCurrentSlideIndex === 0">◀ 已到最左边</span>
             <span v-else-if="zsCurrentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
           </div>
         </div>
-        <!-- 结果滑动容器 -->
+
+        <!-- 结果滑动容器 (关键修改处) -->
         <div
-        class="results-slider-container"
-        ref="zsSliderContainer"
-        @scroll="zsOnSliderScroll"
-        @mousedown="startContentDrag"
+          class="results-slider-container"
+          ref="zsSliderContainer"
+          @scroll="zsOnSliderScroll"
+          @mousedown="startContentDrag"
         >
-          <div
-            class="results-slider"
-            :style="{ transform: `translateX(-${zsSlideOffset}px)` }"
-          >
+          <!-- 内部滑动区域：不再使用 transform -->
+          <div class="results-slider">
             <div
               v-for="(result, index) in aiAnalysisResults"
               :key="index"
@@ -614,27 +614,19 @@
                   {{ copySingleStatus[index] ? '已复制' : '复制' }}
                 </Button>
               </div>
-<!--              <div class="result-content">-->
-<!--                <div v-if="result === 'ANALYSIS_FAILED'" class="error-content">-->
-<!--                  <p class="error-message">分析失败</p>-->
-<!--                  <Button class="retry-btn" @click="retryModel(index)">-->
-<!--                    重试-->
-<!--                  </Button>-->
               <div class="result-content">
                 <div v-if="aiAnalysisResults[index] === 'ANALYSIS_FAILED'" class="error-content">
                   <p class="error-message">分析失败</p>
                   <Button class="retry-btn" @click="retryModel(index)">
                     重试
                   </Button>
-
                 </div>
-<!--                <div v-else class="success-content" v-html="formatAnalysisResult(result)"></div>-->
-<!--              </div>-->
                 <div v-else class="success-content markdown-content" v-html="renderedResults[index] || ''"></div>
               </div>
             </div>
           </div>
         </div>
+
         <!-- 下方滑轨 -->
         <div class="slider-controls bottom">
           <div class="position-indicator">{{ zsCurrentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
@@ -646,9 +638,9 @@
             ></div>
           </div>
           <div class="boundary-indicator" :class="{
-            'at-start': zsCurrentSlideIndex === 0,
-            'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
-          }">
+          'at-start': zsCurrentSlideIndex === 0,
+          'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
+        }">
             <span v-if="zsCurrentSlideIndex === 0">◀ 已到最左边</span>
             <span v-else-if="zsCurrentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
           </div>
@@ -3100,51 +3092,195 @@ const updatezsSlideOffset = () => {
 // ... 其他脚本 ...
 
 // 更新 zsOnSliderScroll 函数
-const zsOnSliderScroll = () => {
-  if (isDragging.value) return; // 如果是拖动滑轨触发的滚动，则忽略
-
-  const container = zsSliderContainer.value as HTMLDivElement | null;
-  if (!container) return;
-
-  const { scrollLeft, scrollWidth, clientWidth } = container;
-  const maxScrollLeft = scrollWidth - clientWidth;
-
-  if (maxScrollLeft <= 0) {
-    zsCurrentSlideIndex.value = 0;
-    // zszsSliderPosition 计算属性会自动更新
-    return;
-  }
-
-  // 更新当前卡片索引 (用于显示 X/Y)
-  const cardWidthWithGap = 350 + 16; // card-width + gap
-  zsCurrentSlideIndex.value = Math.round(scrollLeft / cardWidthWithGap);
-
-  // zszsSliderPosition 计算属性会根据 zsCurrentSlideIndex 变化，
-  // 但为了更平滑，我们可以直接根据滚动百分比计算
-};
+// const zsOnSliderScroll = () => {
+//   if (isDragging.value) return; // 如果是拖动滑轨触发的滚动，则忽略
+//
+//   const container = zsSliderContainer.value as HTMLDivElement | null;
+//   if (!container) return;
+//
+//   const { scrollLeft, scrollWidth, clientWidth } = container;
+//   const maxScrollLeft = scrollWidth - clientWidth;
+//
+//   if (maxScrollLeft <= 0) {
+//     zsCurrentSlideIndex.value = 0;
+//     // zszsSliderPosition 计算属性会自动更新
+//     return;
+//   }
+//
+//   // 更新当前卡片索引 (用于显示 X/Y)
+//   const cardWidthWithGap = 350 + 16; // card-width + gap
+//   zsCurrentSlideIndex.value = Math.round(scrollLeft / cardWidthWithGap);
+//
+//   // zszsSliderPosition 计算属性会根据 zsCurrentSlideIndex 变化，
+//   // 但为了更平滑，我们可以直接根据滚动百分比计算
+// };
+// const zsOnSliderScroll = () => {
+//   // 如果是拖动滑轨导致的滚动，可以提前退出，避免不必要的计算
+//   if (isDragging.value) return;
+//
+//   const container = zsSliderContainer.value;
+//   if (!(container instanceof HTMLElement)) return;
+//
+//   // 唯一目的：更新用于显示的当前卡片索引
+//   // (350是卡片宽度, 16是gap)
+//   const cardWidthWithGap = 350 + 16;
+//   const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+//
+//   // 确保索引在有效范围内
+//   zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
+// };
 
 // 我们需要修改 zszsSliderPosition 计算属性，使其更精确
+// const zszsSliderPosition = computed(() => {
+//   const container = zsSliderContainer.value;
+//   if (!container) return 0;
+//
+//   const { scrollLeft, scrollWidth, clientWidth } = container;
+//   const maxScrollLeft = scrollWidth - clientWidth;
+//
+//   if (maxScrollLeft <= 0) return 0;
+//
+//   return (scrollLeft / maxScrollLeft) * 100;
+// });
+// const zszsSliderPosition = computed(() => {
+//   const container = zsSliderContainer.value;
+//   if (!(container instanceof HTMLElement)) return 0;
+//
+//   const { scrollLeft, scrollWidth, clientWidth } = container;
+//   const maxScrollLeft = scrollWidth - clientWidth;
+//
+//   if (maxScrollLeft <= 0) {
+//     return 0;
+//   }
+//
+//   // 关键：直接根据 scrollLeft 的百分比计算滑块位置
+//   return (scrollLeft / maxScrollLeft) * 100;
+// });
 const zszsSliderPosition = computed(() => {
   const container = zsSliderContainer.value;
-  if (!container) return 0;
-
+  // 添加类型守卫，确保元素存在
+  if (!(container instanceof HTMLElement)) {
+    return 0;
+  }
   const { scrollLeft, scrollWidth, clientWidth } = container;
   const maxScrollLeft = scrollWidth - clientWidth;
-
-  if (maxScrollLeft <= 0) return 0;
-
+  // 避免除以零
+  if (maxScrollLeft <= 0) {
+    return 0;
+  }
+  // 返回滚动位置的百分比
   return (scrollLeft / maxScrollLeft) * 100;
 });
-
 // ... 其他脚本 ...
 
 // 滑轨拖拽
+// const zsStartDrag = (event: MouseEvent) => {
+//   isDragging.value = true
+//   document.addEventListener('mousemove', zsOnDrag)
+//   document.addEventListener('mouseup', zsEndDrag)
+//   event.preventDefault()
+// }
 const zsStartDrag = (event: MouseEvent) => {
-  isDragging.value = true
-  document.addEventListener('mousemove', zsOnDrag)
-  document.addEventListener('mouseup', zsEndDrag)
-  event.preventDefault()
-}
+  isDragging.value = true;
+  // 在整个文档上监听移动和松开事件，确保鼠标移出滑轨也能响应
+  document.addEventListener('mousemove', zsOnDrag);
+  document.addEventListener('mouseup', zsEndDrag);
+  document.addEventListener('mouseleave', zsEndDrag); // 处理鼠标移出窗口
+  event.preventDefault(); // 防止拖动时选中其他文本
+};
+// 关键修正2：拖动滑轨时，直接修改容器的 scrollLeft
+// const zsOnDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return;
+//
+//   const track = bottomSliderTrack.value || zszsBottomSliderTrack.value;
+//   const container = zsSliderContainer.value;
+//
+//   if (!(track instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
+//
+//   const rect = track.getBoundingClientRect();
+//   const x = event.clientX - rect.left;
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
+//
+//   // 1. 直接设置 DOM，让内容滚动
+//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
+//
+//   // 2. 【新增的修复代码】手动调用 scroll 事件处理器
+//   // 这个函数会更新 zsCurrentSlideIndex，从而触发 Vue 的重新渲染，
+//   // 进而让 zszsSliderPosition 重新计算，最终更新滑块圆点的位置。
+//   zsOnSliderScroll();
+// };
+// 位于 <script setup> 中
+
+// 关键修正1：拖动滑轨时，直接修改容器的 scrollLeft
+const zsOnDrag = (event: MouseEvent) => {
+  if (!isDragging.value) return;
+
+  const track = bottomSliderTrack.value || zszsBottomSliderTrack.value;
+  const container = zsSliderContainer.value;
+
+  if (!(track instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
+
+  const rect = track.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+  // 1. 直接设置 DOM，让内容滚动
+  container.scrollLeft = (percentage / 100) * maxScrollLeft;
+
+  // 2. 【核心修正】在这里直接计算并更新 zsCurrentSlideIndex
+  //    不再调用 zsOnSliderScroll()
+  const cardWidthWithGap = 350 + 16; // 卡片宽度 + 间隙
+  const newIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+  zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1));
+};
+
+// 如果你已经添加了这个函数，请做如下修改
+
+const handleTrackClick = (event: MouseEvent) => {
+  const track = event.currentTarget as HTMLElement;
+  const container = zsSliderContainer.value;
+
+  if (!track || !(container instanceof HTMLElement)) return;
+
+  const rect = track.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+  container.scrollLeft = (percentage / 100) * maxScrollLeft;
+
+  // 移除这一行（如果存在的话），因为设置 scrollLeft 会自动触发 @scroll 事件
+  // zsOnSliderScroll();
+};
+
+const zsEndDrag = () => {
+  isDragging.value = false;
+  // 拖动结束后，务必移除事件监听器
+  document.removeEventListener('mousemove', zsOnDrag);
+  document.removeEventListener('mouseup', zsEndDrag);
+  document.removeEventListener('mouseleave', zsEndDrag);
+};
+// 关键修正3：`scroll`事件处理器现在只负责更新UI指示器
+const zsOnSliderScroll = () => {
+  // 如果是程序化拖动滑轨导致的滚动，可以退出以避免不必要的计算
+  if (isDragging.value) return;
+  const container = zsSliderContainer.value;
+  if (!(container instanceof HTMLElement)) return;
+  // 这个函数现在唯一的目的就是更新左上角的 "X/Y" 指示器
+  const cardWidthWithGap = 350 + 16; // 卡片宽度 + 间隙
+  const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+  // 确保索引在有效范围内
+  zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
+};
+// 别忘了在组件卸载时清理事件监听器
+onBeforeUnmount(() => {
+  // 确保即使组件意外卸载，监听器也被移除
+  document.removeEventListener('mousemove', zsOnDrag);
+  document.removeEventListener('mouseup', zsEndDrag);
+  document.removeEventListener('mouseleave', zsEndDrag);
+});
 
 // const zsOnDrag = (event: MouseEvent) => {
 //   if (!isDragging.value) return
@@ -3163,23 +3299,42 @@ const zsStartDrag = (event: MouseEvent) => {
 // ... 其他脚本 ...
 
 // 更新 zsOnDrag 函数
-const zsOnDrag = (event: MouseEvent) => {
-  if (!isDragging.value) return;
+// const zsOnDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return;
+//
+//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null;
+//   const container = zsSliderContainer.value as HTMLDivElement | null;
+//   if (!track || !container) return;
+//
+//   const rect = track.getBoundingClientRect();
+//   const x = event.clientX - rect.left;
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+//
+//   // 新逻辑：直接设置 scrollLeft
+//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
+//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
+// };
 
-  const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null;
-  const container = zsSliderContainer.value as HTMLDivElement | null;
-  if (!track || !container) return;
 
-  const rect = track.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-
-  // 新逻辑：直接设置 scrollLeft
-  const maxScrollLeft = container.scrollWidth - container.clientWidth;
-  container.scrollLeft = (percentage / 100) * maxScrollLeft;
-};
-
-
+// const zsOnDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return;
+//
+//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value);
+//   const container = zsSliderContainer.value;
+//
+//   // 使用严格的类型守卫
+//   if (!(track instanceof HTMLElement) || !(container instanceof HTMLElement)) {
+//     return;
+//   }
+//
+//   const rect = track.getBoundingClientRect();
+//   const x = event.clientX - rect.left;
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+//
+//   // 关键改动：直接映射，不再通过索引
+//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
+//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
+// };
 
 
 
@@ -3190,11 +3345,11 @@ const zsOnDrag = (event: MouseEvent) => {
 
 // ... 其他脚本 ...
 
-const zsEndDrag = () => {
-  isDragging.value = false
-  document.removeEventListener('mousemove', zsOnDrag)
-  document.removeEventListener('mouseup', zsEndDrag)
-}
+// const zsEndDrag = () => {
+//   isDragging.value = false
+//   document.removeEventListener('mousemove', zsOnDrag)
+//   document.removeEventListener('mouseup', zsEndDrag)
+// }
 
 // 触摸事件
 const zsOnTouchStart = (event: TouchEvent) => {
@@ -4889,7 +5044,7 @@ const handleImageError = (event: Event) => {
 
   position: relative;
 
-  padding: 5px;
+  padding: 5px 0;
 
   min-height: 100vh;
 
@@ -8535,13 +8690,13 @@ label {
   font-weight: 600;
 }
 
-
-/* 结果滑动容器样式 */
+/* 结果滑动容器样式 (关键修改处) */
 .results-slider-container {
-  overflow-x: auto; /* 关键：启用原生横向滚动 */
+  overflow-x: auto;
   position: relative;
-  scroll-behavior: smooth; /* 使编程式滚动更平滑 */
-  cursor: grab; /* 提示用户可以拖动 */
+  scroll-behavior: smooth;
+  cursor: grab;
+  /* 移除了 scroll-snap-type */
   /* 隐藏默认滚动条 */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -8552,16 +8707,12 @@ label {
 .results-slider-container:active {
   cursor: grabbing;
 }
-
 .results-slider {
   display: flex;
-  /* 移除 transform 过渡，因为不再需要 */
-  /* transition: transform 0.3s ease; */
-  padding-bottom: 10px; /* 为可能的阴影或溢出提供空间 */
-  width: max-content; /* 让容器宽度自适应内容 */
+  padding-bottom: 10px;
+  width: max-content;
   gap: 16px;
 }
-
 .model-result-card {
   flex: 0 0 350px;
   background: white;
@@ -8570,7 +8721,8 @@ label {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
-  user-select: none; /* 防止拖动时选中文本 */
+  user-select: none;
+  /* 移除了 scroll-snap-align */
 }
 
 /* ... 其他样式 ... */
@@ -8630,7 +8782,7 @@ label {
 }
 .result-content {
   padding: 5px;
-  max-height: 2000px;
+  max-height: 1500px;
   overflow-y: auto;
 }
 .success-content {
