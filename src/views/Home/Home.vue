@@ -590,12 +590,10 @@
         </div>
         <!-- 结果滑动容器 -->
         <div
-          class="results-slider-container"
-          ref="zsSliderContainer"
-          @scroll="zsOnSliderScroll"
-          @touchstart="zsOnTouchStart"
-          @touchmove="zsOnTouchMove"
-          @touchend="zsonTouchEnd"
+        class="results-slider-container"
+        ref="zsSliderContainer"
+        @scroll="zsOnSliderScroll"
+        @mousedown="startContentDrag"
         >
           <div
             class="results-slider"
@@ -2604,11 +2602,82 @@ const copySingleStatus = ref<boolean[]>([])
 // 触摸相关
 const zsTouchStartX = ref(0)
 const zsTouchStartOffset = ref(0)
+
+
+
+
+
+
+
+
+
+// 在 ref 定义区域添加新的状态
+const isContentDragging = ref(false);
+const contentDragStartX = ref(0);
+const contentDragStartScrollLeft = ref(0);
+
+// 添加新的函数
+const startContentDrag = (event: MouseEvent) => {
+  const container = zsSliderContainer.value;
+
+  // 使用更严格的类型守卫
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+
+  isContentDragging.value = true;
+  // 在这个代码块内部，TypeScript 已经确认 container 是一个 HTMLElement
+  contentDragStartX.value = event.pageX - container.offsetLeft;
+  contentDragStartScrollLeft.value = container.scrollLeft;
+
+  document.addEventListener('mousemove', onContentDrag);
+  document.addEventListener('mouseup', endContentDrag);
+  document.addEventListener('mouseleave', endContentDrag);
+};
+
+const onContentDrag = (event: MouseEvent) => {
+  if (!isContentDragging.value) return;
+  event.preventDefault();
+
+  const container = zsSliderContainer.value;
+
+  // 同样，在这里也加上类型守卫，确保安全
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+
+  const x = event.pageX - container.offsetLeft;
+  const walk = (x - contentDragStartX.value) * 2; // *2 加快拖动速度
+  container.scrollLeft = contentDragStartScrollLeft.value - walk;
+};
+
+const endContentDrag = () => {
+  isContentDragging.value = false;
+  document.removeEventListener('mousemove', onContentDrag);
+  document.removeEventListener('mouseup', endContentDrag);
+  document.removeEventListener('mouseleave', endContentDrag);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 计算滑轨位置
-const zszsSliderPosition = computed(() => {
-  if (aiAnalysisResults.value.length <= 1) return 0
-  return (zsCurrentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
-})
+// const zszsSliderPosition = computed(() => {
+//   if (aiAnalysisResults.value.length <= 1) return 0
+//   return (zsCurrentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
+// })
 // 可用模型列表
 const availableModels = ref([
   {
@@ -3018,16 +3087,56 @@ const updatezsSlideOffset = () => {
   zsSlideOffset.value = Math.min(targetOffset, maxOffset)
 }
 
+// const zsOnSliderScroll = () => {
+//   if (isDragging.value) return
+//
+//   const container = zsSliderContainer.value as HTMLDivElement | null
+//   if (!container) return
+//
+//   const scrollLeft = container.scrollLeft
+//   const newIndex = Math.round(scrollLeft / cardWidth.value)
+//   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+// }
+// ... 其他脚本 ...
+
+// 更新 zsOnSliderScroll 函数
 const zsOnSliderScroll = () => {
-  if (isDragging.value) return
+  if (isDragging.value) return; // 如果是拖动滑轨触发的滚动，则忽略
 
-  const container = zsSliderContainer.value as HTMLDivElement | null
-  if (!container) return
+  const container = zsSliderContainer.value as HTMLDivElement | null;
+  if (!container) return;
 
-  const scrollLeft = container.scrollLeft
-  const newIndex = Math.round(scrollLeft / cardWidth.value)
-  zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
-}
+  const { scrollLeft, scrollWidth, clientWidth } = container;
+  const maxScrollLeft = scrollWidth - clientWidth;
+
+  if (maxScrollLeft <= 0) {
+    zsCurrentSlideIndex.value = 0;
+    // zszsSliderPosition 计算属性会自动更新
+    return;
+  }
+
+  // 更新当前卡片索引 (用于显示 X/Y)
+  const cardWidthWithGap = 350 + 16; // card-width + gap
+  zsCurrentSlideIndex.value = Math.round(scrollLeft / cardWidthWithGap);
+
+  // zszsSliderPosition 计算属性会根据 zsCurrentSlideIndex 变化，
+  // 但为了更平滑，我们可以直接根据滚动百分比计算
+};
+
+// 我们需要修改 zszsSliderPosition 计算属性，使其更精确
+const zszsSliderPosition = computed(() => {
+  const container = zsSliderContainer.value;
+  if (!container) return 0;
+
+  const { scrollLeft, scrollWidth, clientWidth } = container;
+  const maxScrollLeft = scrollWidth - clientWidth;
+
+  if (maxScrollLeft <= 0) return 0;
+
+  return (scrollLeft / maxScrollLeft) * 100;
+});
+
+// ... 其他脚本 ...
 
 // 滑轨拖拽
 const zsStartDrag = (event: MouseEvent) => {
@@ -3037,20 +3146,49 @@ const zsStartDrag = (event: MouseEvent) => {
   event.preventDefault()
 }
 
+// const zsOnDrag = (event: MouseEvent) => {
+//   if (!isDragging.value) return
+//
+//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
+//   if (!track) return
+//
+//   const rect = track.getBoundingClientRect()
+//   const x = event.clientX - rect.left
+//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+//   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+//
+//   zsCurrentSlideIndex.value = newIndex
+//   updatezsSlideOffset()
+// }
+// ... 其他脚本 ...
+
+// 更新 zsOnDrag 函数
 const zsOnDrag = (event: MouseEvent) => {
-  if (!isDragging.value) return
+  if (!isDragging.value) return;
 
-  const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
-  if (!track) return
+  const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null;
+  const container = zsSliderContainer.value as HTMLDivElement | null;
+  if (!track || !container) return;
 
-  const rect = track.getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-  const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
+  const rect = track.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
 
-  zsCurrentSlideIndex.value = newIndex
-  updatezsSlideOffset()
-}
+  // 新逻辑：直接设置 scrollLeft
+  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+  container.scrollLeft = (percentage / 100) * maxScrollLeft;
+};
+
+
+
+
+
+
+
+
+
+
+// ... 其他脚本 ...
 
 const zsEndDrag = () => {
   isDragging.value = false
@@ -3443,6 +3581,10 @@ onBeforeUnmount(() => {
     typedInstance.destroy();
     typedInstance = null;
   }
+
+  document.removeEventListener('mousemove', onContentDrag);
+  document.removeEventListener('mouseup', endContentDrag);
+  document.removeEventListener('mouseleave', endContentDrag);
 });
 
 // 拖拽相关
@@ -4747,7 +4889,7 @@ const handleImageError = (event: Event) => {
 
   position: relative;
 
-  padding: 20px;
+  padding: 5px;
 
   min-height: 100vh;
 
@@ -5911,7 +6053,7 @@ label {
 
 /* 结果页面样式 */
 .result-container {
-  padding: 20px;
+  padding: 5px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -6154,7 +6296,7 @@ label {
 .cards-grid {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 5px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 16px;
@@ -6696,7 +6838,7 @@ label {
 .result-container .guide-cards-section,
 .result-container .spread-cards-section {
   margin-bottom: 32px;
-  padding: 20px;
+  padding: 5px;
   border-radius: 12px;
   border: 2px solid #e0e0e0;
 }
@@ -6705,7 +6847,7 @@ label {
   background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
   border-color: #6366F1;
   margin-bottom: 32px;
-  padding: 20px;
+  padding: 5px;
   border-radius: 12px;
   border: 2px solid #6366F1;
 }
@@ -6714,7 +6856,7 @@ label {
   background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
   border-color: #6366F1;
   margin-bottom: 32px;
-  padding: 20px;
+  padding: 5px;
   border-radius: 12px;
   border: 2px solid #6366F1;
 }
@@ -6919,7 +7061,7 @@ label {
 
 .no-result {
   text-align: center;
-  padding: 20px;
+  padding: 5px;
   color: #999;
   font-style: italic;
 }
@@ -7140,14 +7282,14 @@ label {
 .detail-panel-content {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 5px;
 }
 
 /* 卡牌基本信息 */
 .card-basic-info {
   text-align: center;
   margin-bottom: 24px;
-  padding: 20px;
+  padding: 5px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -8392,16 +8534,34 @@ label {
   color: #f59e0b;
   font-weight: 600;
 }
+
+
 /* 结果滑动容器样式 */
 .results-slider-container {
-  overflow: hidden;
+  overflow-x: auto; /* 关键：启用原生横向滚动 */
   position: relative;
+  scroll-behavior: smooth; /* 使编程式滚动更平滑 */
+  cursor: grab; /* 提示用户可以拖动 */
+  /* 隐藏默认滚动条 */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
+.results-slider-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.results-slider-container:active {
+  cursor: grabbing;
+}
+
 .results-slider {
   display: flex;
-  transition: transform 0.3s ease;
+  /* 移除 transform 过渡，因为不再需要 */
+  /* transition: transform 0.3s ease; */
+  padding-bottom: 10px; /* 为可能的阴影或溢出提供空间 */
+  width: max-content; /* 让容器宽度自适应内容 */
   gap: 16px;
 }
+
 .model-result-card {
   flex: 0 0 350px;
   background: white;
@@ -8410,35 +8570,58 @@ label {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
+  user-select: none; /* 防止拖动时选中文本 */
 }
+
+/* ... 其他样式 ... */
+
 .model-result-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
+
+/* 卡片头部 */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 6px 10px; /* 内边距紧凑 */
   background: #f8f9fa;
   border-bottom: 1px solid #e5e7eb;
 }
+
 .card-header .model-name {
-  font-size: 16px;
+  font-size: 13px; /* 字体缩小 */
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
+
+/* 按钮 */
 .copy-single-btn {
-  padding: 6px 12px;
+  padding: 3px 6px; /* 按钮更小 */
   background: #10b981;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px; /* 圆角减小 */
+  font-size: 11px; /* 字体缩小 */
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
+/* 卡片内容 */
+.model-result-card .card-content {
+  padding: 6px 10px; /* 内容内边距紧凑 */
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+/* 卡片底部 */
+.result-footer {
+  margin-top: 8px; /* 底部间距减小 */
+  text-align: right;
+}
+
 .copy-single-btn:hover {
   background: #059669;
 }
@@ -8446,8 +8629,8 @@ label {
   background: #6b7280;
 }
 .result-content {
-  padding: 20px;
-  max-height: 500px;
+  padding: 5px;
+  max-height: 2000px;
   overflow-y: auto;
 }
 .success-content {
