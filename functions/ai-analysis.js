@@ -200,7 +200,6 @@ ${spreadCards.map((card, index) => {
       "max_tokens": 5000,
       "stream": false
     };
-
     console.log('=== AI分析API请求体信息 ===');
     console.log('模型:', apiRequestBody.model);
     console.log('温度:', apiRequestBody.temperature);
@@ -214,7 +213,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://api.wlai.vip/v1/chat/completions", {
       "method": "POST",
       "headers": {
-        "Authorization": `Bearer ${env.VITE_OPENAI_API_KEY}`, // 需要在环境变量中设置
+        "Authorization": `Bearer ${env.API_KEY_TY}`, // 需要在环境变量中设置
         "Content-Type": "application/json"
       },
       "body": JSON.stringify(apiRequestBody)
