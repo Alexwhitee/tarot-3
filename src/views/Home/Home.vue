@@ -3398,6 +3398,7 @@ const totalCardsWidth = computed(() => {
   return (deck.length - 1) * cardPartialWidth + cardWidth2
 })
 
+
 const sliderMax = computed(() => {
   return Math.max(0, totalCardsWidth.value - containerWidth.value)
 })
