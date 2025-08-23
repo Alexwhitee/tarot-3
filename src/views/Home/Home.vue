@@ -1779,6 +1779,17 @@ const closeQuestionGuideModal = () => {
   showQuestionGuideModal.value = false
 }
 
+// 位于 <script setup> 顶部
+
+// ... 你已有的 ref 定义 ...
+
+// --- 新增：键盘持续滚动状态 ---
+const isKeyDown = ref(false); // 标记是否有方向键被按住
+const scrollDirection = ref(0); // -1 代表向左, 1 代表向右
+const animationFrameId = ref<number | null>(null); // 存储 requestAnimationFrame 的 ID，用于取消
+const SCROLL_SPEED = 8; // 滚动速度（像素/帧），可以根据手感调整
+
+
 
 
 // 格式化当前时间
@@ -2586,7 +2597,7 @@ const zsSliderContainer = ref<HTMLElement | null>(null)
 const zszsBottomSliderTrack = ref<HTMLElement | null>(null)
 const bottomSliderTrack = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
- const cardWidth = ref(358) // 每个卡片的固定宽度
+ const cardWidth = ref(400) // 每个卡片的固定宽度
 const zsCardsPerView = ref(2) // 当前视图显示的卡片数量
 // 复制状态
 const copyAllStatus = ref(false)
@@ -2673,110 +2684,47 @@ const endContentDrag = () => {
 // 可用模型列表
 const availableModels = ref([
   {
-    key: 'glm-4.5-flash',
-    name: 'GLM-4.5 Flash',
-    description: '智谱超快响应模型，速度与质量并重'
+    key: 'glm-4-flash',
+    name: 'GLM-4-Flash',
+    description: '智谱超快响应模型,快速'
   },
   {
     key: 'gpt-5-2025-08-07',
     name: 'GPT-5',
-    description: 'OpenAI最新旗舰模型，理解能力卓越'
+    description: 'OpenAI最新旗舰模型，深度思考'
   },
   {
     key: 'o3',
     name: 'O3',
-    description: 'OpenAI推理专家模型，逻辑分析强'
-  },
-  {
-    key: 'claude-3-7-sonnet-20250219-thinking',
-    name: 'Claude-3.7 Sonnet',
-    description: 'Anthropic思维链模型，深度推理'
+    description: 'OpenAI推理专家模型，逻辑分析强，深度思考'
   },
   {
     key: 'gemini-2.5-flash',
     name: 'Gemini-2.5 Flash',
-    description: 'Google快速多模态模型'
+    description: 'Google快速多模态模型，快速，深度思考'
   },
   {
     key: 'gemini-2.5-pro',
     name: 'Gemini-2.5 Pro',
-    description: 'Google专业级多模态模型'
+    description: 'Google专业级多模态模型，深度思考'
   },
   {
-    key: 'grok-4',
-    name: 'Grok-4',
-    description: 'xAI最新模型，创新思维强'
+    key: 'glm-4.5-flash',
+    name: 'GLM-4.5-Flash',
+    description: '智谱快速响应模型，快速'
   },
   {
-    key: 'grok-3-deepsearch',
-    name: 'Grok-3 DeepSearch',
-    description: 'xAI深度搜索增强模型'
+    key: 'doubao-seed-1-6-250615',
+    name: 'Doubao Seed',
+    description: '豆包模型，深度思考'
   },
   {
-    key: 'qwen3-235b-a22b',
-    name: 'Qwen3-235B',
-    description: '阿里通义千问超大参数模型'
-  },
-  {
-    key: 'qwen3-235b-a22b-think',
-    name: 'Qwen3-235B Think',
-    description: '阿里通义千问思维链版本'
-  },
-  {
-    key: 'deepseek-r1',
-    name: 'DeepSeek-R1',
-    description: 'DeepSeek推理专用模型'
-  },
-  {
-    key: 'deepseek-v3',
-    name: 'DeepSeek-V3',
-    description: 'DeepSeek第三代通用模型'
-  },
-  {
-    key: 'doubao-1.5-pro-256k',
-    name: 'Doubao-1.5 Pro',
-    description: '字节豆包长文本处理模型'
-  },
-  {
-    key: 'glm-4.5',
-    name: 'GLM-4.5',
-    description: '智谱标准版模型，平衡性能'
-  },
-  {
-    key: 'hunyuan-standard-256K',
-    name: 'Hunyuan Standard',
-    description: '腾讯混元标准版长文本模型'
-  },
-  {
-    key: 'kimi-k2-250711',
-    name: 'Kimi-K2',
-    description: 'Moonshot超长上下文模型'
-  },{
-    key: 'gpt-4.1-nano-2025-04-14',
-    name: 'GPT-4.1 Nano',
-    description: 'OpenAI轻量级模型，快速响应',
-  },
-  {
-    key: 'claude-3-haiku-20240307',
-    name: 'Claude-3 Haiku',
-    description: 'Anthropic快速模型，简洁高效',
-  },
-  {
-    key: 'gemini-2.0-flash',
-    name: 'Gemini-2.0 Flash',
-    description: 'Google新一代快速模型',
-  },
-  {
-    key: 'qwen-plus',
-    name: 'qwen-plus',
-    description: '阿里通义千问加速版',
-  },
-  {
-    key: 'claude-sonnet-4-20250514-thinking',
-    name: 'claude-sonnet-4-thinking',
-    description: 'Anthropic旗舰思维链模型，深度推理',
+    key: 'deepseek-v3-1-250821',
+    name: 'DeepSeek-V3.1',
+    description: 'DeepSeek第三代增强模型，深度思考'
   }
 ])
+
 // 响应式布局检测
 const updatezsCardsPerView = () => {
   const width = window.innerWidth
@@ -2791,10 +2739,10 @@ const toggleModelSelection = (key: string) => {
   if (selectedModelKeys.value.includes(key)) {
     selectedModelKeys.value = selectedModelKeys.value.filter(k => k !== key)
   } else {
-    if (selectedModelKeys.value.length < 5) {
+    if (selectedModelKeys.value.length < 10) {
       selectedModelKeys.value.push(key)
     } else {
-      alert('最多只能选择5个模型')
+      alert('最多只能选择10个模型')
     }
   }
 }
@@ -2900,108 +2848,210 @@ const getModelName = (key: string) => {
 //   }
 // }
 
+// const getAIAnalysis = async () => {
+//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
+//     console.error('缺少必要参数进行AI分析')
+//     return
+//   }
+//   console.log('=== 开始AI分析流程 ===')
+//   isWaitingForAIAnalysis.value = true
+//   aiAnalysisResults.value = []
+//   renderedResults.value = [] // 清空渲染结果
+//   copySingleStatus.value = []
+//   progressPercentage.value = 0
+//   zsCurrentSlideIndex.value = 0
+//   zsSlideOffset.value = 0
+//   try {
+//     const totalModels = selectedModelKeys.value.length
+//     let completedModels = 0
+//     progressText.value = `正在分析 (0/${totalModels})`
+//     const promises = selectedModelKeys.value.map(async (modelKey, index) => {
+//       try {
+//         const res = await fetch('/api/ai-analysis', {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json'
+//           },
+//           body: JSON.stringify({
+//             text: textValue.value,
+//             model: modelKey,
+//             pms: cardResult.value.map((card: CardResult) => {
+//               const cardData: any = {
+//                 no: card.no,
+//                 name: card.name,
+//                 type: card.type,
+//                 isReversed: card.isReversed
+//               }
+//               if (card.cardAnalysis) {
+//                 cardData.cardAnalysis = {
+//                   symbols: card.cardAnalysis.symbols,
+//                   actions: card.cardAnalysis.actions,
+//                   story_hint: card.cardAnalysis.story_hint,
+//                   branches: card.cardAnalysis.branches,
+//                   possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+//                 }
+//                    // element_relations: card.cardAnalysis.element_relations
+//                   if (card.cardAnalysis.element_relations) {
+//                   cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
+//                 }
+//               }
+//               return cardData
+//             }),
+//             spread: {
+//               key: selectedSpread.value?.key || '',
+//               name: selectedSpread.value?.name || '标准牌阵',
+//               desc: selectedSpread.value?.desc || '',
+//               positions: selectedSpread.value?.positions || []
+//             },
+//             deck: {
+//               key: selectedDeck.value?.key || '',
+//               name: selectedDeck.value?.name || '标准塔罗牌'
+//             }
+//           })
+//         })
+//         if (!res.ok) {
+//           throw new Error(`模型 ${modelKey} 请求失败`)
+//         }
+//         const resText = await res.text()
+//         const content = parseApiResponse(resText)
+//
+//         completedModels++
+//         progressPercentage.value = (completedModels / totalModels) * 100
+//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
+//
+//         return content
+//       } catch (error) {
+//         console.error(`模型 ${modelKey} 分析失败:`, error)
+//         completedModels++
+//         progressPercentage.value = (completedModels / totalModels) * 100
+//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
+//         return 'ANALYSIS_FAILED'
+//       }
+//     })
+//     const results = await Promise.allSettled(promises)
+//
+//     // 处理结果
+//     results.forEach((result) => {
+//       if (result.status === 'fulfilled') {
+//         aiAnalysisResults.value.push(result.value)
+//       } else {
+//         aiAnalysisResults.value.push('ANALYSIS_FAILED')
+//       }
+//       copySingleStatus.value.push(false)
+//     })
+//     // 渲染所有Markdown结果
+//     await renderAllResults()
+//     console.log('=== AI分析成功完成 ===')
+//   } catch (error) {
+//     console.error('🔍 AI分析失败:', error)
+//   } finally {
+//     isWaitingForAIAnalysis.value = false
+//     progressText.value = ''
+//     console.log('🔍 AI分析流程结束')
+//   }
+// }
 const getAIAnalysis = async () => {
   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
-    console.error('缺少必要参数进行AI分析')
-    return
+    console.error('缺少必要参数进行AI分析');
+    return;
   }
-  console.log('=== 开始AI分析流程 ===')
-  isWaitingForAIAnalysis.value = true
-  aiAnalysisResults.value = []
-  renderedResults.value = [] // 清空渲染结果
-  copySingleStatus.value = []
-  progressPercentage.value = 0
-  zsCurrentSlideIndex.value = 0
-  zsSlideOffset.value = 0
-  try {
-    const totalModels = selectedModelKeys.value.length
-    let completedModels = 0
-    progressText.value = `正在分析 (0/${totalModels})`
-    const promises = selectedModelKeys.value.map(async (modelKey, index) => {
-      try {
-        const res = await fetch('/ai-analysis', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            text: textValue.value,
-            model: modelKey,
-            pms: cardResult.value.map((card: CardResult) => {
-              const cardData: any = {
-                no: card.no,
-                name: card.name,
-                type: card.type,
-                isReversed: card.isReversed
+  console.log('=== 开始AI分析流程 ===');
+  isWaitingForAIAnalysis.value = true;
+  aiAnalysisResults.value = [];
+  renderedResults.value = []; // 清空渲染结果
+  copySingleStatus.value = [];
+  progressPercentage.value = 0;
+  zsCurrentSlideIndex.value = 0;
+  zsSlideOffset.value = 0;
+
+  const totalModels = selectedModelKeys.value.length;
+  let completedModels = 0;
+  progressText.value = `正在分析 (0/${totalModels})`;
+
+  // 使用 Promise.allSettled 来处理多个模型的请求
+  const promises = selectedModelKeys.value.map(async (modelKey, index) => {
+    try {
+      const res = await fetch('/ai-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          text: textValue.value,
+          model: modelKey,
+          pms: cardResult.value.map((card: CardResult) => {
+            const cardData: any = {
+              no: card.no,
+              name: card.name,
+              type: card.type,
+              isReversed: card.isReversed
+            };
+            if (card.cardAnalysis) {
+              cardData.cardAnalysis = {
+                symbols: card.cardAnalysis.symbols,
+                actions: card.cardAnalysis.actions,
+                story_hint: card.cardAnalysis.story_hint,
+                branches: card.cardAnalysis.branches,
+                possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
+              };
+              if (card.cardAnalysis.element_relations) {
+                cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations;
               }
-              if (card.cardAnalysis) {
-                cardData.cardAnalysis = {
-                  symbols: card.cardAnalysis.symbols,
-                  actions: card.cardAnalysis.actions,
-                  story_hint: card.cardAnalysis.story_hint,
-                  branches: card.cardAnalysis.branches,
-                  possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-                }
-                   // element_relations: card.cardAnalysis.element_relations
-                  if (card.cardAnalysis.element_relations) {
-                  cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-                }
-              }
-              return cardData
-            }),
-            spread: {
-              key: selectedSpread.value?.key || '',
-              name: selectedSpread.value?.name || '标准牌阵',
-              desc: selectedSpread.value?.desc || '',
-              positions: selectedSpread.value?.positions || []
-            },
-            deck: {
-              key: selectedDeck.value?.key || '',
-              name: selectedDeck.value?.name || '标准塔罗牌'
             }
-          })
+            return cardData;
+          }),
+          spread: {
+            key: selectedSpread.value?.key || '',
+            name: selectedSpread.value?.name || '标准牌阵',
+            desc: selectedSpread.value?.desc || '',
+            positions: selectedSpread.value?.positions || []
+          },
+          deck: {
+            key: selectedDeck.value?.key || '',
+            name: selectedDeck.value?.name || '标准塔罗牌'
+          }
         })
-        if (!res.ok) {
-          throw new Error(`模型 ${modelKey} 请求失败`)
-        }
-        const resText = await res.text()
-        const content = parseApiResponse(resText)
+      });
 
-        completedModels++
-        progressPercentage.value = (completedModels / totalModels) * 100
-        progressText.value = `正在分析 (${completedModels}/${totalModels})`
-
-        return content
-      } catch (error) {
-        console.error(`模型 ${modelKey} 分析失败:`, error)
-        completedModels++
-        progressPercentage.value = (completedModels / totalModels) * 100
-        progressText.value = `正在分析 (${completedModels}/${totalModels})`
-        return 'ANALYSIS_FAILED'
+      if (!res.ok) {
+        throw new Error(`模型 ${modelKey} 请求失败`);
       }
-    })
-    const results = await Promise.allSettled(promises)
 
-    // 处理结果
-    results.forEach((result) => {
-      if (result.status === 'fulfilled') {
-        aiAnalysisResults.value.push(result.value)
-      } else {
-        aiAnalysisResults.value.push('ANALYSIS_FAILED')
-      }
-      copySingleStatus.value.push(false)
-    })
-    // 渲染所有Markdown结果
-    await renderAllResults()
-    console.log('=== AI分析成功完成 ===')
-  } catch (error) {
-    console.error('🔍 AI分析失败:', error)
-  } finally {
-    isWaitingForAIAnalysis.value = false
-    progressText.value = ''
-    console.log('🔍 AI分析流程结束')
-  }
-}
+      const resText = await res.text();
+      const content = parseApiResponse(resText);
+
+      // 立即更新结果
+      aiAnalysisResults.value[index] = content; // 更新AI分析结果
+      renderedResults.value[index] = await renderMarkdownAsync(content); // 渲染结果
+
+      completedModels++;
+      progressPercentage.value = (completedModels / totalModels) * 100;
+      progressText.value = `正在分析 (${completedModels}/${totalModels})`;
+
+    } catch (error) {
+      console.error(`模型 ${modelKey} 分析失败:`, error);
+      aiAnalysisResults.value[index] = 'ANALYSIS_FAILED'; // 标记为失败
+      renderedResults.value[index] = '分析失败'; // 渲染失败信息
+      completedModels++;
+      progressPercentage.value = (completedModels / totalModels) * 100;
+      progressText.value = `正在分析 (${completedModels}/${totalModels})`;
+    }
+  });
+
+  // 等待所有请求完成
+  await Promise.allSettled(promises);
+
+  isWaitingForAIAnalysis.value = false;
+  progressText.value = '';
+  console.log('🔍 AI分析流程结束');
+};
+
+
+
+
+
+
+
 // // 滑动相关函数
 // const updatezsSlideOffset = () => {
 //   const containerWidth = zsSliderContainer.value?.clientWidth || 0
@@ -3078,6 +3128,8 @@ const updatezsSlideOffset = () => {
   const targetOffset = (zsCurrentSlideIndex.value * cardWidth.value)
   zsSlideOffset.value = Math.min(targetOffset, maxOffset)
 }
+
+
 
 // const zsOnSliderScroll = () => {
 //   if (isDragging.value) return
@@ -3212,6 +3264,64 @@ const zsStartDrag = (event: MouseEvent) => {
 // };
 // 位于 <script setup> 中
 
+// --- 新增：键盘持续滚动核心逻辑 ---
+
+// 滚动动画循环
+const scrollLoop = () => {
+  if (!isKeyDown.value || !zsSliderContainer.value) return;
+
+  const container = zsSliderContainer.value;
+  // 按照指定方向和速度进行滚动
+  container.scrollLeft += scrollDirection.value * SCROLL_SPEED;
+
+  // 【重要】同步更新UI指示器（X/Y 和滑块位置）
+  // 这部分逻辑与 zsOnSliderScroll 类似，确保UI同步
+  const cardWidthWithGap = 400 + 16;
+  const newIndex = Math.round(container.scrollLeft / cardWidthWithGap);
+  zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1));
+
+  // 请求下一帧动画
+  animationFrameId.value = requestAnimationFrame(scrollLoop);
+};
+
+// 按键按下事件处理器
+const handleKeyDown = (event: KeyboardEvent) => {
+  // 如果没有AI结果，或者已经在滚动中，则忽略
+  if (!hasAIAnalysis.value || isKeyDown.value) return;
+
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    isKeyDown.value = true;
+    scrollDirection.value = -1;
+    scrollLoop(); // 启动滚动循环
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    isKeyDown.value = true;
+    scrollDirection.value = 1;
+    scrollLoop(); // 启动滚动循环
+  }
+};
+
+// 按键抬起事件处理器
+const handleKeyUp = (event: KeyboardEvent) => {
+  // 只有当松开的键是当前正在滚动的方向键时，才停止
+  if (
+    (event.key === 'ArrowLeft' && scrollDirection.value === -1) ||
+    (event.key === 'ArrowRight' && scrollDirection.value === 1)
+  ) {
+    isKeyDown.value = false;
+    scrollDirection.value = 0;
+    // 取消动画帧请求，停止循环
+    if (animationFrameId.value) {
+      cancelAnimationFrame(animationFrameId.value);
+      animationFrameId.value = null;
+    }
+  }
+};
+
+
+
+
 // 关键修正1：拖动滑轨时，直接修改容器的 scrollLeft
 const zsOnDrag = (event: MouseEvent) => {
   if (!isDragging.value) return;
@@ -3231,7 +3341,7 @@ const zsOnDrag = (event: MouseEvent) => {
 
   // 2. 【核心修正】在这里直接计算并更新 zsCurrentSlideIndex
   //    不再调用 zsOnSliderScroll()
-  const cardWidthWithGap = 350 + 16; // 卡片宽度 + 间隙
+  const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
   const newIndex = Math.round(container.scrollLeft / cardWidthWithGap);
   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1));
 };
@@ -3269,7 +3379,7 @@ const zsOnSliderScroll = () => {
   const container = zsSliderContainer.value;
   if (!(container instanceof HTMLElement)) return;
   // 这个函数现在唯一的目的就是更新左上角的 "X/Y" 指示器
-  const cardWidthWithGap = 350 + 16; // 卡片宽度 + 间隙
+  const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
   const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
   // 确保索引在有效范围内
   zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
@@ -3973,12 +4083,29 @@ onMounted(() => {
   updatezsCardsPerView()
   window.addEventListener('resize', updatezsCardsPerView)
   document.addEventListener('keydown', zsOnKeyDown)
+
+  updatezsCardsPerView();
+  window.addEventListener('resize', updatezsCardsPerView);
+
+  // 新增：为整个文档添加键盘事件监听
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
+
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updatezsCardsPerView)
   document.removeEventListener('keydown', zsOnKeyDown)
   document.removeEventListener('mousemove', zsOnDrag)
   document.removeEventListener('mouseup', zsEndDrag)
+
+  window.removeEventListener('resize', updatezsCardsPerView);
+  // 新增：移除键盘事件监听
+  document.removeEventListener('keydown', handleKeyDown);
+  document.removeEventListener('keyup', handleKeyUp);
+  // 确保组件卸载时停止任何正在进行的滚动动画
+  if (animationFrameId.value) {
+    cancelAnimationFrame(animationFrameId.value);
+  }
 })
 
 // 图片渲染
@@ -8714,7 +8841,7 @@ label {
   gap: 16px;
 }
 .model-result-card {
-  flex: 0 0 350px;
+  flex: 0 0 400px; /* 这是桌面端的默认样式 */
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -8722,10 +8849,20 @@ label {
   overflow: hidden;
   transition: all 0.3s ease;
   user-select: none;
-  /* 移除了 scroll-snap-align */
 }
-
-/* ... 其他样式 ... */
+/* ========================================================== */
+/*               ↓↓↓ 把新代码块放在这里 ↓↓↓                    */
+/* ========================================================== */
+/* 响应式设计：针对移动端屏幕 */
+@media (max-width: 768px) {
+  .model-result-card {
+    /* 关键修改：
+       将 flex-basis 设置为 100%，让卡片宽度等于父容器宽度。
+       flex-grow 和 flex-shrink 保持为 0。
+    */
+    flex: 0 0 100%;
+  }
+}
 
 .model-result-card:hover {
   transform: translateY(-1px);
