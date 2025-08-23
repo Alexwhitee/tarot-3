@@ -197,7 +197,7 @@
 //       "model": model,  // 使用前端传来的模型参数
 //       "messages": messages,
 //       "temperature": 0.6,
-//       "max_tokens": 5000,
+//       "max_tokens": 30000,
 //       "stream": false
 //     };
 //     console.log('=== AI分析API请求体信息 ===');
@@ -518,6 +518,7 @@ const systemPrompt = `## **[身份与目标]**
 
 
 // AI分析专用端点
+
 export async function onRequestPost({ request, env }) {
   console.log('收到AI分析请求');
 
@@ -678,29 +679,30 @@ ${spreadCards.map((card, index) => {
     console.log(userMessage);
     console.log('================================================================\n\n');
 
-        let response;
+    let response;
     let data;
 
-//     let response;
-//     let data;
-
     // ========================================================================
-    // ===== 新增：根据模型名称选择不同的API端点和请求格式 =====
+    // ===== 根据模型名称选择不同的API端点和请求格式 =====
     // ========================================================================
-
     if (model.startsWith('glm-4-flash')) {
       // --- 分支 1: 调用 ZhipuAI (智谱) API ---
-      // 注意：需要设置环境变量 ZHIPU_API_KEY
       console.log(`正在调用 ZhipuAI API 进行AI分析（模型：${model}）...`);
-
 
       const apiRequestBody = {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 5000,
+        "max_tokens": 30000,
         "stream": false
       };
+
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('温度:', apiRequestBody.temperature);
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
 
       response = await fetch("https://nas-ai.4ce.cn/v1/chat/completions", {
         "method": "POST",
@@ -711,57 +713,123 @@ ${spreadCards.map((card, index) => {
         "body": JSON.stringify(apiRequestBody)
       });
 
-    } else if (model.startsWith('gemini-2.5-pro') || model.startsWith('gemini-2.5-flash')) {
-      // --- 分支 3: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
-      console.log(`正在调用云雾 API进行AI分析（模型：${model}）...`);
-      if (!env.TAROT_GEMINI) {
-        throw new Error('环境变量 TAROT_GEMINI 未设置');
-      }
+    } else if (model.startsWith('deepseek')) {
+      // --- 分支 2: 调用 DeepSeek Reasoner API (支持推理模式) ---
+      console.log(`正在调用 DeepSeek Reasoner API 进行AI分析（模型：${model}）...`);
+
+      const apiRequestBody = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": 32000,  // DeepSeek Reasoner 默认32K，最大64K
+        "stream": false
+        // 注意：DeepSeek Reasoner 不支持 temperature、top_p 等参数
+      };
+
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
+      console.log('注意：DeepSeek Reasoner 将输出思维链内容');
+
+      response = await fetch("https://api.wlai.vip/v1/chat/completions", {
+        "method": "POST",
+        "headers": {
+          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(apiRequestBody)
+      });
+
+    } else if (model.startsWith('doubao-') || model.includes('doubao')) {
+      // --- 分支 3: 调用豆包 API (支持深度思考) ---
+      console.log(`正在调用豆包 API 进行AI分析（模型：${model}）...`);
 
       const apiRequestBody = {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 5000,
+        "max_tokens": 30000,
+        "stream": false,
+        "thinking": {
+          "type": "enabled"  // 开启深度思考模式：enabled/disabled/auto
+        }
+      };
+
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('温度:', apiRequestBody.temperature);
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
+      console.log('深度思考模式:', apiRequestBody.thinking.type);
+
+      response = await fetch("https://api.wlai.vip/v1/chat/completions", {
+        "method": "POST",
+        "headers": {
+          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(apiRequestBody)
+      });
+
+    } else if (model.startsWith('gemini-2.5-pro') || model.startsWith('gemini-2.5-flash')) {
+      // --- 分支 4: 调用 Gemini API ---
+      console.log(`正在调用云雾 API进行AI分析（模型：${model}）...`);
+
+      const apiRequestBody = {
+        "model": model,
+        "messages": messages,
+        // "temperature": 0.6,
+        "max_tokens": 30000,
         "stream": false,
         "reasoning_effort": "high"
       };
 
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('温度:', apiRequestBody.temperature);
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
+
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer ${env.TAROT_GEMINI}`,
+          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
       });
-    }
-    else {
-      // --- 分支 3: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
+    } else {
+      // --- 分支 5: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
       console.log(`正在调用云雾 API进行AI分析（模型：${model}）...`);
-      if (!env.TAROT_TY) {
-        throw new Error('环境变量 TAROT_TY 未设置');
-      }
 
       const apiRequestBody = {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 5000,
+        "max_tokens": 30000,
         "stream": false,
         "reasoning_effort": "high"  // 添加思考参数
       };
 
+      console.log('=== AI分析API请求体信息 ===');
+      console.log('模型:', apiRequestBody.model);
+      console.log('温度:', apiRequestBody.temperature);
+      console.log('最大token:', apiRequestBody.max_tokens);
+      console.log('消息数量:', apiRequestBody.messages.length);
+      console.log('是否包含五行分析:', hasElementRelations);
+
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer ${env.TAROT_TY}`,
+          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
       });
     }
-
 
     // ========================================================================
     // ===== 统一处理 API 响应 =====
@@ -779,18 +847,33 @@ ${spreadCards.map((card, index) => {
     console.log(JSON.stringify(data, null, 2));
 
     let assistantMessage;
+    let reasoningContent = null;
 
     // 根据模型解析不同的响应体
     if (model.startsWith('gemini')) {
-      // 解析 Gemini 的响应
-      if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-        assistantMessage = data.candidates[0].content.parts[0].text;
-      } else {
-        // 处理 Gemini 可能因安全设置等原因返回空内容的情况
-        console.error('Gemini API 响应格式异常或内容被阻止:', data);
-        const finishReason = data.candidates?.[0]?.finishReason || '未知原因';
-        const safetyRatings = data.promptFeedback?.safetyRatings || '无安全评级信息';
-        throw new Error(`Gemini API 响应格式异常或内容为空。结束原因: ${finishReason}, 安全评级: ${JSON.stringify(safetyRatings)}`);
+      /* 你实际走的是 OpenAI-兼容中转，返回结构与 OpenAI 相同，
+         因此直接复用通用解析即可，无需 Google 原格式判断 */
+      if (!data.choices || !data.choices[0] || typeof data.choices[0].message?.content !== 'string') {
+        const finish = data.choices?.[0]?.finish_reason || '未知';
+        throw new Error(`Gemini 返回内容异常，finish_reason=${finish}`);
+      }
+      assistantMessage = data.choices[0].message.content;
+    }
+    else if (model === 'deepseek-v3-1-250821' || model.startsWith('doubao-') || model.includes('doubao')) {
+      // 解析 DeepSeek Reasoner 和豆包的响应 (都包含思维链)
+      if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        throw new Error(`${model.includes('doubao') ? '豆包' : 'deepseek-v3-1-250821'} API 响应格式异常`);
+      }
+
+      // 获取思维链内容和最终回答
+      reasoningContent = data.choices[0].message.reasoning_content;
+      assistantMessage = data.choices[0].message.content;
+
+      // 打印思维链内容
+      if (reasoningContent) {
+        console.log(`\n=== ${model.includes('doubao') ? '豆包' : 'DeepSeek'} 思维链内容 ===`);
+        console.log(reasoningContent);
+        console.log('=========================\n');
       }
     } else {
       // 解析 OpenAI 兼容的响应 (包括 GLM 和默认 API)
@@ -806,9 +889,18 @@ ${spreadCards.map((card, index) => {
     console.log('=========================\n');
 
     // 返回AI分析结果
-    return new Response(JSON.stringify({
+    const responseData = {
       content: assistantMessage
-    }), {
+    };
+
+    // 如果是支持思维链的模型，同时返回思维链内容
+    if ((model === 'deepseek-reasoner' || model.startsWith('doubao-') || model.includes('doubao')) && reasoningContent) {
+      responseData.reasoning_content = reasoningContent;
+      responseData.has_reasoning = true;
+    }
+
+    return new Response(JSON.stringify(responseData), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -817,14 +909,13 @@ ${spreadCards.map((card, index) => {
     return new Response(JSON.stringify({
       error: 'AI分析处理失败',
       details: error.message,
-      success: false
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 }
-
 
 
 
