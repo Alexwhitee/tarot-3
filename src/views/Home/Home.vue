@@ -9263,8 +9263,8 @@ label {
 
 @media (max-width: 768px) {
 .results-slider .model-result-card {
-  flex: 0 0 50% !important;
-max-width: 60% !important;
+  flex: 0 0 100% !important;
+max-width: 100% !important;
   box-sizing: border-box;
 min-width: 0;
 }
@@ -9273,21 +9273,6 @@ min-width: 0;
   .results-slider .model-result-card .result-content {
     padding: 4px !important;
     box-sizing: border-box;
-  }
-
-  /* 限制 Markdown 容器，防止横向溢出 */
-  .results-slider .model-result-card .success-content.markdown-content {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    word-break: break-word;
-  }
-
-  /* Markdown 图片不超出容器 */
-  .results-slider .model-result-card .success-content.markdown-content img {
-    max-width: 100%;
-    height: auto;
   }
 
   /* 可选：减小卡片间隙 */
