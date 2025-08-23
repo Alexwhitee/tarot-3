@@ -2971,7 +2971,7 @@ const getAIAnalysis = async () => {
   // 使用 Promise.allSettled 来处理多个模型的请求
   const promises = selectedModelKeys.value.map(async (modelKey, index) => {
     try {
-      const res = await fetch('/ai-analysis', {
+      const res = await fetch('/api/ai-analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -3686,7 +3686,7 @@ const retryModel = async (index: number) => {
   const modelKey = selectedModelKeys.value[index]
 
   try {
-    const res = await fetch('/ai-analysis', {
+    const res = await fetch('/api/ai-analysis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -8860,7 +8860,7 @@ label {
        将 flex-basis 设置为 100%，让卡片宽度等于父容器宽度。
        flex-grow 和 flex-shrink 保持为 0。
     */
-    flex: 0 0 100%;
+    flex: 0 0 90%;
   }
 }
 

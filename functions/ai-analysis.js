@@ -678,8 +678,11 @@ ${spreadCards.map((card, index) => {
     console.log(userMessage);
     console.log('================================================================\n\n');
 
-    let response;
+        let response;
     let data;
+
+//     let response;
+//     let data;
 
     // ========================================================================
     // ===== 新增：根据模型名称选择不同的API端点和请求格式 =====
@@ -695,7 +698,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 50000,
+        "max_tokens": 5000,
         "stream": false
       };
 
@@ -719,7 +722,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 50000,
+        "max_tokens": 5000,
         "stream": false,
         "reasoning_effort": "high"
       };
@@ -744,7 +747,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 50000,
+        "max_tokens": 5000,
         "stream": false,
         "reasoning_effort": "high"  // 添加思考参数
       };
