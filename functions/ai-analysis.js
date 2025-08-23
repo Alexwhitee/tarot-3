@@ -197,7 +197,7 @@
 //       "model": model,  // 使用前端传来的模型参数
 //       "messages": messages,
 //       "temperature": 0.6,
-//       "max_tokens": 10000,
+//       "max_tokens": 20000,
 //       "stream": false
 //     };
 //     console.log('=== AI分析API请求体信息 ===');
@@ -545,6 +545,8 @@ export async function onRequestPost({ request, env }) {
       'glm-4-flash',
       'doubao-seed-1-6-250615',
       'deepseek-v3-1-250821',
+      'claude-3-7-sonnet-20250219-thinking',
+      'qwen3-235b-a22b-think',
     ];
 
     if (!supportedModels.includes(model)) {
@@ -687,7 +689,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 10000,
+        "max_tokens": 20000,
         "stream": false
       };
 
@@ -729,7 +731,7 @@ ${spreadCards.map((card, index) => {
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Authorization": `Bearer ${env.TAROT_TY}`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
@@ -743,7 +745,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 10000,
+        "max_tokens": 20000,
         "stream": false,
         "thinking": {
           "type": "enabled"  // 开启深度思考模式：enabled/disabled/auto
@@ -761,7 +763,7 @@ ${spreadCards.map((card, index) => {
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Authorization": `Bearer ${env.TAROT_TY}`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
@@ -790,7 +792,7 @@ ${spreadCards.map((card, index) => {
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Authorization": `Bearer ${env.TAROT_TY}`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
@@ -815,12 +817,52 @@ ${spreadCards.map((card, index) => {
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Authorization": `Bearer ${env.TAROT_TY}`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)
       });
-    } else {
+    } else if (model.startsWith('claude-')) {
+      console.log(`正在调用 claude API 进行AI分析（模型：${model}）...`);
+
+      const apiRequestBody = {
+        model: model,
+        messages: messages,
+        max_tokens: 16000,
+        stream: false, // 解析逻辑是 response.json()，因此关闭流式
+        thinking: {
+          type: 'enabled',
+          budget_tokens: 10240
+        }
+      };
+      response = await fetch("https://api.wlai.vip/v1/chat/completions", {
+        "method": "POST",
+        "headers": {
+          "Authorization": `Bearer ${env.TAROT_TY}`,
+          "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(apiRequestBody)
+      });
+    }else if(model.startsWith('qwen')){
+      // --- 分支 5: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
+      console.log(`正在调用qwen API进行AI分析（模型：${model}）...`);
+      const apiRequestBody = {
+        "model": model,
+        "messages": messages,
+        "temperature": 0.6,
+        "max_tokens": 20000,
+        "stream": false,
+        enable_thinking: true
+      };
+      response = await fetch("https://api.wlai.vip/v1/chat/completions", {
+        "method": "POST",
+        "headers": {
+          "Authorization": `Bearer ${env.TAROT_TY}`,
+          "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(apiRequestBody)
+      });
+    }else {
       // --- 分支 5: 默认调用云雾 API (或其他 OpenAI 兼容 API) ---
       console.log(`正在调用云雾 API进行AI分析（模型：${model}）...`);
 
@@ -828,7 +870,7 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         "temperature": 0.6,
-        "max_tokens": 10000,
+        "max_tokens": 20000,
         "stream": false,
         "reasoning_effort": "low"  // 添加思考参数
       };
@@ -843,7 +885,7 @@ ${spreadCards.map((card, index) => {
       response = await fetch("https://api.wlai.vip/v1/chat/completions", {
         "method": "POST",
         "headers": {
-          "Authorization": `Bearer sk-I2k4ljIyMKeL5Yt04CXJ8eeKy8Qlk9RXqcPTFmltdogYmNpd`,
+          "Authorization": `Bearer ${env.TAROT_TY}`,
           "Content-Type": "application/json"
         },
         "body": JSON.stringify(apiRequestBody)

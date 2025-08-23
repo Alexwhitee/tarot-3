@@ -1787,7 +1787,7 @@ const closeQuestionGuideModal = () => {
 const isKeyDown = ref(false); // 标记是否有方向键被按住
 const scrollDirection = ref(0); // -1 代表向左, 1 代表向右
 const animationFrameId = ref<number | null>(null); // 存储 requestAnimationFrame 的 ID，用于取消
-const SCROLL_SPEED = 8; // 滚动速度（像素/帧），可以根据手感调整
+const SCROLL_SPEED = 80; // 滚动速度（像素/帧），可以根据手感调整
 
 
 
@@ -2722,6 +2722,16 @@ const availableModels = ref([
     key: 'deepseek-v3-1-250821',
     name: 'DeepSeek-V3.1',
     description: 'DeepSeek第三代增强模型，深度思考'
+  },
+  {
+    key: 'claude-3-7-sonnet-20250219-thinking',
+    name: 'Claude 3.7 克劳德 ',
+    description: 'Claude第三代增强模型，深度思考'
+  },
+  {
+    key: 'qwen3-235b-a22b-think',
+    name: '通义千问',
+    description: 'Qwen第三代超大规模模型，深度思考'
   }
 ])
 
@@ -2971,7 +2981,7 @@ const getAIAnalysis = async () => {
   // 使用 Promise.allSettled 来处理多个模型的请求
   const promises = selectedModelKeys.value.map(async (modelKey, index) => {
     try {
-      const res = await fetch('/ai-analysis', {
+      const res = await fetch('/api/ai-analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -5610,12 +5620,12 @@ const handleImageError = (event: Event) => {
 
   background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
   border: 2px solid #CBD5E1;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 1px;
+  padding: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
   color: #334155; /* 深灰色文字 */
-  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+  box-shadow: 0 2px 4px rgba(107, 70, 193, 0.1);
 
 }
 
@@ -5623,7 +5633,7 @@ const handleImageError = (event: Event) => {
 
   font-weight: bold;
 
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 
 }
 
@@ -5650,11 +5660,12 @@ const handleImageError = (event: Event) => {
   background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
   border: 2px solid #CBD5E1;
   border-radius: 8px;
-  padding: 12px;
+  padding: 2px;
   cursor: pointer;
   transition: all 0.3s ease;
   color: #334155; /* 深灰色文字 */
   box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+  margin: 1px;
 
 }
 
@@ -6335,9 +6346,9 @@ label {
 
 /* 结果页面样式 */
 .result-container {
-  padding: 5px;
+  padding: 1px;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -7109,7 +7120,7 @@ label {
 
 /* 结果容器样式 */
 .result-container {
-  padding: 24px;
+  padding: 0px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -7120,7 +7131,7 @@ label {
 .result-container .guide-cards-section,
 .result-container .spread-cards-section {
   margin-bottom: 32px;
-  padding: 5px;
+  padding: 4px;
   border-radius: 12px;
   border: 2px solid #e0e0e0;
 }
@@ -8654,11 +8665,11 @@ label {
 .model-option {
   background: white;
   border: 2px solid #E5E7EB;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 6px;
+  padding: 2px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+  box-shadow: 0 1px 4px rgba(107, 70, 193, 0.1);
 }
 .model-option:hover {
   transform: translateY(-2px);
@@ -8674,14 +8685,14 @@ label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 0px;
 }
 .model-name {
   font-weight: 600;
   color: #1f2937;
 }
 .model-desc {
-  font-size: 14px;
+  font-size: 10px;
   color: #6b7280;
   margin: 0;
 }
@@ -8694,7 +8705,7 @@ label {
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -8817,20 +8828,19 @@ label {
   font-weight: 600;
 }
 
-/* 结果滑动容器样式 (关键修改处) */
 .results-slider-container {
+  padding: 0; /* 确保没有内边距 */
   overflow-x: auto;
   position: relative;
   scroll-behavior: smooth;
   cursor: grab;
-  /* 移除了 scroll-snap-type */
-  /* 隐藏默认滚动条 */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 .results-slider-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
 .results-slider-container:active {
   cursor: grabbing;
 }
@@ -8841,7 +8851,7 @@ label {
   gap: 16px;
 }
 .model-result-card {
-  flex: 0 0 400px; /* 这是桌面端的默认样式 */
+  flex: 0 0 360px; /* 这是桌面端的默认样式 */
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -8849,6 +8859,7 @@ label {
   overflow: hidden;
   transition: all 0.3s ease;
   user-select: none;
+  padding: 0; /* 确保没有内边距 */
 }
 /* ========================================================== */
 /*               ↓↓↓ 把新代码块放在这里 ↓↓↓                    */
@@ -8861,6 +8872,7 @@ label {
        flex-grow 和 flex-shrink 保持为 0。
     */
     flex: 0 0 90%;
+    max-width: 360px; /* 确保最大宽度 */
   }
 }
 
@@ -8880,11 +8892,19 @@ label {
 }
 
 .card-header .model-name {
-  font-size: 13px; /* 字体缩小 */
+  font-size: 16px; /* 字体缩小 */
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
+
+.model-name {
+  font-size: 12px; /* 字体缩小 */
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
 
 /* 按钮 */
 .copy-single-btn {
@@ -9261,23 +9281,4 @@ label {
 }
 
 
-@media (max-width: 768px) {
-.results-slider .model-result-card {
-  flex: 0 0 100% !important;
-max-width: 100% !important;
-  box-sizing: border-box;
-min-width: 0;
-}
-
-  /* 缩小内容内边距，避免“最后两个字被裁” */
-  .results-slider .model-result-card .result-content {
-    padding: 4px !important;
-    box-sizing: border-box;
-  }
-
-  /* 可选：减小卡片间隙 */
-  .results-slider {
-    gap: 4px;
-  }
-}
 </style>
