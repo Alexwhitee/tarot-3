@@ -13,10 +13,6 @@
 
 
 
-
-
-
-
     <!-- 修改现有的问题输入区域 -->
     <div class="text">
       <div class="question-header">
@@ -34,65 +30,6 @@
 
 
 
-    <!--    &lt;!&ndash; 简化的结果展示区域 &ndash;&gt;-->
-    <!--    <div v-if="resStatus" class="result-container">-->
-    <!--      &lt;!&ndash; 指示牌展示 &ndash;&gt;-->
-    <!--      <div v-if="guideCards.length > 0" class="guide-cards-section">-->
-    <!--        <h4 class="cards-section-title">指示牌</h4>-->
-    <!--        <div class="cards-display">-->
-    <!--          <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">-->
-    <!--            <div class="card-wrapper">-->
-    <!--              <img-->
-    <!--                :src="renderIMG(card.no)"-->
-    <!--                :class="{ 'card-reversed': card.isReversed }"-->
-    <!--                :alt="card.name"-->
-    <!--                class="result-card-image"-->
-    <!--              />-->
-    <!--            </div>-->
-    <!--            <div class="card-info-text">-->
-    <!--              <div class="card-position">指示牌{{ index + 1 }}</div>-->
-    <!--              <div class="card-name-text">{{ card.name }}</div>-->
-    <!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-
-    <!--      &lt;!&ndash; 牌阵牌展示 &ndash;&gt;-->
-    <!--      <div v-if="spreadCards.length > 0" class="spread-cards-section">-->
-    <!--        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>-->
-    <!--        <div class="cards-display">-->
-    <!--          <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">-->
-    <!--            <div class="card-wrapper">-->
-    <!--              <img-->
-    <!--                :src="renderIMG(card.no)"-->
-    <!--                :class="{ 'card-reversed': card.isReversed }"-->
-    <!--                :alt="card.name"-->
-    <!--                class="result-card-image"-->
-    <!--              />-->
-    <!--            </div>-->
-    <!--            <div class="card-info-text">-->
-    <!--              <div class="card-position">-->
-    <!--                （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}-->
-    <!--              </div>-->
-    <!--              <div class="card-name-text">{{ card.name }}</div>-->
-    <!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-
-    <!--      &lt;!&ndash; 占卜结果显示 &ndash;&gt;-->
-    <!--      <div class="divination-result" v-if="firstDivinationResult">-->
-    <!--        <h4 class="result-title">占卜解析</h4>-->
-    <!--        <div class="result-content" v-html="firstDivinationResult"></div>-->
-    <!--      </div>-->
-
-    <!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
-    <!--      <div class="result-actions">-->
-    <!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
-    <!--      </div>-->
-    <!--    </div>-->
 
     <!-- 结果展示区域 - 优先显示 -->
     <div v-if="resStatus" class="result-container">
@@ -100,27 +37,6 @@
 
 
 
-      <!-- 指示牌展示 -->
-<!--      <div v-if="guideCards.length > 0" class="guide-cards-section">-->
-<!--        <h4 class="cards-section-title">指示牌</h4>-->
-<!--        <div class="cards-display">-->
-<!--          <div v-for="(card, index) in guideCards" :key="`guide-${card.no}`" class="card-display-item">-->
-<!--            <div class="card-wrapper">-->
-<!--              <img-->
-<!--                :src="renderIMG(card.no)"-->
-<!--                :class="{ 'card-reversed': card.isReversed }"-->
-<!--                :alt="card.name"-->
-<!--                class="result-card-image"-->
-<!--              />-->
-<!--            </div>-->
-<!--            <div class="card-info-text">-->
-<!--              <div class="card-position">指示牌{{ index + 1 }}</div>-->
-<!--              <div class="card-name-text">{{ card.name }}</div>-->
-<!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
       <!-- 找到这个区域并修改 -->
       <div v-if="guideCards.length > 0" class="guide-cards-section">
         <h4 class="cards-section-title">指示牌</h4>
@@ -144,29 +60,7 @@
         </div>
       </div>
 
-      <!-- 牌阵牌展示 -->
-<!--      <div v-if="spreadCards.length > 0" class="spread-cards-section">-->
-<!--        <h4 class="cards-section-title">{{ selectedSpread?.name }}牌阵</h4>-->
-<!--        <div class="cards-display">-->
-<!--          <div v-for="(card, index) in spreadCards" :key="`spread-${card.no}`" class="card-display-item">-->
-<!--            <div class="card-wrapper">-->
-<!--              <img-->
-<!--                :src="renderIMG(card.no)"-->
-<!--                :class="{ 'card-reversed': card.isReversed }"-->
-<!--                :alt="card.name"-->
-<!--                class="result-card-image"-->
-<!--              />-->
-<!--            </div>-->
-<!--            <div class="card-info-text">-->
-<!--              <div class="card-position">-->
-<!--                （{{ index + 1 }}）{{ selectedSpread?.positions?.[index] ?? `第${index + 1}张` }}-->
-<!--              </div>-->
-<!--              <div class="card-name-text">{{ card.name }}</div>-->
-<!--              <div v-if="card.isReversed" class="reverse-indicator">（逆位）</div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+
 
       <!-- 找到这个区域并修改 -->
       <div v-if="spreadCards.length > 0" class="spread-cards-section">
@@ -192,108 +86,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 新增：抽牌详情展示区域 -->
-<!--      <div class="divination-details-section">-->
-<!--        <div class="section-header">-->
-<!--          <h4 class="cards-section-title">抽牌详情</h4>-->
-<!--          <button class="copy-all-btn" @click="copyAllDetails" :disabled="isCopying">-->
-<!--            <span v-if="isCopying">复制中...</span>-->
-<!--            <span v-else-if="copySuccess">已复制 ✓</span>-->
-<!--            <span v-else>📋 复制全部</span>-->
-<!--          </button>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 问题展示 &ndash;&gt;-->
-<!--        <div class="question-display">-->
-<!--          <div class="subsection-header">-->
-<!--            <h5 class="subsection-title">基本信息</h5>-->
-<!--            <button class="copy-btn" @click="copyBasicInfo">📋</button>-->
-<!--          </div>-->
-<!--          <div class="detail-item">-->
-<!--            <span class="detail-label">占卜问题：</span>-->
-<!--            <span class="detail-content">{{ textValue || '无具体问题' }}</span>-->
-<!--          </div>-->
-<!--          <div class="detail-item">-->
-<!--            <span class="detail-label">使用牌组：</span>-->
-<!--            <span class="detail-content">{{ selectedDeck?.name || '标准塔罗牌' }}</span>-->
-<!--          </div>-->
-<!--          <div class="detail-item">-->
-<!--            <span class="detail-label">选择牌阵：</span>-->
-<!--            <span class="detail-content">{{ selectedSpread?.name || '标准牌阵' }}</span>-->
-<!--          </div>-->
-<!--          <div class="detail-item">-->
-<!--            <span class="detail-label">占卜时间：</span>-->
-<!--            <span class="detail-content">{{ formatCurrentTime }}</span>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 抽牌结果详细展示 &ndash;&gt;-->
-<!--        <div class="cards-detail-display">-->
-
-<!--          &lt;!&ndash; 指示牌详情（如果有） &ndash;&gt;-->
-<!--          <div v-if="guideCards.length > 0" class="guide-cards-detail">-->
-<!--            <div class="subsection-header">-->
-<!--              <h5 class="detail-subtitle">指示牌抽牌结果</h5>-->
-<!--              <button class="copy-btn" @click="copyGuideCards">📋</button>-->
-<!--            </div>-->
-<!--            <div class="cards-list">-->
-<!--              <div v-for="(card, index) in guideCards" :key="`guide-detail-${card.no}`" class="card-detail-item">-->
-<!--                <div class="card-index">{{ index + 1 }}</div>-->
-<!--                <div class="card-detail-info">-->
-<!--                  <div class="card-name-with-status">-->
-<!--                    {{ card.name }}-->
-<!--                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">-->
-<!--                {{ card.isReversed ? '（逆位）' : '（正位）' }}-->
-<!--              </span>-->
-<!--                  </div>-->
-<!--                  <div class="card-type-label">指示牌</div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash; 牌阵牌详情 &ndash;&gt;-->
-<!--          <div v-if="spreadCards.length > 0" class="spread-cards-detail">-->
-<!--            <div class="subsection-header">-->
-<!--              <h5 class="detail-subtitle">牌阵牌抽牌结果</h5>-->
-<!--              <button class="copy-btn" @click="copySpreadCards">📋</button>-->
-<!--            </div>-->
-<!--            <div class="cards-list">-->
-<!--              <div v-for="(card, index) in spreadCards" :key="`spread-detail-${card.no}`" class="card-detail-item">-->
-<!--                <div class="card-index">{{ index + 1 }}</div>-->
-<!--                <div class="card-detail-info">-->
-<!--                  <div class="card-name-with-status">-->
-<!--                    {{ card.name }}-->
-<!--                    <span class="card-status" :class="{ 'reversed-status': card.isReversed }">-->
-<!--                {{ card.isReversed ? '（逆位）' : '（正位）' }}-->
-<!--              </span>-->
-<!--                  </div>-->
-<!--                  <div class="card-position-label">-->
-<!--                    {{ selectedSpread?.positions?.[index] || `第${index + 1}位` }}-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash; 传给AI的完整数据预览 &ndash;&gt;-->
-<!--          <div class="ai-input-preview">-->
-<!--            <div class="subsection-header">-->
-<!--              <h5 class="detail-subtitle">-->
-<!--                传给AI的数据-->
-<!--                <button class="toggle-btn" @click="showAIData = !showAIData">-->
-<!--                  {{ showAIData ? '隐藏' : '显示' }}-->
-<!--                </button>-->
-<!--              </h5>-->
-<!--              <button v-if="showAIData" class="copy-btn" @click="copyAIData">📋</button>-->
-<!--            </div>-->
-<!--            <div v-if="showAIData" class="ai-data-content">-->
-<!--              <pre class="ai-data-json">{{ formatAIInputData }}</pre>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
 
       <!-- 新增：抽牌详情展示区域 -->
       <div class="divination-details-section">
@@ -405,104 +197,6 @@
       </div>
 
 
-<!--      &lt;!&ndash; 占卜结果显示区域 &ndash;&gt;-->
-<!--      <div class="divination-result">-->
-<!--        <h4 class="result-title">占卜解析</h4>-->
-
-
-
-<!--        &lt;!&ndash; 加载状态 - 只在文字区域显示 &ndash;&gt;-->
-<!--        <div v-if="isWaitingForAnalysis" class="analysis-loading">-->
-<!--          <div class="loading-spinner"></div>-->
-<!--          <p class="loading-text">AI正在为您解析牌面含义，请稍候...</p>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 分析结果 &ndash;&gt;-->
-<!--        <div v-else-if="firstDivinationResult" class="result-content" v-html="firstDivinationResult"></div>-->
-
-<!--        &lt;!&ndash; 无结果提示 &ndash;&gt;-->
-<!--        <div v-else class="no-result">-->
-<!--          <p>暂无分析结果</p>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
-<!--      <div class="result-actions">-->
-<!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
-<!--      </div>-->
-<!--    </div>-->
-
-
-<!--      &lt;!&ndash; 新增：总体进度条 &ndash;&gt;-->
-<!--      <div class="progress-bar">-->
-<!--        <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>-->
-<!--      </div>-->
-<!--      &lt;!&ndash; 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） &ndash;&gt;-->
-<!--      <div v-if="!hasAIAnalysis" class="ai-model-selection-section">-->
-<!--        <div class="section-header">-->
-<!--          <h4 class="cards-section-title">选择AI模型进行解析</h4>-->
-<!--        </div>-->
-
-<!--        <div class="model-selection-grid">-->
-<!--          <div-->
-<!--            v-for="model in availableModels"-->
-<!--            :key="model.key"-->
-<!--            class="model-option"-->
-<!--            :class="{ active: selectedModelKeys.includes(model.key) }"-->
-<!--            @click="toggleModelSelection(model.key)"-->
-<!--          >-->
-<!--            <div class="model-header">-->
-<!--              <span class="model-name">{{ model.name }}</span>-->
-<!--            </div>-->
-<!--            <p class="model-desc">{{ model.description }}</p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; AI解答按钮 &ndash;&gt;-->
-<!--        <div class="ai-analysis-actions">-->
-<!--          <Button-->
-<!--            class="ai-analysis-btn"-->
-<!--            :disabled="selectedModelKeys.length === 0 || isWaitingForAIAnalysis"-->
-<!--            @click="getAIAnalysis"-->
-<!--          >-->
-<!--            <span v-if="isWaitingForAIAnalysis">AI分析中...</span>-->
-<!--            <span v-else>🤖 AI解答</span>-->
-<!--          </Button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      &lt;!&ndash; 占卜结果显示区域 &ndash;&gt;-->
-<!--      <div class="divination-result">-->
-<!--        <div class="result-header">-->
-<!--          <h4 class="result-title">占卜解析</h4>-->
-<!--          <div v-if="hasAIAnalysis" class="used-model-info">-->
-<!--            <span class="model-label">使用模型：</span>-->
-<!--            <span class="model-names">{{ getSelectedModelNames }}</span>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; AI分析加载状态 &ndash;&gt;-->
-<!--        <div v-if="isWaitingForAIAnalysis" class="analysis-loading">-->
-<!--          <div class="loading-spinner"></div>-->
-<!--          <p class="loading-text">正在为您解析牌面含义，请稍候...</p>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; AI分析结果 &ndash;&gt;-->
-<!--        <div v-else-if="aiAnalysisResults.length > 0" class="results-comparison">-->
-<!--          <div v-for="(result, index) in aiAnalysisResults" :key="index" class="model-result">-->
-<!--            <h5 class="model-name">{{ selectedModelKeys[index] }}</h5>-->
-<!--            <div class="result-content" v-html="result"></div>-->
-<!--            <Button class="retry-btn" @click="retryModel(index)">重试</Button>-->
-<!--          </div>-->
-<!--        </div>-->
-
-
-<!--        &lt;!&ndash; 无结果提示 &ndash;&gt;-->
-<!--        <div v-else class="no-result">-->
-<!--          <p>AI分析出现问题，请重试</p>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      &lt;!&ndash; 重新开始按钮 &ndash;&gt;-->
-<!--      <div class="result-actions">-->
-<!--        <Button class="restart-btn" @click="resetFn">重新开始</Button>-->
-<!--      </div>-->
-<!--    </div>-->
 
       <!-- 新增：总体进度条 -->
       <div v-if="isWaitingForAIAnalysis" class="progress-section">
@@ -964,71 +658,6 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
       </div>
     </div>
 
-    <!-- 查看牌面模态框 -->
-<!--    <div v-if="showCardViewModal" class="card-view-modal-overlay" @click.self="closeCardViewModal">-->
-<!--      <div class="card-view-modal-content">-->
-<!--        &lt;!&ndash; 头部 &ndash;&gt;-->
-<!--        <div class="card-view-header">-->
-<!--          <h3 v-if="showDeckSelector">选择要查看的塔罗牌</h3>-->
-<!--          <h3 v-else>{{ decks.find(d => d.key === selectedViewDeck)?.name }} - 牌面一览</h3>-->
-<!--          <button class="close-btn" @click="closeCardViewModal">×</button>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 牌组选择界面 &ndash;&gt;-->
-<!--        <div v-if="showDeckSelector" class="deck-selector">-->
-<!--          <div class="deck-grid">-->
-<!--            <div-->
-<!--              v-for="deck in decks"-->
-<!--              :key="deck.key"-->
-<!--              class="deck-option"-->
-<!--              @click="selectViewDeck(deck.key)"-->
-<!--            >-->
-<!--              <div class="deck-preview">-->
-<!--                <img :src="`${base}${deck.imagePath}back.jpg`" alt="牌背" class="deck-back-image">-->
-<!--              </div>-->
-<!--              <div class="deck-info">-->
-<!--                <h4>{{ deck.name }}</h4>-->
-<!--                <p>{{ deck.cardCount }}张牌</p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 牌面网格显示 &ndash;&gt;-->
-<!--        <div v-else class="cards-grid-container">-->
-<!--          &lt;!&ndash; 返回按钮 &ndash;&gt;-->
-<!--          <div class="grid-header">-->
-<!--            <Button class="back-btn" @click="showDeckSelector = true">-->
-<!--              ← 返回选择-->
-<!--            </Button>-->
-<!--            <div class="card-count">-->
-<!--              共 {{ getSelectedDeckCards.length }} 张牌-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash; 牌面网格 &ndash;&gt;-->
-<!--          <div class="cards-grid" ref="cardsGridRef">-->
-<!--            <div-->
-<!--              v-for="card in getSelectedDeckCards"-->
-<!--              :key="card.no"-->
-<!--              class="card-grid-item"-->
-<!--            >-->
-<!--              <img-->
-<!--                :src="card.imagePath"-->
-<!--                :alt="card.name"-->
-<!--                class="card-image"-->
-<!--                @error="handleImageError"-->
-<!--                loading="lazy"-->
-<!--              />-->
-<!--              <div class="card-info">-->
-<!--                <span class="card-number">{{ card.no + 1 }}</span>-->
-<!--                <span class="card-name">{{ card.name }}</span>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
 
     <!-- 查看牌面模态框 -->
     <div v-if="showCardViewModal" class="card-view-modal-overlay" @click.self="closeCardViewModal">
@@ -1478,76 +1107,6 @@ interface CardResult {
 
 
 
-// 在现有 import 后添加
-import cardDetails from '../../data/pai.json'
-
-// 在现有类型定义后添加
-// type CardDetail = {
-//   id: number
-//   name: string
-//   english: string
-//   upright: {
-//     keywords: string[]
-//     description: string
-//   }
-//   reversed: {
-//     keywords: string[]
-//     description: string
-//   }
-//   story: string
-//   core_meaning: string
-//   potential_risks: string
-//   possible_real_world_mapping: string
-//   symbolic_elements: {
-//     characters: string[]
-//     props: string[]
-//     environment: string[]
-//     time_hint: string
-//     direction: string
-//   }
-//   symbolic_attributes: {
-//     interactions: string[]
-//     potential_branches: string[]
-//   }
-// }
-
-// type CardDetail = {
-//   id: number
-//   name: string
-//   english: string
-//   upright: {
-//     keywords: string[]
-//     description: string
-//   }
-//   reversed: {
-//     keywords: string[]
-//     description: string
-//   }
-//   story: string
-//   core_meaning: string
-//   potential_risks: string
-//   possible_real_world_mapping: string
-//   symbolic_elements: {
-//     characters: string[]
-//     props: string[]
-//     environment: string[]
-//     time_hint: string
-//     direction: string
-//   }
-//   symbolic_attributes: {
-//     interactions: string[]
-//     potential_branches: string[]
-//   }
-//   element_relations?: {  // 可选字段
-//     element: string
-//     generates: string[]
-//     overcomes: string[]
-//     generated_by: string[]
-//     overcome_by: string[]
-//   }
-//   relative_effects?: any  // 可选字段
-// }
-
 type CardDetail = {
   id: number
   name: string
@@ -1608,73 +1167,6 @@ type Deck = {
   cardNames?: Record<string, string>  // 改为 string 键
 }
 
-// 在 script setup 顶部添加更严格的类型定义
-// type CardInfo = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-// }
-// type CardInfo = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-//   cardAnalysis?: {
-//     symbols: {
-//       characters: string[]
-//       props: string[]
-//       environment: string[]
-//       time_hint: string
-//       direction: string
-//     }
-//     actions: string[]
-//     story_hint: string
-//     branches: string[]
-//     possible_real_world_mapping: string
-//     element_relations?: {
-//       element: string
-//       generates: string[]
-//       overcomes: string[]
-//       generated_by: string[]
-//       overcome_by: string[]
-//     }
-//   }
-// }
-// type CardInfo = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-//   cardAnalysis?: {
-//     symbols: {
-//       characters: string[]
-//       props: string[]
-//       environment: string[]
-//       time_hint: string
-//       direction: string
-//     }
-//     actions: string[]
-//     story_hint: string
-//     branches: string[]
-//     possible_real_world_mapping: string
-//     element_relations?: {
-//       element: string
-//       generates: string[]
-//       overcomes: string[]
-//       generated_by: string[]
-//       overcome_by: string[]
-//     }
-//   }
-// }
-
-// type CardResult = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-// }
-
 type ConversationMessage = {
   role: 'user' | 'assistant'
   content: string
@@ -1685,39 +1177,6 @@ type CustomSpread = Spread & {
   createdAt: string
 }
 
-// type CardResult = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-//   cardAnalysis?: any // 添加这一行
-// }
-// type CardResult = {
-//   no: number
-//   name: string
-//   type?: 'guide' | 'spread'
-//   isReversed: boolean
-//   cardAnalysis?: {
-//     symbols: {
-//       characters: string[]
-//       props: string[]
-//       environment: string[]
-//       time_hint: string
-//       direction: string
-//     }
-//     actions: string[]
-//     story_hint: string
-//     branches: string[]
-//     possible_real_world_mapping: string
-//     element_relations?: {
-//       element: string
-//       generates: string[]
-//       overcomes: string[]
-//       generated_by: string[]
-//       overcome_by: string[]
-//     }
-//   }
-// }
 
 
 // 在 script setup 中添加
@@ -1804,160 +1263,6 @@ const formatCurrentTime = computed(() => {
   })
 })
 
-// 添加格式化AI输入数据的计算属性
-// const formatAIInputData = computed(() => {
-//   if (!resStatus.value || cardResult.value.length === 0) return ''
-//
-//   const aiInputData = {
-//     question: textValue.value || '请为我进行塔罗占卜',
-//     deck: {
-//       key: selectedDeck.value?.key || '',
-//       name: selectedDeck.value?.name || '标准塔罗牌'
-//     },
-//     spread: {
-//       key: selectedSpread.value?.key || '',
-//       name: selectedSpread.value?.name || '标准牌阵',
-//       desc: selectedSpread.value?.desc || '',
-//       positions: selectedSpread.value?.positions || []
-//     },
-//     cards: cardResult.value.map((card, index) => ({
-//       index: index + 1,
-//       no: card.no,
-//       name: card.name,
-//       type: card.type,
-//       isReversed: card.isReversed,
-//       position: card.type === 'spread'
-//         ? selectedSpread.value?.positions?.[spreadCards.value.findIndex(c => c.no === card.no)] || `第${index + 1}位`
-//         : '指示牌'
-//     })),
-//     guideCardsCount: guideCards.value.length,
-//     spreadCardsCount: spreadCards.value.length,
-//     totalCards: cardResult.value.length
-//   }
-//
-//   return JSON.stringify(aiInputData, null, 2)
-// })
-
-// const formatAIInputData = computed(() => {
-//   if (!resStatus.value || cardResult.value.length === 0) return ''
-//
-//   const frontendToApiData = {
-//     text: textValue.value || '请为我进行塔罗占卜',
-//     pms: cardResult.value.map(card => ({
-//       no: card.no,
-//       name: card.name,
-//       type: card.type,
-//       isReversed: card.isReversed,
-//       cardAnalysis: card.cardAnalysis ? {
-//         symbols: card.cardAnalysis.symbols,
-//         actions: card.cardAnalysis.actions,
-//         story_hint: card.cardAnalysis.story_hint,
-//         branches: card.cardAnalysis.branches
-//       } : null
-//     })),
-//     spread: {
-//       key: selectedSpread.value?.key || '',
-//       name: selectedSpread.value?.name || '标准牌阵',
-//       desc: selectedSpread.value?.desc || '',
-//       positions: selectedSpread.value?.positions || []
-//     },
-//     deck: {
-//       key: selectedDeck.value?.key || '',
-//       name: selectedDeck.value?.name || '标准塔罗牌'
-//     }
-//   }
-//
-//   return JSON.stringify(frontendToApiData, null, 2)
-// })
-
-
-// const formatAIInputData = computed(() => {
-//   if (!resStatus.value || cardResult.value.length === 0) return ''
-//
-//   const frontendToApiData = {
-//     text: textValue.value || '请为我进行塔罗占卜',
-//     pms: cardResult.value.map(card => {
-//       const cardData = {
-//         no: card.no,
-//         name: card.name,
-//         type: card.type,
-//         isReversed: card.isReversed,
-//         cardAnalysis: card.cardAnalysis ? {
-//           symbols: card.cardAnalysis.symbols,
-//           actions: card.cardAnalysis.actions,
-//           story_hint: card.cardAnalysis.story_hint,
-//           branches: card.cardAnalysis.branches,
-//           possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping // 新增
-//         } : null
-//       }
-//
-//       // 如果有 element_relations 且不为 null，则添加
-//       if (card.cardAnalysis?.element_relations) {
-//         cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-//       }
-//
-//       return cardData
-//     }),
-//     spread: {
-//       key: selectedSpread.value?.key || '',
-//       name: selectedSpread.value?.name || '标准牌阵',
-//       desc: selectedSpread.value?.desc || '',
-//       positions: selectedSpread.value?.positions || []
-//     },
-//     deck: {
-//       key: selectedDeck.value?.key || '',
-//       name: selectedDeck.value?.name || '标准塔罗牌'
-//     }
-//   }
-//
-//   return JSON.stringify(frontendToApiData, null, 2)
-// })
-
-// const formatAIInputData = computed(() => {
-//   if (!resStatus.value || cardResult.value.length === 0) return ''
-//
-//   const frontendToApiData = {
-//     text: textValue.value || '请为我进行塔罗占卜',
-//     pms: cardResult.value.map(card => {
-//       const cardData: any = {
-//         no: card.no,
-//         name: card.name,
-//         type: card.type,
-//         isReversed: card.isReversed
-//       }
-//
-//       // 如果有 cardAnalysis，则添加相关字段
-//       if (card.cardAnalysis) {
-//         cardData.cardAnalysis = {
-//           symbols: card.cardAnalysis.symbols,
-//           actions: card.cardAnalysis.actions,
-//           story_hint: card.cardAnalysis.story_hint,
-//           branches: card.cardAnalysis.branches,
-//           possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-//         }
-//
-//         // 只有当 element_relations 存在且不为 null 时才添加
-//         if (card.cardAnalysis.element_relations) {
-//           cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-//         }
-//       }
-//
-//       return cardData
-//     }),
-//     spread: {
-//       key: selectedSpread.value?.key || '',
-//       name: selectedSpread.value?.name || '标准牌阵',
-//       desc: selectedSpread.value?.desc || '',
-//       positions: selectedSpread.value?.positions || []
-//     },
-//     deck: {
-//       key: selectedDeck.value?.key || '',
-//       name: selectedDeck.value?.name || '标准塔罗牌'
-//     }
-//   }
-//
-//   return JSON.stringify(frontendToApiData, null, 2)
-// })
 const formatAIInputData = computed(() => {
   if (!resStatus.value || cardResult.value.length === 0) return ''
 
@@ -2172,53 +1477,6 @@ watch(selectedSpreadKey, () => {
 // 修改 shuffledDeck 相关逻辑
 const shuffledDeck = ref<CardResult[]>([])
 
-// 新增：计算显示的牌组（明牌模式按序号，普通模式随机）
-// const displayDeck = computed(() => {
-//   if (isOpenCardMode.value) {
-//     // 明牌模式：按序号排列
-//     const deckCount = selectedDeck.value?.cardCount ?? 78
-//     return Array.from({ length: deckCount }, (_, i) => ({
-//       no: i,
-//       name: selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`,
-//       isReversed: false
-//     }))
-//   } else {
-//     // 普通模式：随机排列
-//     return shuffledDeck.value
-//   }
-// })
-
-// 更新 displayDeck 的计算属性
-// const displayDeck = computed((): CardInfo[] => {
-//   if (isOpenCardMode.value) {
-//     // 明牌模式：按序号排列
-//     const deckCount = selectedDeck.value?.cardCount ?? 78
-//     return Array.from({ length: deckCount }, (_, i) => ({
-//       no: i,
-//       name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`),
-//       isReversed: false,
-//       type: undefined // 明确设置为 undefined
-//     }))
-//   } else {
-//     // 普通模式：随机排列
-//     return shuffledDeck.value
-//   }
-// })
-// const displayDeck = computed((): CardInfo[] => {
-//   if (isOpenCardMode.value) {
-//     // 明牌模式：按序号排列
-//     const deckCount = selectedDeck.value?.cardCount ?? 78
-//     return Array.from({ length: deckCount }, (_, i) => ({
-//       no: i,
-//       name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i + 1}张`),
-//       isReversed: false,
-//       type: undefined as 'guide' | 'spread' | undefined
-//     }))
-//   } else {
-//     // 普通模式：随机排列
-//     return shuffle
-//   }
-// })
 const displayDeck = computed((): CardInfo[] => {
   if (isOpenCardMode.value) {
     // 明牌模式：按序号排列
@@ -2236,25 +1494,6 @@ const displayDeck = computed((): CardInfo[] => {
 })
 
 
-// const initShuffledDeck = () => {
-//   const deckCount = selectedDeck.value?.cardCount ?? 78
-//   const deck: CardResult[] = Array.from({ length: deckCount }, (_, i) => ({
-//     no: i,
-//     name: String(selectedDeck.value?.cardNames?.[i] ?? `第${i}张`),
-//     isReversed: false,
-//     type: undefined // 添加 type 字段
-//   }))
-//
-//   // 洗牌
-//   for (let i = deck.length - 1; i > 0; i--) {
-//     const j = Math.floor(Math.random() * (i + 1))
-//     ;[deck[i], deck[j]] = [deck[j], deck[i]]
-//   }
-//   shuffledDeck.value = deck
-//
-//   // 重置逆位状态
-//   cardReversedStates.value = {}
-// }
 
 const initShuffledDeck = () => {
   const deckCount = selectedDeck.value?.cardCount ?? 78
@@ -2278,310 +1517,6 @@ const initShuffledDeck = () => {
   // 重置逆位状态
   cardReversedStates.value = {}
 }
-//
-// // 在现有的 ref 声明中添加新的状态
-// const selectedModelKeys = ref<string[]>([])
-// const aiAnalysisResults = ref<string[]>([])
-// const isWaitingForAIAnalysis = ref(false)
-// const hasAIAnalysis = computed(() => aiAnalysisResults.value.length > 0)
-// const progressPercentage = ref(0)
-// // 可用模型列表
-// // 在 home.vue 的 script setup 中更新
-// const availableModels = ref([
-//   {
-//     key: 'grok-4',
-//     name: 'GLM-4.5 Flash',
-//     description: '智谱超快响应模型，速度与质量并重'
-//   },
-//   {
-//     key: 'gpt-5-2025-08-07',
-//     name: 'GPT-5',
-//     description: 'OpenAI最新旗舰模型，理解能力卓越'
-//   },
-//   {
-//     key: 'o3',
-//     name: 'O3',
-//     description: 'OpenAI推理专家模型，逻辑分析强'
-//   },
-//   {
-//     key: 'claude-3-7-sonnet-20250219-thinking',
-//     name: 'Claude-3.7 Sonnet',
-//     description: 'Anthropic思维链模型，深度推理'
-//   },
-//   {
-//     key: 'gemini-2.5-flash',
-//     name: 'Gemini-2.5 Flash',
-//     description: 'Google快速多模态模型'
-//   },
-//   {
-//     key: 'gemini-2.5-pro',
-//     name: 'Gemini-2.5 Pro',
-//     description: 'Google专业级多模态模型'
-//   },
-//   {
-//     key: 'grok-4',
-//     name: 'Grok-4',
-//     description: 'xAI最新模型，创新思维强'
-//   },
-//   {
-//     key: 'grok-3-deepsearch',
-//     name: 'Grok-3 DeepSearch',
-//     description: 'xAI深度搜索增强模型'
-//   },
-//   {
-//     key: 'qwen3-235b-a22b',
-//     name: 'Qwen3-235B',
-//     description: '阿里通义千问超大参数模型'
-//   },
-//   {
-//     key: 'qwen3-235b-a22b-think',
-//     name: 'Qwen3-235B Think',
-//     description: '阿里通义千问思维链版本'
-//   },
-//   {
-//     key: 'deepseek-r1',
-//     name: 'DeepSeek-R1',
-//     description: 'DeepSeek推理专用模型'
-//   },
-//   {
-//     key: 'deepseek-v3',
-//     name: 'DeepSeek-V3',
-//     description: 'DeepSeek第三代通用模型'
-//   },
-//   {
-//     key: 'doubao-1.5-pro-256k',
-//     name: 'Doubao-1.5 Pro',
-//     description: '字节豆包长文本处理模型'
-//   },
-//   {
-//     key: 'glm-4.5',
-//     name: 'GLM-4.5',
-//     description: '智谱标准版模型，平衡性能'
-//   },
-//   {
-//     key: 'hunyuan-standard-256K',
-//     name: 'Hunyuan Standard',
-//     description: '腾讯混元标准版长文本模型'
-//   },
-//   {
-//     key: 'kimi-k2-250711',
-//     name: 'Kimi-K2',
-//     description: 'Moonshot超长上下文模型'
-//   },
-//   {
-//     key: 'gpt-4.1-nano-2025-04-14',
-//     name: 'GPT-4.1 Nano',
-//     description: 'OpenAI轻量级模型，快速响应',
-//   },
-//   {
-//     key: 'claude-3-haiku-20240307',
-//     name: 'Claude-3 Haiku',
-//     description: 'Anthropic快速模型，简洁高效',
-//   },
-//   {
-//     key: 'gemini-2.0-flash',
-//     name: 'Gemini-2.0 Flash',
-//     description: 'Google新一代快速模型',
-//   },
-//   {
-//     key: 'qwen-plus',
-//     name: 'qwen-plus',
-//     description: '阿里通义千问加速版',
-//   },
-//   {
-//     key: 'claude-sonnet-4-20250514-thinking',
-//     name: 'claude-sonnet-4-thinking',
-//     description: 'Anthropic旗舰思维链模型，深度推理',
-//   }
-// ])
-//
-// // 选择模型
-// const selectModel = (key: string) => {
-//   selectedModelKey.value = key
-// }
-// // 获取模型名称
-// const getModelName = (key: string) => {
-//   const model = availableModels.value.find(m => m.key === key)
-//   return model ? model.name : key
-// }
-// // 新增：AI分析函数（独立于原有的getRes）
-// // const getAIAnalysis = async () => {
-// //   if (!selectedModelKey.value || !resStatus.value || cardResult.value.length === 0) {
-// //     console.error('缺少必要参数进行AI分析')
-// //     return
-// //   }
-// //   console.log('=== 开始AI分析流程 ===')
-// //   isWaitingForAIAnalysis.value = true
-// //   aiAnalysisResult.value = '' // 清空之前的结果
-// //   try {
-// //     const res = await fetch('/ai-analysis', { // 使用新的端点
-// //       method: 'POST',
-// //       headers: {
-// //         'Content-Type': 'application/json'
-// //       },
-// //       body: JSON.stringify({
-// //         text: textValue.value,
-// //         model: selectedModelKey.value, // 传递选择的模型
-// //         pms: cardResult.value.map((card: CardResult) => {
-// //           const cardData: any = {
-// //             no: card.no,
-// //             name: card.name,
-// //             type: card.type,
-// //             isReversed: card.isReversed
-// //           }
-// //           // 如果有 cardAnalysis，则添加相关字段
-// //           if (card.cardAnalysis) {
-// //             cardData.cardAnalysis = {
-// //               symbols: card.cardAnalysis.symbols,
-// //               actions: card.cardAnalysis.actions,
-// //               story_hint: card.cardAnalysis.story_hint,
-// //               branches: card.cardAnalysis.branches,
-// //               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-// //             }
-// //             // 只有当 element_relations 存在时才添加
-// //             if (card.cardAnalysis.element_relations) {
-// //               cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-// //             }
-// //           }
-// //           return cardData
-// //         }),
-// //         spread: {
-// //           key: selectedSpread.value?.key || '',
-// //           name: selectedSpread.value?.name || '标准牌阵',
-// //           desc: selectedSpread.value?.desc || '',
-// //           positions: selectedSpread.value?.positions || []
-// //         },
-// //         deck: {
-// //           key: selectedDeck.value?.key || '',
-// //           name: selectedDeck.value?.name || '标准塔罗牌'
-// //         }
-// //       })
-// //     })
-// //     if (!res.ok) {
-// //       const errorData = await res.json()
-// //       console.error('AI分析API错误响应:', errorData)
-// //       throw new Error(`AI分析失败: ${res.statusText}`)
-// //     }
-// //     const resText = await res.text()
-// //     console.log('🔍 AI分析API原始响应:', resText)
-// //     const content = parseApiResponse(resText)
-// //     console.log('🔍 AI分析提取的内容:', content)
-// //     if (!content || content.length === 0) {
-// //       throw new Error('未能提取到有效的AI分析内容')
-// //     }
-// //     const html = await parseMdToHtml(content)
-// //     console.log('🔍 AI分析Markdown转换为HTML:', html)
-// //     // 设置AI分析结果
-// //     aiAnalysisResult.value = html
-// //     console.log('🔍 AI分析结果已设置')
-// //     await nextTick()
-// //     console.log('🔍 AI分析DOM已更新')
-// //     console.log('=== AI分析成功完成 ===')
-// //   } catch (error) {
-// //     console.error('🔍 AI分析失败:', error)
-// //     aiAnalysisResult.value = '<p style="color: #e74c3c;">AI分析失败，请重试</p>'
-// //   } finally {
-// //     isWaitingForAIAnalysis.value = false
-// //     console.log('🔍 AI分析流程结束')
-// //   }
-// // }
-//
-// // 切换模型选择
-// const toggleModelSelection = (key: string) => {
-//   if (selectedModelKeys.value.includes(key)) {
-//     selectedModelKeys.value = selectedModelKeys.value.filter(k => k !== key)
-//   } else {
-//     if (selectedModelKeys.value.length < 5) {
-//       selectedModelKeys.value.push(key)
-//     } else {
-//       alert('最多只能选择5个模型')
-//     }
-//   }
-// }
-// // 获取选中的模型名称
-// const getSelectedModelNames = computed(() => {
-//   return selectedModelKeys.value.join(', ')
-// })
-//
-// // AI分析函数
-// const getAIAnalysis = async () => {
-//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
-//     console.error('缺少必要参数进行AI分析')
-//     return
-//   }
-//   console.log('=== 开始AI分析流程 ===')
-//   isWaitingForAIAnalysis.value = true
-//   aiAnalysisResults.value = [] // 清空之前的结果
-//   progressPercentage.value = 0 // 重置进度
-//   try {
-//     const promises = selectedModelKeys.value.map(async (modelKey) => {
-//       const res = await fetch('/api/ai-analysis', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//           text: textValue.value,
-//           model: modelKey,
-//           pms: cardResult.value.map((card: CardResult) => {
-//             const cardData: any = {
-//               no: card.no,
-//               name: card.name,
-//               type: card.type,
-//               isReversed: card.isReversed
-//             }
-//             // 如果有 cardAnalysis，则添加相关字段
-//             if (card.cardAnalysis) {
-//               cardData.cardAnalysis = {
-//                 symbols: card.cardAnalysis.symbols,
-//                 actions: card.cardAnalysis.actions,
-//                 story_hint: card.cardAnalysis.story_hint,
-//                 branches: card.cardAnalysis.branches,
-//                 possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-//               }
-//             }
-//             return cardData
-//           }),
-//           spread: {
-//             key: selectedSpread.value?.key || '',
-//             name: selectedSpread.value?.name || '标准牌阵',
-//             desc: selectedSpread.value?.desc || '',
-//             positions: selectedSpread.value?.positions || []
-//           },
-//           deck: {
-//             key: selectedDeck.value?.key || '',
-//             name: selectedDeck.value?.name || '标准塔罗牌'
-//           }
-//         })
-//       })
-//       if (!res.ok) {
-//         throw new Error(`模型 ${modelKey} 请求失败`)
-//       }
-//       const resText = await res.text()
-//       const content = parseApiResponse(resText)
-//       return content
-//     })
-//     // 显示总体进度
-//     const totalModels = selectedModelKeys.value.length
-//     const results = await Promise.allSettled(promises)
-//     results.forEach((result, index) => {
-//       if (result.status === 'fulfilled') {
-//         aiAnalysisResults.value.push(result.value)
-//       } else {
-//         console.error(`模型 ${selectedModelKeys.value[index]} 分析失败:`, result.reason)
-//         aiAnalysisResults.value.push('<p style="color: #e74c3c;">分析失败，请重试</p>')
-//       }
-//       progressPercentage.value = ((index + 1) / totalModels) * 100 // 更新进度
-//     })
-//     console.log('=== AI分析成功完成 ===')
-//   } catch (error) {
-//     console.error('🔍 AI分析失败:', error)
-//     aiAnalysisResults.value.push('<p style="color: #e74c3c;">AI分析失败，请重试</p>')
-//   } finally {
-//     isWaitingForAIAnalysis.value = false
-//     console.log('🔍 AI分析流程结束')
-//   }
-// }
 
 
 const selectedModelKeys = ref<string[]>([])
@@ -2662,25 +1597,6 @@ const endContentDrag = () => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 计算滑轨位置
-// const zszsSliderPosition = computed(() => {
-//   if (aiAnalysisResults.value.length <= 1) return 0
-//   return (zsCurrentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
-// })
 // 可用模型列表
 const availableModels = ref([
   {
@@ -2761,205 +1677,7 @@ const getModelName = (key: string) => {
   const model = availableModels.value.find(m => m.key === key)
   return model ? model.name : key
 }
-// AI分析函数
-// const getAIAnalysis = async () => {
-//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
-//     console.error('缺少必要参数进行AI分析')
-//     return
-//   }
-//   console.log('=== 开始AI分析流程 ===')
-//   isWaitingForAIAnalysis.value = true
-//   aiAnalysisResults.value = []
-//   copySingleStatus.value = []
-//   progressPercentage.value = 0
-//   zsCurrentSlideIndex.value = 0
-//   zsSlideOffset.value = 0
-//   try {
-//     const totalModels = selectedModelKeys.value.length
-//     let completedModels = 0
-//     progressText.value = `正在分析 (0/${totalModels})`
-//     const promises = selectedModelKeys.value.map(async (modelKey, index) => {
-//       try {
-//         const res = await fetch('/api/ai-analysis', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json'
-//           },
-//           body: JSON.stringify({
-//             text: textValue.value,
-//             model: modelKey,
-//             pms: cardResult.value.map((card: CardResult) => {
-//               const cardData: any = {
-//                 no: card.no,
-//                 name: card.name,
-//                 type: card.type,
-//                 isReversed: card.isReversed
-//               }
-//               if (card.cardAnalysis) {
-//                 cardData.cardAnalysis = {
-//                   symbols: card.cardAnalysis.symbols,
-//                   actions: card.cardAnalysis.actions,
-//                   story_hint: card.cardAnalysis.story_hint,
-//                   branches: card.cardAnalysis.branches,
-//                   possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
-//                   element_relations: card.cardAnalysis.element_relations
-//                 }
-//               }
-//               return cardData
-//             }),
-//             spread: {
-//               key: selectedSpread.value?.key || '',
-//               name: selectedSpread.value?.name || '标准牌阵',
-//               desc: selectedSpread.value?.desc || '',
-//               positions: selectedSpread.value?.positions || []
-//             },
-//             deck: {
-//               key: selectedDeck.value?.key || '',
-//               name: selectedDeck.value?.name || '标准塔罗牌'
-//             }
-//           })
-//         })
-//         if (!res.ok) {
-//           throw new Error(`模型 ${modelKey} 请求失败`)
-//         }
-//         const resText = await res.text()
-//         const content = parseApiResponse(resText)
-//
-//         completedModels++
-//         progressPercentage.value = (completedModels / totalModels) * 100
-//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
-//
-//         return content
-//       } catch (error) {
-//         console.error(`模型 ${modelKey} 分析失败:`, error)
-//         completedModels++
-//         progressPercentage.value = (completedModels / totalModels) * 100
-//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
-//         return 'ANALYSIS_FAILED'
-//       }
-//     })
-//     const results = await Promise.allSettled(promises)
-//
-//     results.forEach((result) => {
-//       if (result.status === 'fulfilled') {
-//         aiAnalysisResults.value.push(result.value)
-//       } else {
-//         aiAnalysisResults.value.push('ANALYSIS_FAILED')
-//       }
-//       copySingleStatus.value.push(false)
-//     })
-//     console.log('=== AI分析成功完成 ===')
-//   } catch (error) {
-//     console.error('🔍 AI分析失败:', error)
-//   } finally {
-//     isWaitingForAIAnalysis.value = false
-//     progressText.value = ''
-//     console.log('🔍 AI分析流程结束')
-//   }
-// }
 
-// const getAIAnalysis = async () => {
-//   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
-//     console.error('缺少必要参数进行AI分析')
-//     return
-//   }
-//   console.log('=== 开始AI分析流程 ===')
-//   isWaitingForAIAnalysis.value = true
-//   aiAnalysisResults.value = []
-//   renderedResults.value = [] // 清空渲染结果
-//   copySingleStatus.value = []
-//   progressPercentage.value = 0
-//   zsCurrentSlideIndex.value = 0
-//   zsSlideOffset.value = 0
-//   try {
-//     const totalModels = selectedModelKeys.value.length
-//     let completedModels = 0
-//     progressText.value = `正在分析 (0/${totalModels})`
-//     const promises = selectedModelKeys.value.map(async (modelKey, index) => {
-//       try {
-//         const res = await fetch('/api/ai-analysis', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json'
-//           },
-//           body: JSON.stringify({
-//             text: textValue.value,
-//             model: modelKey,
-//             pms: cardResult.value.map((card: CardResult) => {
-//               const cardData: any = {
-//                 no: card.no,
-//                 name: card.name,
-//                 type: card.type,
-//                 isReversed: card.isReversed
-//               }
-//               if (card.cardAnalysis) {
-//                 cardData.cardAnalysis = {
-//                   symbols: card.cardAnalysis.symbols,
-//                   actions: card.cardAnalysis.actions,
-//                   story_hint: card.cardAnalysis.story_hint,
-//                   branches: card.cardAnalysis.branches,
-//                   possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-//                 }
-//                    // element_relations: card.cardAnalysis.element_relations
-//                   if (card.cardAnalysis.element_relations) {
-//                   cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-//                 }
-//               }
-//               return cardData
-//             }),
-//             spread: {
-//               key: selectedSpread.value?.key || '',
-//               name: selectedSpread.value?.name || '标准牌阵',
-//               desc: selectedSpread.value?.desc || '',
-//               positions: selectedSpread.value?.positions || []
-//             },
-//             deck: {
-//               key: selectedDeck.value?.key || '',
-//               name: selectedDeck.value?.name || '标准塔罗牌'
-//             }
-//           })
-//         })
-//         if (!res.ok) {
-//           throw new Error(`模型 ${modelKey} 请求失败`)
-//         }
-//         const resText = await res.text()
-//         const content = parseApiResponse(resText)
-//
-//         completedModels++
-//         progressPercentage.value = (completedModels / totalModels) * 100
-//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
-//
-//         return content
-//       } catch (error) {
-//         console.error(`模型 ${modelKey} 分析失败:`, error)
-//         completedModels++
-//         progressPercentage.value = (completedModels / totalModels) * 100
-//         progressText.value = `正在分析 (${completedModels}/${totalModels})`
-//         return 'ANALYSIS_FAILED'
-//       }
-//     })
-//     const results = await Promise.allSettled(promises)
-//
-//     // 处理结果
-//     results.forEach((result) => {
-//       if (result.status === 'fulfilled') {
-//         aiAnalysisResults.value.push(result.value)
-//       } else {
-//         aiAnalysisResults.value.push('ANALYSIS_FAILED')
-//       }
-//       copySingleStatus.value.push(false)
-//     })
-//     // 渲染所有Markdown结果
-//     await renderAllResults()
-//     console.log('=== AI分析成功完成 ===')
-//   } catch (error) {
-//     console.error('🔍 AI分析失败:', error)
-//   } finally {
-//     isWaitingForAIAnalysis.value = false
-//     progressText.value = ''
-//     console.log('🔍 AI分析流程结束')
-//   }
-// }
 const getAIAnalysis = async () => {
   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
     console.error('缺少必要参数进行AI分析');
@@ -3058,78 +1776,6 @@ const getAIAnalysis = async () => {
 
 
 
-
-
-
-
-// // 滑动相关函数
-// const updatezsSlideOffset = () => {
-//   const containerWidth = zsSliderContainer.value?.clientWidth || 0
-//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-//   const targetOffset = (zsCurrentSlideIndex.value * cardWidth.value)
-//   zsSlideOffset.value = Math.min(targetOffset, maxOffset)
-// }
-// const zsOnSliderScroll = () => {
-//   if (isDragging.value) return
-//
-//   const container = zsSliderContainer.value
-//   if (!container) return
-//
-//   const scrollLeft = container.scrollLeft
-//   const newIndex = Math.round(scrollLeft / cardWidth.value)
-//   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
-// }
-// // 滑轨拖拽
-// const zsStartDrag = (event: MouseEvent) => {
-//   isDragging.value = true
-//   document.addEventListener('mousemove', zsOnDrag)
-//   document.addEventListener('mouseup', zsEndDrag)
-//   event.preventDefault()
-// }
-// const zsOnDrag = (event: MouseEvent) => {
-//   if (!isDragging.value) return
-//
-//   const track = zszsBottomSliderTrack.value || bottomSliderTrack.value
-//   if (!track) return
-//
-//   const rect = track.getBoundingClientRect()
-//   const x = event.clientX - rect.left
-//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-//   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
-//
-//   zsCurrentSlideIndex.value = newIndex
-//   updatezsSlideOffset()
-// }
-// const zsEndDrag = () => {
-//   isDragging.value = false
-//   document.removeEventListener('mousemove', zsOnDrag)
-//   document.removeEventListener('mouseup', zsEndDrag)
-// }
-// // 触摸事件
-// const zsOnTouchStart = (event: TouchEvent) => {
-//   zsTouchStartX.value = event.touches[0].clientX
-//   zsTouchStartOffset.value = zsSlideOffset.value
-// }
-// const zsOnTouchMove = (event: TouchEvent) => {
-//   const currentX = event.touches[0].clientX
-//   const deltaX = zsTouchStartX.value - currentX
-//   const newOffset = zsTouchStartOffset.value + deltaX
-//
-//   const containerWidth = zsSliderContainer.value?.clientWidth || 0
-//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-//
-//   zsSlideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-//   zsCurrentSlideIndex.value = Math.round(zsSlideOffset.value / cardWidth.value)
-// }
-//
-//
-//
-//
-//
-// const zsonTouchEnd = () => {
-//   updatezsSlideOffset()
-// }
-
 // 滑动相关函数
 const updatezsSlideOffset = () => {
   const container = zsSliderContainer.value as HTMLDivElement | null
@@ -3140,84 +1786,6 @@ const updatezsSlideOffset = () => {
 }
 
 
-
-// const zsOnSliderScroll = () => {
-//   if (isDragging.value) return
-//
-//   const container = zsSliderContainer.value as HTMLDivElement | null
-//   if (!container) return
-//
-//   const scrollLeft = container.scrollLeft
-//   const newIndex = Math.round(scrollLeft / cardWidth.value)
-//   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
-// }
-// ... 其他脚本 ...
-
-// 更新 zsOnSliderScroll 函数
-// const zsOnSliderScroll = () => {
-//   if (isDragging.value) return; // 如果是拖动滑轨触发的滚动，则忽略
-//
-//   const container = zsSliderContainer.value as HTMLDivElement | null;
-//   if (!container) return;
-//
-//   const { scrollLeft, scrollWidth, clientWidth } = container;
-//   const maxScrollLeft = scrollWidth - clientWidth;
-//
-//   if (maxScrollLeft <= 0) {
-//     zsCurrentSlideIndex.value = 0;
-//     // zszsSliderPosition 计算属性会自动更新
-//     return;
-//   }
-//
-//   // 更新当前卡片索引 (用于显示 X/Y)
-//   const cardWidthWithGap = 350 + 16; // card-width + gap
-//   zsCurrentSlideIndex.value = Math.round(scrollLeft / cardWidthWithGap);
-//
-//   // zszsSliderPosition 计算属性会根据 zsCurrentSlideIndex 变化，
-//   // 但为了更平滑，我们可以直接根据滚动百分比计算
-// };
-// const zsOnSliderScroll = () => {
-//   // 如果是拖动滑轨导致的滚动，可以提前退出，避免不必要的计算
-//   if (isDragging.value) return;
-//
-//   const container = zsSliderContainer.value;
-//   if (!(container instanceof HTMLElement)) return;
-//
-//   // 唯一目的：更新用于显示的当前卡片索引
-//   // (350是卡片宽度, 16是gap)
-//   const cardWidthWithGap = 350 + 16;
-//   const currentIndex = Math.round(container.scrollLeft / cardWidthWithGap);
-//
-//   // 确保索引在有效范围内
-//   zsCurrentSlideIndex.value = Math.max(0, Math.min(currentIndex, aiAnalysisResults.value.length - 1));
-// };
-
-// 我们需要修改 zszsSliderPosition 计算属性，使其更精确
-// const zszsSliderPosition = computed(() => {
-//   const container = zsSliderContainer.value;
-//   if (!container) return 0;
-//
-//   const { scrollLeft, scrollWidth, clientWidth } = container;
-//   const maxScrollLeft = scrollWidth - clientWidth;
-//
-//   if (maxScrollLeft <= 0) return 0;
-//
-//   return (scrollLeft / maxScrollLeft) * 100;
-// });
-// const zszsSliderPosition = computed(() => {
-//   const container = zsSliderContainer.value;
-//   if (!(container instanceof HTMLElement)) return 0;
-//
-//   const { scrollLeft, scrollWidth, clientWidth } = container;
-//   const maxScrollLeft = scrollWidth - clientWidth;
-//
-//   if (maxScrollLeft <= 0) {
-//     return 0;
-//   }
-//
-//   // 关键：直接根据 scrollLeft 的百分比计算滑块位置
-//   return (scrollLeft / maxScrollLeft) * 100;
-// });
 const zszsSliderPosition = computed(() => {
   const container = zsSliderContainer.value;
   // 添加类型守卫，确保元素存在
@@ -3233,15 +1801,7 @@ const zszsSliderPosition = computed(() => {
   // 返回滚动位置的百分比
   return (scrollLeft / maxScrollLeft) * 100;
 });
-// ... 其他脚本 ...
 
-// 滑轨拖拽
-// const zsStartDrag = (event: MouseEvent) => {
-//   isDragging.value = true
-//   document.addEventListener('mousemove', zsOnDrag)
-//   document.addEventListener('mouseup', zsEndDrag)
-//   event.preventDefault()
-// }
 const zsStartDrag = (event: MouseEvent) => {
   isDragging.value = true;
   // 在整个文档上监听移动和松开事件，确保鼠标移出滑轨也能响应
@@ -3250,31 +1810,7 @@ const zsStartDrag = (event: MouseEvent) => {
   document.addEventListener('mouseleave', zsEndDrag); // 处理鼠标移出窗口
   event.preventDefault(); // 防止拖动时选中其他文本
 };
-// 关键修正2：拖动滑轨时，直接修改容器的 scrollLeft
-// const zsOnDrag = (event: MouseEvent) => {
-//   if (!isDragging.value) return;
-//
-//   const track = bottomSliderTrack.value || zszsBottomSliderTrack.value;
-//   const container = zsSliderContainer.value;
-//
-//   if (!(track instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
-//
-//   const rect = track.getBoundingClientRect();
-//   const x = event.clientX - rect.left;
-//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
-//
-//   // 1. 直接设置 DOM，让内容滚动
-//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
-//
-//   // 2. 【新增的修复代码】手动调用 scroll 事件处理器
-//   // 这个函数会更新 zsCurrentSlideIndex，从而触发 Vue 的重新渲染，
-//   // 进而让 zszsSliderPosition 重新计算，最终更新滑块圆点的位置。
-//   zsOnSliderScroll();
-// };
-// 位于 <script setup> 中
 
-// --- 新增：键盘持续滚动核心逻辑 ---
 
 // 滚动动画循环
 const scrollLoop = () => {
@@ -3401,98 +1937,16 @@ onBeforeUnmount(() => {
   document.removeEventListener('mouseup', zsEndDrag);
   document.removeEventListener('mouseleave', zsEndDrag);
 });
-
-// const zsOnDrag = (event: MouseEvent) => {
-//   if (!isDragging.value) return
 //
-//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
-//   if (!track) return
+// // 触摸事件
+// const zsOnTouchStart = (event: TouchEvent) => {
+//   zsTouchStartX.value = event.touches[0].clientX
+//   zsTouchStartOffset.value = zsSlideOffset.value
+// }
 //
-//   const rect = track.getBoundingClientRect()
-//   const x = event.clientX - rect.left
-//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
-//   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
-//
-//   zsCurrentSlideIndex.value = newIndex
+// const zsonTouchEnd = () => {
 //   updatezsSlideOffset()
 // }
-// ... 其他脚本 ...
-
-// 更新 zsOnDrag 函数
-// const zsOnDrag = (event: MouseEvent) => {
-//   if (!isDragging.value) return;
-//
-//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null;
-//   const container = zsSliderContainer.value as HTMLDivElement | null;
-//   if (!track || !container) return;
-//
-//   const rect = track.getBoundingClientRect();
-//   const x = event.clientX - rect.left;
-//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-//
-//   // 新逻辑：直接设置 scrollLeft
-//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
-//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
-// };
-
-
-// const zsOnDrag = (event: MouseEvent) => {
-//   if (!isDragging.value) return;
-//
-//   const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value);
-//   const container = zsSliderContainer.value;
-//
-//   // 使用严格的类型守卫
-//   if (!(track instanceof HTMLElement) || !(container instanceof HTMLElement)) {
-//     return;
-//   }
-//
-//   const rect = track.getBoundingClientRect();
-//   const x = event.clientX - rect.left;
-//   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-//
-//   // 关键改动：直接映射，不再通过索引
-//   const maxScrollLeft = container.scrollWidth - container.clientWidth;
-//   container.scrollLeft = (percentage / 100) * maxScrollLeft;
-// };
-
-
-
-
-
-
-
-
-// ... 其他脚本 ...
-
-// const zsEndDrag = () => {
-//   isDragging.value = false
-//   document.removeEventListener('mousemove', zsOnDrag)
-//   document.removeEventListener('mouseup', zsEndDrag)
-// }
-
-// 触摸事件
-const zsOnTouchStart = (event: TouchEvent) => {
-  zsTouchStartX.value = event.touches[0].clientX
-  zsTouchStartOffset.value = zsSlideOffset.value
-}
-
-// const zsOnTouchMove = (event: TouchEvent) => {
-//   const currentX = event.touches[0].clientX
-//   const deltaX = zsTouchStartX.value - currentX
-//   const newOffset = zsTouchStartOffset.value + deltaX
-//
-//   const container = zsSliderContainer.value as HTMLDivElement | null
-//   const containerWidth = container?.clientWidth || 0
-//   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-//
-//   zsSlideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-//   zsCurrentSlideIndex.value = Math.round(zsSlideOffset.value / cardWidth.value)
-// }
-
-const zsonTouchEnd = () => {
-  updatezsSlideOffset()
-}
 
 // 键盘事件
 const zsOnKeyDown = (event: KeyboardEvent) => {
@@ -3632,63 +2086,6 @@ const exportResults = () => {
 
   URL.revokeObjectURL(url)
 }
-// 重试单个模型
-// const retryModel = async (index: number) => {
-//   const modelKey = selectedModelKeys.value[index]
-//
-//   try {
-//     const res = await fetch('/api/ai-analysis', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({
-//         text: textValue.value,
-//         model: modelKey,
-//         pms: cardResult.value.map((card: CardResult) => {
-//           const cardData: any = {
-//             no: card.no,
-//             name: card.name,
-//             type: card.type,
-//             isReversed: card.isReversed
-//           }
-//           if (card.cardAnalysis) {
-//             cardData.cardAnalysis = {
-//               symbols: card.cardAnalysis.symbols,
-//               actions: card.cardAnalysis.actions,
-//               story_hint: card.cardAnalysis.story_hint,
-//               branches: card.cardAnalysis.branches,
-//               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping,
-//               element_relations: card.cardAnalysis.element_relations
-//             }
-//           }
-//           return cardData
-//         }),
-//         spread: {
-//           key: selectedSpread.value?.key || '',
-//           name: selectedSpread.value?.name || '标准牌阵',
-//           desc: selectedSpread.value?.desc || '',
-//           positions: selectedSpread.value?.positions || []
-//         },
-//         deck: {
-//           key: selectedDeck.value?.key || '',
-//           name: selectedDeck.value?.name || '标准塔罗牌'
-//         }
-//       })
-//     })
-//     if (!res.ok) {
-//       throw new Error(`模型 ${modelKey} 请求失败`)
-//     }
-//     const resText = await res.text()
-//     const content = parseApiResponse(resText)
-//
-//     aiAnalysisResults.value[index] = content
-//
-//   } catch (error) {
-//     console.error(`重试模型 ${modelKey} 失败:`, error)
-//     aiAnalysisResults.value[index] = 'ANALYSIS_FAILED'
-//   }
-// }
 
 
 
@@ -3753,25 +2150,7 @@ const retryModel = async (index: number) => {
     renderedResults.value[index] = 'ANALYSIS_FAILED'
   }
 }
-// 格式化分析结果
-// const formatAnalysisResult = (result: string): string => {
-//   // 将换行符转换为<br>标签，保持格式
-//   return result.replace(/\n/g, '<br>')
-// }
-// const renderMarkdown = (content: string): string => {
-//   if (!content || content === 'ANALYSIS_FAILED') {
-//     return content
-//   }
-//
-//   try {
-//     // 使用marked解析Markdown
-//     return marked(content)
-//   } catch (error) {
-//     console.error('Markdown渲染失败:', error)
-//     // 降级处理：简单的换行转换
-//     return content.replace(/\n/g, '<br>')
-//   }
-// }
+
 // 存储渲染后的内容
 const renderedResults = ref<string[]>([])
 // 异步渲染Markdown
@@ -3862,38 +2241,6 @@ onBeforeUnmount(() => {
   document.removeEventListener('mouseleave', endContentDrag);
 });
 
-// 拖拽相关
-// const onDragStart = (e: MouseEvent | TouchEvent) => {
-//   const el = cardStripWrapper.value; if (!el) return
-//   isDragging2 = true
-//   dragStartX = 'touches' in e ? e.touches[0].clientX : e.clientX
-//   dragStartOffset = viewOffset.value
-//   window.addEventListener('mousemove', onDragStart)
-//   window.addEventListener('mouseup', onDragStart)
-//   window.addEventListener('touchmove', onDragStart as any, { passive: false })
-//   window.addEventListener('touchend', onDragStart)
-// }
-//
-// const SCALE = 3
-// const onDragStart = (e: MouseEvent | TouchEvent) => {
-//   if (!isDragging2) return
-//   if ('preventDefault' in e) e.preventDefault()
-//
-//   const x = 'touches' in e ? e.touches[0].clientX : e.clientX
-//   const dx = x - dragStartX
-//   const newOffset = dragStartOffset - dx * SCALE
-//
-//   viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
-// }
-//
-// const onDragStart = () => {
-//   isDragging2 = false
-//   window.removeEventListener('mousemove', onDragStart)
-//   window.removeEventListener('mouseup', onDragStart)
-//   window.removeEventListener('touchmove', onDragStart as any)
-//   window.removeEventListener('touchend', onDragStart)
-// }
-
 
 
 // 拖拽开始
@@ -3983,19 +2330,6 @@ const spreadCards = computed((): CardResult[] => {
   return cardResult.value.filter(card => card.type === 'spread')
 })
 
-// 确认牌阵
-// 确认牌阵
-// const confirmSpread = async () => {
-//   if (!selectedSpreadKey.value) return
-//   isSpreadConfirmed.value = true
-//   selectCardArr.value = []
-//   cardReversedStates.value = {}
-//
-//   await nextTick()
-//   if (cardStripWrapper.value) {
-//     containerWidth.value = cardStripWrapper.value.clientWidth
-//   }
-// }
 const confirmSpread = async () => {
   if (!selectedSpreadKey.value) return
   isSpreadConfirmed.value = true
@@ -4009,33 +2343,6 @@ const confirmSpread = async () => {
 }
 
 
-
-
-// 重置功能
-// const resetFn = () => {
-//   selectCardArr.value = []
-//   cardResult.value = []
-//   resStatus.value = false
-//   loadingStatus.value = false
-//   isSpreadConfirmed.value = false
-//   clickedSpread.value = null
-//   needReversed.value = true
-//   selectedDeckKey.value = ''
-//   selectedSpreadKey.value = ''
-//   needGuideCards.value = false
-//   guideCardCount.value = 1
-//   isOpenCardMode.value = false
-//   cardReversedStates.value = {}
-//   customSpreads.value = []
-//   showCustomSpreadModal.value = false
-//   formErrors.value = {}
-//   textValue.value = ''
-//   if (typedInstance) {
-//     typedInstance.destroy();
-//     typedInstance = null
-//   }
-//   initShuffledDeck()
-// }
 
 const resetFn = () => {
   selectCardArr.value = []
@@ -4126,92 +2433,12 @@ const renderBackImage = () => {
   return `${base}${path}back.jpg`
 }
 
-// const renderIMG = (no: number): string => {
-//   const path = selectedDeck.value?.imagePath ?? 'cards/card/'
-//   const start = selectedDeck.value?.start ?? 0
-//   const fileNo = no + start
-//   return `${base}${path}${fileNo}.jpg`
-// }
 const renderIMG = (no: number): string => {
   const path = selectedDeck.value?.imagePath ?? 'cards/card/'
   return `${base}${path}${no}.jpg`  // 🔧 直接使用 no，因为现在 no 已经是正确的文件编号
 }
 
 
-// const parseApiResponse = (responseText: string): string => {
-//   console.log('=== parseApiResponse 开始 ===')
-//   console.log('输入文本长度:', responseText.length)
-//   console.log('输入文本前500字符:', responseText.substring(0, Math.min(responseText.length, 500))) // 打印前500字符
-//
-//   try {
-//     const jsonData = JSON.parse(responseText)
-//     console.log('JSON 解析成功')
-//     console.log('数据结构键:', Object.keys(jsonData))
-//
-//     // 直接返回content字段(如果存在)
-//     if (jsonData.content) {
-//       console.log('找到直接 content 字段')
-//       return jsonData.content
-//     }
-//
-//     // 处理智谱API的嵌套结构
-//     if (jsonData.choices &&
-//       jsonData.choices[0] &&
-//       jsonData.choices[0].message &&
-//       jsonData.choices[0].message.content) {
-//       console.log('找到智谱 API 嵌套结构的 content')
-//       const content = jsonData.choices[0].message.content
-//       console.log('提取的 content 长度:', content.length)
-//       return content
-//     }
-//
-//     // 调试输出完整结构
-//     console.log('未找到预期的 content 结构')
-//     console.log('完整数据结构:', JSON.stringify(jsonData, null, 2))
-//     console.warn('parseApiResponse: 未能提取到有效内容，返回空字符串。原始响应:', responseText); // 警告并打印原始响应
-//     return '' // 明确返回空字符串
-//   } catch (e) {
-//     console.error('JSON 解析失败:', e)
-//     console.log('尝试作为纯文本处理')
-//     console.warn('parseApiResponse: JSON 解析失败，返回原始文本。错误:', e, '原始响应:', responseText); // 警告并打印原始响应
-//   }
-//
-//   console.log('返回原始文本')
-//   return responseText
-// }
-
-// const parseApiResponse = (responseText: string): string => {
-//   console.log('🔍 parseApiResponse 输入:', responseText.substring(0, 500))
-//
-//   try {
-//     const jsonData = JSON.parse(responseText)
-//     console.log('🔍 JSON 解析成功，数据键:', Object.keys(jsonData))
-//
-//     // 直接返回content字段
-//     if (jsonData.content) {
-//       console.log('🔍 找到直接 content 字段')
-//       return jsonData.content
-//     }
-//
-//     // 处理智谱API的嵌套结构
-//     if (jsonData.choices &&
-//       jsonData.choices[0] &&
-//       jsonData.choices[0].message &&
-//       jsonData.choices[0].message.content) {
-//       console.log('🔍 找到智谱 API 嵌套结构的 content')
-//       const content = jsonData.choices[0].message.content
-//       console.log('🔍 提取的 content:', content)
-//       return content
-//     }
-//
-//     console.warn('🔍 未找到预期的 content 结构，完整数据:', jsonData)
-//     return ''
-//   } catch (e) {
-//     console.error('🔍 JSON 解析失败:', e)
-//     console.log('🔍 作为纯文本返回')
-//     return responseText
-//   }
-// }
 
 const parseApiResponse = (responseText: string): string => {
   try {
@@ -4234,285 +2461,6 @@ const parseApiResponse = (responseText: string): string => {
   }
 }
 
-// const getRes = async () => {
-//   if (!selectedSpread.value) return
-//
-//   console.log('=== 开始占卜流程 ===')
-//   loadingStatus.value = true
-//   //resStatus.value = false; // 确保在开始新占卜时隐藏旧结果
-//
-//   // 生成抽牌结果
-//   if (isOpenCardMode.value) {
-//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
-//       return {
-//         no: cardNo,
-//         name: String(cardInfo?.name || `第${cardNo + 1}张`),
-//         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-//         isReversed: Boolean(cardReversedStates.value[cardNo])
-//       } as CardResult
-//     })
-//   } else {
-//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
-//       return {
-//         no: cardNo,
-//         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-//         type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-//         isReversed: needReversed.value ? Math.random() > 0.5 : false
-//       } as CardResult
-//     })
-//   }
-//
-//   vh.showLoading()
-//
-//   try {
-//     const res = await fetch('/api', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({
-//         text: textValue.value,
-//         pms: cardResult.value,
-//         spread: {
-//           key: selectedSpread.value.key,
-//           name: selectedSpread.value.name,
-//           count: selectedSpread.value.count,
-//           positions: selectedSpread.value.positions ?? []
-//         },
-//         deck: {
-//           key: selectedDeck.value?.key ?? '',
-//           name: selectedDeck.value?.name ?? ''
-//         }
-//       })
-//     })
-//
-//     if (!res.ok) {
-//       const errorData = await res.json(); // 尝试解析错误响应
-//       console.error('API 错误响应数据:', errorData);
-//       throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`);
-//     }
-//
-//     const resText = await res.text()
-//     console.log('API 原始响应文本:', resText); // 打印原始响应文本
-//     const content = parseApiResponse(resText)
-//     console.log('parseApiResponse 提取的内容:', content); // 打印提取的内容
-//
-//     if (!content || content.length === 0) {
-//       throw new Error('未能提取到有效内容');
-//     }
-//
-//     const html = await parseMdToHtml(content)
-//     console.log('Markdown 转换为 HTML:', html); // 打印转换后的HTML
-//
-//     // 先设置结果内容
-//     firstDivinationResult.value = html
-//     console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0);
-//
-//     // 确保 DOM 更新
-//     await nextTick();
-//     console.log('DOM 已更新 (nextTick 1)');
-//
-//     resStatus.value = true // 设置为true，显示结果页面
-//     console.log('resStatus.value 已设置为 true');
-//
-//     // 再次等待 DOM 更新，确保 v-else-if 渲染
-//     await nextTick();
-//     console.log('DOM 已更新 (nextTick 2)');
-//
-//     console.log('=== 占卜成功完成 ===')
-//
-//   } catch (error) {
-//     console.error('=== 占卜请求失败，进入 catch 块 ===', error)
-//     resStatus.value = false
-//     firstDivinationResult.value = ''
-//   } finally {
-//     vh.hideLoading()
-//     loadingStatus.value = false
-//     console.log('=== 占卜流程结束，finally 块执行 ===')
-//     console.log('最终 loadingStatus:', loadingStatus.value, '最终 resStatus:', resStatus.value);
-//   }
-// }
-
-// const getRes = async () => {
-//   // if (!selectedSpread.value) return
-//   //
-//   // console.log('=== 开始占卜流程 ===')
-//   // loadingStatus.value = true
-//   // isWaitingForAnalysis.value = true // 开始等待AI分析
-//   //
-//   // // 生成抽牌结果 - 立即显示
-//   // if (isOpenCardMode.value) {
-//   //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//   //     const cardInfo = displayDeck.value.find(card => card.no === cardNo)
-//   //     const cardAnalysis = generateCardAnalysis(cardNo)
-//   //     return {
-//   //       no: cardNo,
-//   //       name: String(cardInfo?.name || `第${cardNo + 1}张`),
-//   //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-//   //       isReversed: Boolean(cardReversedStates.value[cardNo]),
-//   //       cardAnalysis: cardAnalysis // 添加这一行
-//   //     } as CardResult
-//   //   })
-//   // } else {
-//   //   cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//   //     const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
-//   //     const cardAnalysis = generateCardAnalysis(cardNo)
-//   //     return {
-//   //       no: cardNo,
-//   //       name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-//   //       type: needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread',
-//   //       isReversed: needReversed.value ? Math.random() > 0.5 : false,
-//   //       cardAnalysis: cardAnalysis // 添加这一行
-//   //     } as CardResult
-//   //   })
-//   // }
-//   if (!selectedSpread.value) return
-//   console.log('=== 开始占卜流程 ===')
-//   loadingStatus.value = true
-//   isWaitingForAnalysis.value = true
-//   // 生成抽牌结果 - 立即显示
-//   if (isOpenCardMode.value) {
-//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//       const cardInfo = displayDeck.value.find(card => card.no === cardNo)
-//       const cardAnalysis = generateCardAnalysis(cardNo)
-//       return {
-//         no: cardNo,
-//         name: String(cardInfo?.name || `第${cardNo + 1}张`),
-//         type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
-//         isReversed: Boolean(cardReversedStates.value[cardNo]),
-//         cardAnalysis: cardAnalysis
-//       } as CardResult
-//     })
-//   } else {
-//     cardResult.value = selectCardArr.value.map((cardNo, index) => {
-//       const cardInfo = shuffledDeck.value.find(card => card.no === cardNo)
-//       const cardAnalysis = generateCardAnalysis(cardNo)
-//       return {
-//         no: cardNo,
-//         name: String(cardInfo?.name || selectedDeck.value?.cardNames?.[cardNo] || `第${cardNo + 1}张`),
-//         type: (needGuideCards.value && index < guideCardCount.value ? 'guide' : 'spread') as 'guide' | 'spread',
-//         isReversed: needReversed.value ? Math.random() > 0.5 : false,
-//         cardAnalysis: cardAnalysis
-//       } as CardResult
-//     })
-//   }
-//
-//   // 立即显示抽牌结果
-//   resStatus.value = true
-//   loadingStatus.value = false
-//
-//   // 清空之前的分析结果
-//   firstDivinationResult.value = ''
-//
-//   try {
-//     // const res = await fetch('/api', {
-//     //   method: 'POST',
-//     //   headers: {
-//     //     'Content-Type': 'application/json'
-//     //   },
-//     //   body: JSON.stringify({
-//     //     text: textValue.value,
-//     //     pms: cardResult.value,
-//     //     spread: {
-//     //       key: selectedSpread.value.key,
-//     //       name: selectedSpread.value.name,
-//     //       count: selectedSpread.value.count,
-//     //       positions: selectedSpread.value.positions ?? []
-//     //     },
-//     //     deck: {
-//     //       key: selectedDeck.value?.key ?? '',
-//     //       name: selectedDeck.value?.name ?? ''
-//     //     }
-//     //   })
-//     // })
-//     // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
-//     // 在 getRes 函数中，找到 fetch 请求部分，修改 body 数据
-//     const res = await fetch('/api', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({
-//         text: textValue.value,
-//         pms: cardResult.value.map(card => {
-//           const cardData = {
-//             no: card.no,
-//             name: card.name,
-//             type: card.type,
-//             isReversed: card.isReversed
-//           }
-//
-//           // 如果有 cardAnalysis，则添加相关字段
-//           if (card.cardAnalysis) {
-//             cardData.cardAnalysis = {
-//               symbols: card.cardAnalysis.symbols,
-//               actions: card.cardAnalysis.actions,
-//               story_hint: card.cardAnalysis.story_hint,
-//               branches: card.cardAnalysis.branches,
-//               possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-//             }
-//
-//             // 只有当 element_relations 存在时才添加
-//             if (card.cardAnalysis.element_relations) {
-//               cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-//             }
-//           }
-//
-//           return cardData
-//         }),
-//         spread: {
-//           key: selectedSpread.value.key,
-//           name: selectedSpread.value.name,
-//           count: selectedSpread.value.count,
-//           positions: selectedSpread.value.positions ?? []
-//         },
-//         deck: {
-//           key: selectedDeck.value?.key ?? '',
-//           name: selectedDeck.value?.name ?? ''
-//         }
-//       })
-//     })
-//
-//
-//
-//     if (!res.ok) {
-//       const errorData = await res.json()
-//       console.error('API 错误响应数据:', errorData)
-//       throw new Error(`API response was not ok: ${res.statusText} - ${errorData.details || '未知错误'}`)
-//     }
-//
-//     const resText = await res.text()
-//     console.log('API 原始响应文本:', resText)
-//     const content = parseApiResponse(resText)
-//     console.log('parseApiResponse 提取的内容:', content)
-//
-//     if (!content || content.length === 0) {
-//       throw new Error('未能提取到有效内容')
-//     }
-//
-//     const html = await parseMdToHtml(content)
-//     console.log('Markdown 转换为 HTML:', html)
-//
-//     // 设置分析结果
-//     firstDivinationResult.value = html
-//     console.log('firstDivinationResult.value 已设置:', firstDivinationResult.value.length > 0)
-//
-//     await nextTick()
-//     console.log('DOM 已更新')
-//
-//     console.log('=== 占卜成功完成 ===')
-//
-//   } catch (error) {
-//     console.error('=== 占卜请求失败，进入 catch 块 ===', error)
-//     firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
-//   } finally {
-//     isWaitingForAnalysis.value = false // 结束等待
-//     console.log('=== 占卜流程结束，finally 块执行 ===')
-//     console.log('最终 isWaitingForAnalysis:', isWaitingForAnalysis.value, '最终 resStatus:', resStatus.value)
-//   }
-// }
 const getRes = async () => {
   if (!selectedSpread.value) return
 
@@ -4551,91 +2499,7 @@ const getRes = async () => {
   resStatus.value = true
   loadingStatus.value = false
   console.log('=== 占卜流程完成（等待AI分析）===')
-  // // 清空之前的分析结果
-  // firstDivinationResult.value = ''
-  //
-  // try {
-  //   // API 调用代码...
-  //   const res = await fetch('/api', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       text: textValue.value,
-  //       pms: cardResult.value.map((card: CardResult) => {
-  //         const cardData: any = {
-  //           no: card.no,
-  //           name: card.name,
-  //           type: card.type,
-  //           isReversed: card.isReversed
-  //         }
-  //
-  //         // 如果有 cardAnalysis，则添加相关字段
-  //         if (card.cardAnalysis) {
-  //           cardData.cardAnalysis = {
-  //             symbols: card.cardAnalysis.symbols,
-  //             actions: card.cardAnalysis.actions,
-  //             story_hint: card.cardAnalysis.story_hint,
-  //             branches: card.cardAnalysis.branches,
-  //             possible_real_world_mapping: card.cardAnalysis.possible_real_world_mapping
-  //           }
-  //
-  //           // 只有当 element_relations 存在时才添加
-  //           if (card.cardAnalysis.element_relations) {
-  //             cardData.cardAnalysis.element_relations = card.cardAnalysis.element_relations
-  //           }
-  //         }
-  //
-  //         return cardData
-  //       }),
-  //       spread: {
-  //         key: selectedSpread.value.key,
-  //         name: selectedSpread.value.name,
-  //         count: selectedSpread.value.count,
-  //         positions: selectedSpread.value.positions ?? []
-  //       },
-  //       deck: {
-  //         key: selectedDeck.value?.key ?? '',
-  //         name: selectedDeck.value?.name ?? ''
-  //       }
-  //     })
-  //   })
-  //
-  // //   // 处理响应...
-  // // } catch (error) {
-  // //   console.error('=== 占卜请求失败，进入 catch 块 ===', error)
-  // //   firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
-  // // } finally {
-  // //   isWaitingForAnalysis.value = false
-  // // }
-  //   if (!res.ok) {
-  //     const errorData = await res.json()
-  //     console.error('API 错误响应数据:', errorData)
-  //     throw new Error(`API response was not ok: ${res.statusText}`)
-  //   }
-  //   const resText = await res.text()
-  //   console.log('🔍 API 原始响应文本:', resText) // 添加调试日志
-  //
-  //   const content = parseApiResponse(resText)
-  //   console.log('🔍 parseApiResponse 提取的内容:', content) // 添加调试日志
-  //   if (!content || content.length === 0) {
-  //     throw new Error('未能提取到有效内容')
-  //   }
-  //   const html = await parseMdToHtml(content)
-  //   console.log('🔍 Markdown 转换为 HTML:', html) // 添加调试日志
-  //   // 🔥 关键：确保这里正确赋值
-  //   firstDivinationResult.value = html
-  //   console.log('🔍 firstDivinationResult.value 已设置:', firstDivinationResult.value) // 添加调试日志
-  //   await nextTick()
-  //   console.log('🔍 DOM 已更新')
-  // } catch (error) {
-  //   console.error('🔍 占卜请求失败:', error)
-  //   firstDivinationResult.value = '<p style="color: #e74c3c;">占卜分析失败，请重试</p>'
-  // } finally {
-  //   isWaitingForAnalysis.value = false
-  //   console.log('🔍 最终状态 - isWaitingForAnalysis:', isWaitingForAnalysis.value, 'resStatus:', resStatus.value)
-  // }
+
 }
 
 
@@ -4646,11 +2510,7 @@ const openCardViewModal = () => {
   selectedViewDeck.value = ''
 }
 
-// const closeCardViewModal = () => {
-//   showCardViewModal.value = false
-//   selectedViewDeck.value = ''
-//   showDeckSelector.value = true
-// }
+
 
 
 const closeCardViewModal = () => {
@@ -4705,101 +2565,6 @@ const selectedCardDetail = ref<CardDetail | null>(null)
 const showCardDetail = ref(false)
 
 
-// 在 selectCardDetail 函数后面添加（大约在第1800行左右）
-
-// 显示抽中卡牌的详情
-// const showDrawnCardDetail = (drawnCard: CardResult) => {
-//   console.log('查看抽中卡牌详情:', drawnCard)
-//
-//   // 获取当前使用的牌组key
-//   const currentDeckKey = selectedDeck.value?.key
-//
-//   if (!currentDeckKey) {
-//     console.error('无法确定当前牌组')
-//     return
-//   }
-//
-//   // 从 pai.json 中查找详细信息
-//   const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
-//
-//   if (!deckDetails) {
-//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
-//     return
-//   }
-//
-//   // 查找对应的卡牌详情
-//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
-//
-//   if (cardDetail) {
-//     selectedCardDetail.value = cardDetail
-//     showDrawnCardDetailModal.value = true
-//   } else {
-//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
-//   }
-// }
-
-// 关闭抽牌详情模态框
-// const closeDrawnCardDetail = () => {
-//   showDrawnCardDetailModal.value = false
-//   selectedCardDetail.value = null
-// }
-// 显示抽中卡牌的详情（保持不变）
-// const showDrawnCardDetail = (drawnCard: CardResult) => {
-//   console.log('查看抽中卡牌详情:', drawnCard)
-//
-//   const currentDeckKey = selectedDeck.value?.key
-//
-//   if (!currentDeckKey) {
-//     console.error('无法确定当前牌组')
-//     return
-//   }
-//
-//   // const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
-// // 在 selectViewDeck 等函数中，如果需要类型转换
-//   const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
-//
-//   if (!deckDetails) {
-//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
-//     return
-//   }
-//
-//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
-//
-//   if (cardDetail) {
-//     selectedCardDetail.value = cardDetail
-//     showDrawnCardDetailModal.value = true // 只使用新的模态框状态
-//   } else {
-//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
-//   }
-// }
-// const showDrawnCardDetail = (drawnCard: CardResult) => {
-//   console.log('查看抽中卡牌详情:', drawnCard)
-//
-//   const currentDeckKey = selectedDeck.value?.key
-//
-//   if (!currentDeckKey) {
-//     console.error('无法确定当前牌组')
-//     return
-//   }
-//
-//   // const deckDetails = (allCardDetails as unknown as CardDetailsData)[currentDeckKey]
-// // 在使用 allCardDetails 的地方，添加类型断言
-//   const deckDetails = (allCardDetails as any)[currentDeckKey] as CardDetail[]
-//
-//   if (!deckDetails) {
-//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
-//     return
-//   }
-//
-//   const cardDetail = deckDetails.find(card => card.id === drawnCard.no)
-//
-//   if (cardDetail) {
-//     selectedCardDetail.value = cardDetail
-//     showDrawnCardDetailModal.value = true
-//   } else {
-//     console.error(`未找到卡牌 ${drawnCard.no} 的详情信息`)
-//   }
-// }
 
 const showDrawnCardDetail = (drawnCard: CardResult) => {
   console.log('查看抽中卡牌详情:', drawnCard)
@@ -4830,14 +2595,6 @@ const closeDrawnCardDetail = () => {
 }
 
 
-// 选择卡牌详情
-// const selectCardDetail = (cardNo: number) => {
-//   const detail = cardDetails.find(card => card.id === cardNo)
-//   if (detail) {
-//     selectedCardDetail.value = detail
-//     showCardDetail.value = true
-//   }
-// }
 
 // 修改导入和类型定义
 import allCardDetails from '../../data/pai.json'
@@ -4845,27 +2602,6 @@ import allCardDetails from '../../data/pai.json'
 // 添加类型定义
 type CardDetailsData = Record<string, CardDetail[]>
 
-// const selectCardDetail = (cardNo: number) => {
-//   if (!selectedViewDeck.value) return
-//
-//   // 使用牌组的key作为标识符
-//   const deckKey = selectedViewDeck.value
-//   const deckDetails = (allCardDetails as CardDetailsData)[deckKey]
-//
-//   if (!deckDetails) {
-//     console.warn(`未找到牌组 ${deckKey} 的详情数据`)
-//     console.log('可用的牌组标识:', Object.keys(allCardDetails))
-//     return
-//   }
-//
-//   const detail = deckDetails.find(card => card.id === cardNo)
-//   if (detail) {
-//     selectedCardDetail.value = detail
-//     showCardDetail.value = true
-//   } else {
-//     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
-//   }
-// }
 
 const selectCardDetail = (cardNo: number) => {
   if (!selectedViewDeck.value) return
@@ -4884,129 +2620,6 @@ const selectCardDetail = (cardNo: number) => {
     console.warn(`在牌组 ${deckKey} 中未找到卡牌 ${cardNo} 的详情信息`)
   }
 }
-
-// 生成卡牌分析数据的函数
-// const generateCardAnalysis = (cardNo: number): any => {
-//   const currentDeckKey = selectedDeck.value?.key
-//
-//   if (!currentDeckKey) {
-//     console.error('无法确定当前牌组')
-//     return null
-//   }
-//
-//   const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
-//
-//   if (!deckDetails) {
-//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
-//     return null
-//   }
-//
-//   const cardDetail = deckDetails.find(card => card.id === cardNo)
-//
-//   if (!cardDetail) {
-//     console.error(`未找到卡牌 ${cardNo} 的详情信息`)
-//     // 返回默认数据而不是 null
-//     return {
-//       symbols: {
-//         characters: ["未知人物"],
-//         props: ["未知道具"],
-//         environment: ["未知环境"],
-//         time_hint: "未知时间",
-//         direction: "未知方向"
-//       },
-//       actions: ["未知行动"],
-//       story_hint: "无可用故事信息",
-//       branches: ["需要更多信息"]
-//     }
-//   }
-//
-//   // 根据 cardDetail 生成 cardAnalysis
-//   // return {
-//   //   symbols: {
-//   //     characters: cardDetail.symbolic_elements.characters,
-//   //     props: cardDetail.symbolic_elements.props,
-//   //     environment: cardDetail.symbolic_elements.environment,
-//   //     time_hint: cardDetail.symbolic_elements.time_hint,
-//   //     direction: cardDetail.symbolic_elements.direction
-//   //   },
-//   //   actions: cardDetail.symbolic_attributes.interactions,
-//   //   story_hint: cardDetail.story,
-//   //   branches: cardDetail.symbolic_attributes.potential_branches
-//   // }
-//   const analysis = {
-//     symbols: {
-//       characters: cardDetail.symbolic_elements.characters || ["未知人物"],
-//       props: cardDetail.symbolic_elements.props || ["未知道具"],
-//       environment: cardDetail.symbolic_elements.environment || ["未知环境"],
-//       time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
-//       direction: cardDetail.symbolic_elements.direction || "未知方向"
-//     },
-//     actions: cardDetail.symbolic_attributes.interactions || ["未知行动"],
-//     story_hint: cardDetail.story || "无可用故事信息",
-//     branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"]
-//   }
-//   console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
-//   return analysis
-// }
-// 找到 generateCardAnalysis 函数（大约在第1600行左右），修改返回的数据结构
-// const generateCardAnalysis = (cardNo: number): any => {
-//   const currentDeckKey = selectedDeck.value?.key
-//
-//   if (!currentDeckKey) {
-//     console.error('无法确定当前牌组')
-//     return null
-//   }
-//
-//   const deckDetails = (allCardDetails as CardDetailsData)[currentDeckKey]
-//
-//   if (!deckDetails) {
-//     console.error(`未找到牌组 ${currentDeckKey} 的详情数据`)
-//     return null
-//   }
-//
-//   const cardDetail = deckDetails.find(card => card.id === cardNo)
-//
-//   if (!cardDetail) {
-//     console.error(`未找到卡牌 ${cardNo} 的详情信息`)
-//     // 返回默认数据而不是 null
-//     return {
-//       symbols: {
-//         characters: ["未知人物"],
-//         props: ["未知道具"],
-//         environment: ["未知环境"],
-//         time_hint: "未知时间",
-//         direction: "未知方向"
-//       },
-//       actions: ["未知行动"],
-//       story_hint: "无可用故事信息",
-//       branches: ["需要更多信息"],
-//       possible_real_world_mapping: "无可用现实映射信息"
-//       // 注意：这里不设置 element_relations，因为没有数据时不应该传递
-//     }
-//   }
-//
-//   const analysis = {
-//     symbols: {
-//       characters: cardDetail.symbolic_elements.characters || ["未知人物"],
-//       props: cardDetail.symbolic_elements.props || ["未知道具"],
-//       environment: cardDetail.symbolic_elements.environment || ["未知环境"],
-//       time_hint: cardDetail.symbolic_elements.time_hint || "未知时间",
-//       direction: cardDetail.symbolic_elements.direction || "未知方向"
-//     },
-//     actions: cardDetail.symbolic_attributes.interactions || ["未知行动"],
-//     story_hint: cardDetail.story || "无可用故事信息",
-//     branches: cardDetail.symbolic_attributes.potential_branches || ["需要更多信息"],
-//     possible_real_world_mapping: cardDetail.possible_real_world_mapping || "无可用现实映射信息"
-//   }
-//
-//   // 只有当 element_relations 存在时才添加到分析数据中
-//   if (cardDetail.element_relations) {
-//     analysis.element_relations = cardDetail.element_relations
-//   }
-//
-//   console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
-//   return analysis
-// }
 
 const generateCardAnalysis = (cardNo: number): any => {
   const currentDeckKey = selectedDeck.value?.key
@@ -5076,10 +2689,6 @@ const generateCardAnalysis = (cardNo: number): any => {
   console.log(`卡牌 ${cardNo} 的分析数据:`, analysis)
   return analysis
 }
-
-// // 在现有的 ref 声明附近添加（大约在第85行左右，showCardDetail 附近）
-// const showCardDetail = ref(false)
-// const selectedCardDetail = ref<CardDetail | null>(null)
 
 // 新增：抽牌结果详情模态框状态
 const showDrawnCardDetailModal = ref(false)
