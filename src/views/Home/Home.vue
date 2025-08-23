@@ -2981,7 +2981,7 @@ const getAIAnalysis = async () => {
   // 使用 Promise.allSettled 来处理多个模型的请求
   const promises = selectedModelKeys.value.map(async (modelKey, index) => {
     try {
-      const res = await fetch('/api/ai-analysis', {
+      const res = await fetch('/ai-analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
