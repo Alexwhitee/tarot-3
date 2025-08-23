@@ -1,4 +1,4 @@
-获取支持的模型列表的端点
+
 export async function onRequestGet({ request, env }) {
   return new Response(JSON.stringify({
     models: [
