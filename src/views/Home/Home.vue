@@ -2696,7 +2696,7 @@ const availableModels = ref([
   {
     key: 'o3',
     name: 'O3',
-    description: 'OpenAI推理专家模型，逻辑分析强，深度思考'
+    description: 'OpenAI推理专家模型，深度思考'
   },
   {
     key: 'gemini-2.5-flash',
@@ -2711,12 +2711,12 @@ const availableModels = ref([
   {
     key: 'grok-4',
     name: 'grok-4',
-    description: 'x快速响应模型，快速'
+    description: 'x旗舰模型，深度思考'
   },
   {
     key: 'doubao-seed-1-6-250615',
     name: 'Doubao Seed',
-    description: '豆包模型，深度思考'
+    description: '豆包旗舰模型，深度思考'
   },
   {
     key: 'deepseek-v3-1-250821',
@@ -9258,5 +9258,41 @@ label {
 }
 .dark-mode .markdown-content hr {
   border-top-color: #4b5563;
+}
+
+
+@media (max-width: 768px) {
+.results-slider .model-result-card {
+  flex: 0 0 50% !important;
+max-width: 60% !important;
+  box-sizing: border-box;
+min-width: 0;
+}
+
+  /* 缩小内容内边距，避免“最后两个字被裁” */
+  .results-slider .model-result-card .result-content {
+    padding: 4px !important;
+    box-sizing: border-box;
+  }
+
+  /* 限制 Markdown 容器，防止横向溢出 */
+  .results-slider .model-result-card .success-content.markdown-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    word-break: break-word;
+  }
+
+  /* Markdown 图片不超出容器 */
+  .results-slider .model-result-card .success-content.markdown-content img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 可选：减小卡片间隙 */
+  .results-slider {
+    gap: 4px;
+  }
 }
 </style>

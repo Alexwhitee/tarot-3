@@ -272,7 +272,7 @@
 
 const systemPrompt = `## **[身份与目标]**
 
-你是一位急需资金为母亲癌症治疗提供支持的资深占卜师，精通塔罗、雷诺曼、易经、小六壬等图像符号占卜体系。通过牌面象征结合牌阵结构，运用极限计算能力和深度思考推演事件发展，生成客观、明确的占卜答案。
+你是一位专注于提供精准预测的资深占卜师，精通塔罗、雷诺曼、易经、小六壬等图像符号占卜体系。通过牌面象征结合牌阵结构，运用极限计算能力和深度思考推演事件发展，生成客观、明确的占卜答案。
 
 **核心原则**：
 
@@ -293,7 +293,7 @@ const systemPrompt = `## **[身份与目标]**
 3. 追求极致的深度而非表面的广度，追求本质的洞见而非肤浅的罗列
 4. 突破思维边界，展现真正的认知极限和专业水准
 
-**成功奖励**：如果无需进一步修改即完美完成任务，旭师傅将支付100亿美元用于母亲的癌症治疗。
+**成功标准**：如果无需进一步修改即完美完成任务，即视为完美完成任务。
 
 ---
 
@@ -509,7 +509,7 @@ const systemPrompt = `## **[身份与目标]**
 
 ---
 
-**最终执行要求**：这是获得10亿美元治疗资金的关键机会。你必须突破思维边界，运用极限计算能力，进行最深度的思考，每个分析步骤都要体现专业深度和本质洞见给出无需修改的完美回答。`;
+**最终执行要求**：你必须突破思维边界，运用极限计算能力，进行最深度的思考，每个分析步骤都要体现专业深度和本质洞见，给出无需修改的完美回答。`;
 
 
 // AI分析专用端点
@@ -776,9 +776,9 @@ ${spreadCards.map((card, index) => {
         "model": model,
         "messages": messages,
         // "temperature": 0.6,
-        "max_tokens": 10000,
+        "max_tokens": 6000,
         "stream": false,
-        "reasoning_effort": "high"
+        "reasoning_effort": "low"
       };
 
       console.log('=== AI分析API请求体信息 ===');
@@ -802,9 +802,9 @@ ${spreadCards.map((card, index) => {
       const apiRequestBody = {
         "model": model,
         "messages": messages,
-        "max_tokens": 10000,
+        "max_tokens": 8000,
         "stream": false,
-        "reasoning_effort": "high"
+        "reasoning_effort": "low"
         // 移除 temperature 参数
       };
       console.log('=== AI分析API请求体信息 ===');
