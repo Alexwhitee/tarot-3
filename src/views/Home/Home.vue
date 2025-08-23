@@ -3492,7 +3492,7 @@ const onDragStart = (e: MouseEvent | TouchEvent) => {
   window.addEventListener('touchmove', onDragMove as any, { passive: false })
   window.addEventListener('touchend', onDragEnd)
 }
-
+const SCALE = 3
 // 拖拽移动（重命名）
 const onDragMove = (e: MouseEvent | TouchEvent) => {
   if (!isDragging2) return
