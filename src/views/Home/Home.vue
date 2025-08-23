@@ -572,34 +572,34 @@
         </div>
         <!-- 上方滑轨 -->
         <div class="slider-controls top">
-          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
-          <div class="slider-track" ref="topSliderTrack">
+          <div class="position-indicator">{{ zsCurrentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
+          <div class="slider-track" ref="zszsBottomSliderTrack">
             <div
               class="slider-thumb"
-              :style="{ left: sliderPosition + '%' }"
-              @mousedown="startDrag"
+              :style="{ left: zszsSliderPosition + '%' }"
+              @mousedown="zsStartDrag"
             ></div>
           </div>
           <div class="boundary-indicator" :class="{
-            'at-start': currentSlideIndex === 0,
-            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
+            'at-start': zsCurrentSlideIndex === 0,
+            'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
           }">
-            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
-            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+            <span v-if="zsCurrentSlideIndex === 0">◀ 已到最左边</span>
+            <span v-else-if="zsCurrentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
           </div>
         </div>
         <!-- 结果滑动容器 -->
         <div
           class="results-slider-container"
-          ref="sliderContainer"
-          @scroll="onSliderScroll"
-          @touchstart="onTouchStart"
-          @touchmove="onTouchMove"
-          @touchend="onTouchEnd"
+          ref="zsSliderContainer"
+          @scroll="zsOnSliderScroll"
+          @touchstart="zsOnTouchStart"
+          @touchmove="zsOnTouchMove"
+          @touchend="zsonTouchEnd"
         >
           <div
             class="results-slider"
-            :style="{ transform: `translateX(-${slideOffset}px)` }"
+            :style="{ transform: `translateX(-${zsSlideOffset}px)` }"
           >
             <div
               v-for="(result, index) in aiAnalysisResults"
@@ -639,20 +639,20 @@
         </div>
         <!-- 下方滑轨 -->
         <div class="slider-controls bottom">
-          <div class="position-indicator">{{ currentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
+          <div class="position-indicator">{{ zsCurrentSlideIndex + 1 }}/{{ aiAnalysisResults.length }}</div>
           <div class="slider-track" ref="bottomSliderTrack">
             <div
               class="slider-thumb"
-              :style="{ left: sliderPosition + '%' }"
-              @mousedown="startDrag"
+              :style="{ left: zszsSliderPosition + '%' }"
+              @mousedown="zsStartDrag"
             ></div>
           </div>
           <div class="boundary-indicator" :class="{
-            'at-start': currentSlideIndex === 0,
-            'at-end': currentSlideIndex === aiAnalysisResults.length - 1
+            'at-start': zsCurrentSlideIndex === 0,
+            'at-end': zsCurrentSlideIndex === aiAnalysisResults.length - 1
           }">
-            <span v-if="currentSlideIndex === 0">◀ 已到最左边</span>
-            <span v-else-if="currentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
+            <span v-if="zsCurrentSlideIndex === 0">◀ 已到最左边</span>
+            <span v-else-if="zsCurrentSlideIndex === aiAnalysisResults.length - 1">已到最右边 ▶</span>
           </div>
         </div>
       </div>
@@ -798,7 +798,7 @@ active: selectCardArr.includes(i.no),
             @click="selectCard(i.no)"
             :style="{
 transform: `translateX(${(index * cardPartialWidth) - viewOffset}px) ${selectCardArr.includes(i.no) ? 'translateY(-160px)' : ''}`,
-width: cardWidth + 'px',
+width: cardWidth2 + 'px',
 zIndex: selectCardArr.includes(i.no) ? 100 : index
 }"
           >
@@ -2590,24 +2590,24 @@ const progressPercentage = ref(0)
 const progressText = ref('')
 const hasAIAnalysis = computed(() => aiAnalysisResults.value.length > 0)
 // 滑动相关状态
-const currentSlideIndex = ref(0)
-const slideOffset = ref(0)
-const sliderContainer = ref<HTMLElement | null>(null)
-const topSliderTrack = ref<HTMLElement | null>(null)
+const zsCurrentSlideIndex = ref(0)
+const zsSlideOffset = ref(0)
+const zsSliderContainer = ref<HTMLElement | null>(null)
+const zszsBottomSliderTrack = ref<HTMLElement | null>(null)
 const bottomSliderTrack = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
- const cardWidth = ref(88) // 每个卡片的固定宽度
-const cardsPerView = ref(2) // 当前视图显示的卡片数量
+ const cardWidth = ref(358) // 每个卡片的固定宽度
+const zsCardsPerView = ref(2) // 当前视图显示的卡片数量
 // 复制状态
 const copyAllStatus = ref(false)
 const copySingleStatus = ref<boolean[]>([])
 // 触摸相关
-const touchStartX = ref(0)
-const touchStartOffset = ref(0)
+const zsTouchStartX = ref(0)
+const zsTouchStartOffset = ref(0)
 // 计算滑轨位置
-const sliderPosition = computed(() => {
+const zszsSliderPosition = computed(() => {
   if (aiAnalysisResults.value.length <= 1) return 0
-  return (currentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
+  return (zsCurrentSlideIndex.value / (aiAnalysisResults.value.length - 1)) * 100
 })
 // 可用模型列表
 const availableModels = ref([
@@ -2717,12 +2717,12 @@ const availableModels = ref([
   }
 ])
 // 响应式布局检测
-const updateCardsPerView = () => {
+const updatezsCardsPerView = () => {
   const width = window.innerWidth
   if (width < 768) {
-    cardsPerView.value = 1 // 手机端
+    zsCardsPerView.value = 1 // 手机端
   } else {
-    cardsPerView.value = 2 // 桌面端和平板端
+    zsCardsPerView.value = 2 // 桌面端和平板端
   }
 }
 // 切换模型选择
@@ -2753,8 +2753,8 @@ const getModelName = (key: string) => {
 //   aiAnalysisResults.value = []
 //   copySingleStatus.value = []
 //   progressPercentage.value = 0
-//   currentSlideIndex.value = 0
-//   slideOffset.value = 0
+//   zsCurrentSlideIndex.value = 0
+//   zsSlideOffset.value = 0
 //   try {
 //     const totalModels = selectedModelKeys.value.length
 //     let completedModels = 0
@@ -2850,8 +2850,8 @@ const getAIAnalysis = async () => {
   renderedResults.value = [] // 清空渲染结果
   copySingleStatus.value = []
   progressPercentage.value = 0
-  currentSlideIndex.value = 0
-  slideOffset.value = 0
+  zsCurrentSlideIndex.value = 0
+  zsSlideOffset.value = 0
   try {
     const totalModels = selectedModelKeys.value.length
     let completedModels = 0
@@ -2942,33 +2942,33 @@ const getAIAnalysis = async () => {
   }
 }
 // // 滑动相关函数
-// const updateSlideOffset = () => {
-//   const containerWidth = sliderContainer.value?.clientWidth || 0
+// const updatezsSlideOffset = () => {
+//   const containerWidth = zsSliderContainer.value?.clientWidth || 0
 //   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-//   const targetOffset = (currentSlideIndex.value * cardWidth.value)
-//   slideOffset.value = Math.min(targetOffset, maxOffset)
+//   const targetOffset = (zsCurrentSlideIndex.value * cardWidth.value)
+//   zsSlideOffset.value = Math.min(targetOffset, maxOffset)
 // }
-// const onSliderScroll = () => {
+// const zsOnSliderScroll = () => {
 //   if (isDragging.value) return
 //
-//   const container = sliderContainer.value
+//   const container = zsSliderContainer.value
 //   if (!container) return
 //
 //   const scrollLeft = container.scrollLeft
 //   const newIndex = Math.round(scrollLeft / cardWidth.value)
-//   currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+//   zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
 // }
 // // 滑轨拖拽
-// const startDrag = (event: MouseEvent) => {
+// const zsStartDrag = (event: MouseEvent) => {
 //   isDragging.value = true
-//   document.addEventListener('mousemove', onDrag)
-//   document.addEventListener('mouseup', endDrag)
+//   document.addEventListener('mousemove', zsOnDrag)
+//   document.addEventListener('mouseup', zsEndDrag)
 //   event.preventDefault()
 // }
-// const onDrag = (event: MouseEvent) => {
+// const zsOnDrag = (event: MouseEvent) => {
 //   if (!isDragging.value) return
 //
-//   const track = topSliderTrack.value || bottomSliderTrack.value
+//   const track = zszsBottomSliderTrack.value || bottomSliderTrack.value
 //   if (!track) return
 //
 //   const rect = track.getBoundingClientRect()
@@ -2976,71 +2976,71 @@ const getAIAnalysis = async () => {
 //   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
 //   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
 //
-//   currentSlideIndex.value = newIndex
-//   updateSlideOffset()
+//   zsCurrentSlideIndex.value = newIndex
+//   updatezsSlideOffset()
 // }
-// const endDrag = () => {
+// const zsEndDrag = () => {
 //   isDragging.value = false
-//   document.removeEventListener('mousemove', onDrag)
-//   document.removeEventListener('mouseup', endDrag)
+//   document.removeEventListener('mousemove', zsOnDrag)
+//   document.removeEventListener('mouseup', zsEndDrag)
 // }
 // // 触摸事件
-// const onTouchStart = (event: TouchEvent) => {
-//   touchStartX.value = event.touches[0].clientX
-//   touchStartOffset.value = slideOffset.value
+// const zsOnTouchStart = (event: TouchEvent) => {
+//   zsTouchStartX.value = event.touches[0].clientX
+//   zsTouchStartOffset.value = zsSlideOffset.value
 // }
-// const onTouchMove = (event: TouchEvent) => {
+// const zsOnTouchMove = (event: TouchEvent) => {
 //   const currentX = event.touches[0].clientX
-//   const deltaX = touchStartX.value - currentX
-//   const newOffset = touchStartOffset.value + deltaX
+//   const deltaX = zsTouchStartX.value - currentX
+//   const newOffset = zsTouchStartOffset.value + deltaX
 //
-//   const containerWidth = sliderContainer.value?.clientWidth || 0
+//   const containerWidth = zsSliderContainer.value?.clientWidth || 0
 //   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
 //
-//   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-//   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+//   zsSlideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+//   zsCurrentSlideIndex.value = Math.round(zsSlideOffset.value / cardWidth.value)
 // }
 //
 //
 //
 //
 //
-// const onTouchEnd = () => {
-//   updateSlideOffset()
+// const zsonTouchEnd = () => {
+//   updatezsSlideOffset()
 // }
 
 // 滑动相关函数
-const updateSlideOffset = () => {
-  const container = sliderContainer.value as HTMLDivElement | null
+const updatezsSlideOffset = () => {
+  const container = zsSliderContainer.value as HTMLDivElement | null
   const containerWidth = container?.clientWidth || 0
   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-  const targetOffset = (currentSlideIndex.value * cardWidth.value)
-  slideOffset.value = Math.min(targetOffset, maxOffset)
+  const targetOffset = (zsCurrentSlideIndex.value * cardWidth.value)
+  zsSlideOffset.value = Math.min(targetOffset, maxOffset)
 }
 
-const onSliderScroll = () => {
+const zsOnSliderScroll = () => {
   if (isDragging.value) return
 
-  const container = sliderContainer.value as HTMLDivElement | null
+  const container = zsSliderContainer.value as HTMLDivElement | null
   if (!container) return
 
   const scrollLeft = container.scrollLeft
   const newIndex = Math.round(scrollLeft / cardWidth.value)
-  currentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
+  zsCurrentSlideIndex.value = Math.max(0, Math.min(newIndex, aiAnalysisResults.value.length - 1))
 }
 
 // 滑轨拖拽
-const startDrag = (event: MouseEvent) => {
+const zsStartDrag = (event: MouseEvent) => {
   isDragging.value = true
-  document.addEventListener('mousemove', onDrag)
-  document.addEventListener('mouseup', endDrag)
+  document.addEventListener('mousemove', zsOnDrag)
+  document.addEventListener('mouseup', zsEndDrag)
   event.preventDefault()
 }
 
-const onDrag = (event: MouseEvent) => {
+const zsOnDrag = (event: MouseEvent) => {
   if (!isDragging.value) return
 
-  const track = (topSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
+  const track = (zszsBottomSliderTrack.value || bottomSliderTrack.value) as HTMLDivElement | null
   if (!track) return
 
   const rect = track.getBoundingClientRect()
@@ -3048,50 +3048,50 @@ const onDrag = (event: MouseEvent) => {
   const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
   const newIndex = Math.round((percentage / 100) * (aiAnalysisResults.value.length - 1))
 
-  currentSlideIndex.value = newIndex
-  updateSlideOffset()
+  zsCurrentSlideIndex.value = newIndex
+  updatezsSlideOffset()
 }
 
-const endDrag = () => {
+const zsEndDrag = () => {
   isDragging.value = false
-  document.removeEventListener('mousemove', onDrag)
-  document.removeEventListener('mouseup', endDrag)
+  document.removeEventListener('mousemove', zsOnDrag)
+  document.removeEventListener('mouseup', zsEndDrag)
 }
 
 // 触摸事件
-const onTouchStart = (event: TouchEvent) => {
-  touchStartX.value = event.touches[0].clientX
-  touchStartOffset.value = slideOffset.value
+const zsOnTouchStart = (event: TouchEvent) => {
+  zsTouchStartX.value = event.touches[0].clientX
+  zsTouchStartOffset.value = zsSlideOffset.value
 }
 
-// const onTouchMove = (event: TouchEvent) => {
+// const zsOnTouchMove = (event: TouchEvent) => {
 //   const currentX = event.touches[0].clientX
-//   const deltaX = touchStartX.value - currentX
-//   const newOffset = touchStartOffset.value + deltaX
+//   const deltaX = zsTouchStartX.value - currentX
+//   const newOffset = zsTouchStartOffset.value + deltaX
 //
-//   const container = sliderContainer.value as HTMLDivElement | null
+//   const container = zsSliderContainer.value as HTMLDivElement | null
 //   const containerWidth = container?.clientWidth || 0
 //   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
 //
-//   slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-//   currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+//   zsSlideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+//   zsCurrentSlideIndex.value = Math.round(zsSlideOffset.value / cardWidth.value)
 // }
 
-const onTouchEnd = () => {
-  updateSlideOffset()
+const zsonTouchEnd = () => {
+  updatezsSlideOffset()
 }
 
 // 键盘事件
-const onKeyDown = (event: KeyboardEvent) => {
+const zsOnKeyDown = (event: KeyboardEvent) => {
   if (!hasAIAnalysis.value) return
 
   if (event.key === 'ArrowLeft') {
-    currentSlideIndex.value = Math.max(0, currentSlideIndex.value - 1)
-    updateSlideOffset()
+    zsCurrentSlideIndex.value = Math.max(0, zsCurrentSlideIndex.value - 1)
+    updatezsSlideOffset()
     event.preventDefault()
   } else if (event.key === 'ArrowRight') {
-    currentSlideIndex.value = Math.min(aiAnalysisResults.value.length - 1, currentSlideIndex.value + 1)
-    updateSlideOffset()
+    zsCurrentSlideIndex.value = Math.min(aiAnalysisResults.value.length - 1, zsCurrentSlideIndex.value + 1)
+    updatezsSlideOffset()
     event.preventDefault()
   }
 }
@@ -3423,18 +3423,18 @@ const totalCardCount = computed(() =>
 //     containerWidth.value = cardStripWrapper.value.clientWidth;
 //   }
 // });
-const onTouchMove = (event: TouchEvent) => {
+const zsOnTouchMove = (event: TouchEvent) => {
   const currentX = event.touches[0].clientX
-  const deltaX = touchStartX.value - currentX
-  const newOffset = touchStartOffset.value + deltaX
-  const container = sliderContainer.value
+  const deltaX = zsTouchStartX.value - currentX
+  const newOffset = zsTouchStartOffset.value + deltaX
+  const container = zsSliderContainer.value
   // 使用类型守卫确保 container 是 HTMLElement
   if (!container || !('clientWidth' in container)) return
 
   const containerWidth = container.clientWidth || 0
   const maxOffset = Math.max(0, (aiAnalysisResults.value.length * cardWidth.value) - containerWidth)
-  slideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
-  currentSlideIndex.value = Math.round(slideOffset.value / cardWidth.value)
+  zsSlideOffset.value = Math.max(0, Math.min(newOffset, maxOffset))
+  zsCurrentSlideIndex.value = Math.round(zsSlideOffset.value / cardWidth.value)
 }
 
 onBeforeUnmount(() => {
@@ -3446,18 +3446,54 @@ onBeforeUnmount(() => {
 });
 
 // 拖拽相关
+// const onDragStart = (e: MouseEvent | TouchEvent) => {
+//   const el = cardStripWrapper.value; if (!el) return
+//   isDragging2 = true
+//   dragStartX = 'touches' in e ? e.touches[0].clientX : e.clientX
+//   dragStartOffset = viewOffset.value
+//   window.addEventListener('mousemove', onDragStart)
+//   window.addEventListener('mouseup', onDragStart)
+//   window.addEventListener('touchmove', onDragStart as any, { passive: false })
+//   window.addEventListener('touchend', onDragStart)
+// }
+//
+// const SCALE = 3
+// const onDragStart = (e: MouseEvent | TouchEvent) => {
+//   if (!isDragging2) return
+//   if ('preventDefault' in e) e.preventDefault()
+//
+//   const x = 'touches' in e ? e.touches[0].clientX : e.clientX
+//   const dx = x - dragStartX
+//   const newOffset = dragStartOffset - dx * SCALE
+//
+//   viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
+// }
+//
+// const onDragStart = () => {
+//   isDragging2 = false
+//   window.removeEventListener('mousemove', onDragStart)
+//   window.removeEventListener('mouseup', onDragStart)
+//   window.removeEventListener('touchmove', onDragStart as any)
+//   window.removeEventListener('touchend', onDragStart)
+// }
+
+
+
+// 拖拽开始
 const onDragStart = (e: MouseEvent | TouchEvent) => {
-  const el = cardStripWrapper.value; if (!el) return
+  const el = cardStripWrapper.value;
+  if (!el) return
   isDragging2 = true
   dragStartX = 'touches' in e ? e.touches[0].clientX : e.clientX
   dragStartOffset = viewOffset.value
+  // 修正事件监听器绑定
   window.addEventListener('mousemove', onDragMove)
   window.addEventListener('mouseup', onDragEnd)
   window.addEventListener('touchmove', onDragMove as any, { passive: false })
   window.addEventListener('touchend', onDragEnd)
 }
 
-const SCALE = 3
+// 拖拽移动（重命名）
 const onDragMove = (e: MouseEvent | TouchEvent) => {
   if (!isDragging2) return
   if ('preventDefault' in e) e.preventDefault()
@@ -3469,13 +3505,16 @@ const onDragMove = (e: MouseEvent | TouchEvent) => {
   viewOffset.value = Math.max(0, Math.min(newOffset, sliderMax.value));
 }
 
+// 拖拽结束（重命名）
 const onDragEnd = () => {
   isDragging2 = false
+  // 修正事件监听器移除
   window.removeEventListener('mousemove', onDragMove)
   window.removeEventListener('mouseup', onDragEnd)
   window.removeEventListener('touchmove', onDragMove as any)
   window.removeEventListener('touchend', onDragEnd)
 }
+
 
 const recalcAfterDOMUpdate = async () => { }
 
@@ -3609,8 +3648,8 @@ const resetFn = () => {
   isWaitingForAIAnalysis.value = false
   progressPercentage.value = 0
   progressText.value = ''
-  currentSlideIndex.value = 0
-  slideOffset.value = 0
+  zsCurrentSlideIndex.value = 0
+  zsSlideOffset.value = 0
   copyAllStatus.value = false
   copySingleStatus.value = []
   // 重置查看牌面相关状态
@@ -3634,15 +3673,15 @@ const resetFn = () => {
   initShuffledDeck()
 }
 onMounted(() => {
-  updateCardsPerView()
-  window.addEventListener('resize', updateCardsPerView)
-  document.addEventListener('keydown', onKeyDown)
+  updatezsCardsPerView()
+  window.addEventListener('resize', updatezsCardsPerView)
+  document.addEventListener('keydown', zsOnKeyDown)
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', updateCardsPerView)
-  document.removeEventListener('keydown', onKeyDown)
-  document.removeEventListener('mousemove', onDrag)
-  document.removeEventListener('mouseup', endDrag)
+  window.removeEventListener('resize', updatezsCardsPerView)
+  document.removeEventListener('keydown', zsOnKeyDown)
+  document.removeEventListener('mousemove', zsOnDrag)
+  document.removeEventListener('mouseup', zsEndDrag)
 })
 
 // 图片渲染
