@@ -213,7 +213,7 @@ ${spreadCards.map((card, index) => {
     const response = await fetch("https://api.wlai.vip/v1/chat/completions", {
       "method": "POST",
       "headers": {
-        "Authorization": `Bearer ${env.tarot_3}`, // 需要在环境变量中设置
+        "Authorization": `Bearer ${env.TAROT_TY}`, // 需要在环境变量中设置
         "Content-Type": "application/json"
       },
       "body": JSON.stringify(apiRequestBody)
