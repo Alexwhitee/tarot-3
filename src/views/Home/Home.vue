@@ -16,9 +16,9 @@
     <!-- 修改现有的问题输入区域 -->
     <div class="text">
       <div class="question-header">
-        <h3 class="section-title">1深呼吸，屏除杂念，集中注意力，写下并默念你的问题，开始你的塔罗占卜之旅</h3>
+        <h3 class="section-title">1.深呼吸，屏除杂念，集中注意力，写下并默念你的问题，开始你的塔罗占卜之旅</h3>
         <button class="question-guide-btn" @click="openQuestionGuideModal" title="查看提问规范">
-          <span class="question-icon">❓</span>
+          <span class="question-icon">注意事项</span>
         </button>
       </div>
       <Textarea
@@ -27,6 +27,20 @@
         :disabled="loadingStatus"
       />
     </div>
+
+
+<!--    <div class="container">-->
+<!--      <div class="question-header">-->
+<!--        <h3 class="section-title">1.深呼吸，屏除杂念，集中注意力，写下并默念你的问题，开始你的塔罗占卜之旅</h3>-->
+<!--        <button class="question-guide-btn" onclick="openQuestionGuideModal()" title="查看提问规范">-->
+<!--          <span class="question-icon">注意事项</span>-->
+<!--        </button>-->
+<!--      </div>-->
+
+<!--      <div class="text">-->
+<!--        <textarea class="custom-textarea" placeholder="你要占卜的问题（可选）"></textarea>-->
+<!--      </div>-->
+<!--    </div>-->
 
 
 
@@ -208,10 +222,10 @@
       <!-- 新增：AI模型选择区域（只在显示结果且未进行AI分析时显示） -->
       <div v-if="!hasAIAnalysis && !isWaitingForAIAnalysis" class="ai-model-selection-section">
         <div class="section-header">
-          <h4 class="cards-section-title">选择ai卦师进行解析</h4>
+          <h4 class="cards-section-title">ai卦师限时免费解析</h4>
           <div class="selection-info">
             <span v-if="selectedModelKeys.length > 0" class="selected-count">
-              已选择 {{ selectedModelKeys.length }}/5 个模型
+              已选择
             </span>
           </div>
         </div>
@@ -231,14 +245,69 @@
           </div>
         </div>
         <!-- AI解答按钮 -->
+<!--        <div class="ai-analysis-actions">-->
+<!--          <Button-->
+<!--            class="ai-analysis-btn"-->
+<!--            :disabled="selectedModelKeys.length === 0"-->
+<!--            @click="getAIAnalysis"-->
+<!--          >-->
+<!--            🤖 AI解答 ({{ selectedModelKeys.length }}个模型)-->
+<!--          </Button>-->
+<!--        </div>-->
+        <!-- AI解答按钮区域 - 修改版 -->
         <div class="ai-analysis-actions">
-          <Button
-            class="ai-analysis-btn"
-            :disabled="selectedModelKeys.length === 0"
-            @click="getAIAnalysis"
-          >
-            🤖 AI解答 ({{ selectedModelKeys.length }}个模型)
-          </Button>
+          <div class="passcode-verification-section">
+            <!-- 口令输入区域 -->
+            <div class="passcode-input-group">
+              <button
+                class="view-passcode-btn"
+                @click="openPasscodeModal"
+                title="点击查看获取口令方式"
+              >
+                查看口令
+              </button>
+
+              <div class="passcode-input-wrapper">
+                <input
+                  v-model="passcode"
+                  type="text"
+                  placeholder="请输入口令后再点击“AI解答”即可免费获取"
+                  class="passcode-input"
+                  :class="{
+            'error': passcodeError,
+            'success': isPasscodeVerified
+          }"
+
+                  @input="verifyPasscode($event)"
+                  @keyup.enter="verifyPasscode($event)"
+
+                />
+                <div v-if="passcodeError" class="passcode-error">
+                  {{ passcodeError }}
+                </div>
+                <div v-if="isPasscodeVerified" class="passcode-success">
+                  ✓ 口令正确
+                  <button
+                    class="clear-passcode-btn"
+                    @click="clearPasscodeVerification"
+                    title="清除口令验证"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI解答按钮 -->
+            <Button
+              class="ai-analysis-btn"
+              :class="{ 'disabled': !isPasscodeVerified || selectedModelKeys.length === 0 }"
+              :disabled="!isPasscodeVerified || selectedModelKeys.length === 0"
+              @click="getAIAnalysis"
+            >
+              🤖 AI解答（请先输入口令）
+            </Button>
+          </div>
         </div>
       </div>
       <!-- AI分析加载状态 -->
@@ -994,9 +1063,9 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
             <h3>📖 使用指南</h3>
 
             <div class="guide-item">
-              <h4>一、什么是占卜？赛博占卜的原理</h4>
+              <h4>一、什么是占卜？占卜的原理</h4>
               <p><strong>占卜：</strong>当心中有疑惑时，人为制造一次"随机事件"（摇签、抽牌、掷币等），并用特定模型对随机结果进行象征化解读，从而获得启示——它给出的是「参考」而非「确定答案」。</p>
-              <p><strong>赛博占卜：</strong>在传统塔罗占卜的基础上，引入 AI 进行占卜结果解读。</p>
+              <p><strong>AI占卜：</strong>在传统塔罗占卜的基础上，引入 AI 进行占卜结果解读。</p>
               <ol>
                 <li>你选择在「此刻」抽牌，本身就构成一次随机性。</li>
                 <li>AI 依据所抽取的牌面卦象要素，自动完成取象、组象与断象流程，并给出启示。</li>
@@ -1025,14 +1094,14 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
             </div>
 
             <div class="guide-item">
-              <h4>三、赛博占卜的可靠性</h4>
+              <h4>三、AI占卜的可靠性</h4>
               <p>• 采用正统塔罗占卜技法，AI模型经多轮精调测试。</p>
             </div>
 
             <div class="guide-item">
               <h4>四、使用须知</h4>
               <ol>
-                <li>同一问题至少间隔 2 小时再次起局</li>
+                <li>同一问题至少间隔几分钟再提问</li>
                 <li>避免一卦多问，以免信息混杂</li>
                 <li>禁止用于证券、期货等高风险投资，后果自负</li>
                 <li>本产品仅供体验与研究，切勿沉迷或迷信</li>
@@ -1052,6 +1121,44 @@ zIndex: selectCardArr.includes(i.no) ? 100 : index
     </div>
 
 
+    <!-- 口令查看模态框 -->
+    <div v-if="showPasscodeModal" class="passcode-modal-overlay" @click.self="closePasscodeModal">
+      <div class="passcode-modal-content">
+        <div class="passcode-modal-header">
+          <h3>🔐 获取口令</h3>
+          <button class="close-btn" @click="closePasscodeModal">×</button>
+        </div>
+
+        <div class="passcode-modal-body">
+          <div class="passcode-guide-text">
+            <p>关注公众号【若云轩】，后台发送【111】查看口令</p>
+            <a class="guide-link"
+               href="https://mp.weixin.qq.com/s/6DdC8FUDebBLmOKfpC353w"
+               target="_blank"
+               rel="noopener noreferrer">
+              👉 点击跳转公众号文章
+            </a>
+          </div>
+
+          <div class="qr-code-container">
+            <img
+              :src="`${base}images/reward.webp`"
+              alt="如有问题请添加联系方式"
+              class="qr-code-image"
+              @error="handleQRCodeError"
+              style="width: auto; height: auto; max-width: 100%; max-height: 300px;"
+            />
+            <p class="qr-code-tip">如有问题请添加联系方式</p>
+          </div>
+        </div>
+
+        <div class="passcode-modal-footer">
+          <Button class="understand-btn" @click="closePasscodeModal">
+            我知道了
+          </Button>
+        </div>
+      </div>
+    </div>
 
 
   </section>
@@ -1223,6 +1330,56 @@ const copySuccess = ref(false)
 // 在现有的 ref 声明附近添加
 // 控制抽牌详情展示区域的显示/隐藏
 const showDivinationDetails = ref(false) // 默认显示
+
+
+// 在现有的 ref 声明附近添加口令相关状态
+const passcode = ref('')
+const isPasscodeVerified = ref(false)
+const passcodeError = ref('')
+const showPasscodeModal = ref(false)
+
+// 验证口令函数
+// 验证口令函数
+const verifyPasscode = (event?: Event) => {
+  // 保持原有逻辑不变
+  if (passcode.value === '789') {
+    isPasscodeVerified.value = true
+    passcodeError.value = ''
+
+    setTimeout(() => {
+      isPasscodeVerified.value = false
+    }, 4000)
+  } else {
+    passcodeError.value = '口令错误'
+    setTimeout(() => {
+      passcodeError.value = ''
+    }, 2000)
+  }
+}
+
+// 清除口令验证状态
+const clearPasscodeVerification = () => {
+  isPasscodeVerified.value = false
+  passcode.value = ''
+  passcodeError.value = ''
+}
+
+// 打开口令查看模态框
+const openPasscodeModal = () => {
+  showPasscodeModal.value = true
+}
+
+// 关闭口令查看模态框
+const closePasscodeModal = () => {
+  showPasscodeModal.value = false
+}
+
+// 修改现有的 getAIAnalysis 函数，添加口令验证
+
+// 在 resetFn 函数中添加口令状态重置
+
+
+
 
 
 
@@ -1541,7 +1698,7 @@ const copySingleStatus = ref<boolean[]>([])
 const zsTouchStartX = ref(0)
 const zsTouchStartOffset = ref(0)
 
-
+//selectedModelKeys.value = [availableModels[0]];
 
 
 
@@ -1601,54 +1758,54 @@ const endContentDrag = () => {
 const availableModels = ref([
   {
     key: 'glm-4-flash',
-    name: 'GLM-4-Flash',
-    description: '智谱超快响应模型,快速'
-  },
-  {
-    key: 'gpt-5-2025-08-07',
-    name: 'GPT-5',
-    description: 'OpenAI最新旗舰模型，深度思考'
-  },
-  {
-    key: 'o3',
-    name: 'O3',
-    description: 'OpenAI推理专家模型，深度思考'
-  },
-  {
-    key: 'gemini-2.5-flash',
-    name: 'Gemini-2.5 Flash',
-    description: 'Google快速多模态模型，快速，深度思考'
-  },
-  {
-    key: 'gemini-2.5-pro',
-    name: 'Gemini-2.5 Pro',
-    description: 'Google专业级多模态模型，深度思考'
-  },
-  {
-    key: 'grok-4',
-    name: 'grok-4',
-    description: 'x旗舰模型，深度思考'
-  },
-  {
-    key: 'doubao-seed-1-6-250615',
-    name: 'Doubao Seed',
-    description: '豆包旗舰模型，深度思考'
-  },
-  {
-    key: 'deepseek-v3-1-250821',
-    name: 'DeepSeek-V3.1',
-    description: 'DeepSeek第三代增强模型，深度思考'
-  },
-  {
-    key: 'claude-3-7-sonnet-20250219-thinking',
-    name: 'Claude 3.7 克劳德 ',
-    description: 'Claude第三代增强模型，深度思考'
-  },
-  {
-    key: 'qwen3-235b-a22b-think',
-    name: '通义千问',
-    description: 'Qwen第三代超大规模模型，深度思考'
+    name: '星穹先知',
+    description: '专为占卜打造的独家AI，基于占卜底层原理，融合秘传占卜技法与现代AI技术，洞悉命运脉络，为您提供前所未有的深度洞察'
   }
+  // {
+  //   key: 'gpt-5-2025-08-07',
+  //   name: 'GPT-5',
+  //   description: 'OpenAI最新旗舰模型，深度思考'
+  // },
+  // {
+  //   key: 'o3',
+  //   name: 'O3',
+  //   description: 'OpenAI推理专家模型，深度思考'
+  // },
+  // {
+  //   key: 'gemini-2.5-flash',
+  //   name: 'Gemini-2.5 Flash',
+  //   description: 'Google快速多模态模型，快速，深度思考'
+  // },
+  // {
+  //   key: 'gemini-2.5-pro',
+  //   name: 'Gemini-2.5 Pro',
+  //   description: 'Google专业级多模态模型，深度思考'
+  // },
+  // {
+  //   key: 'grok-4',
+  //   name: 'grok-4',
+  //   description: 'x旗舰模型，深度思考'
+  // },
+  // {
+  //   key: 'doubao-seed-1-6-250615',
+  //   name: 'Doubao Seed',
+  //   description: '豆包旗舰模型，深度思考'
+  // },
+  // {
+  //   key: 'deepseek-v3-1-250821',
+  //   name: 'DeepSeek-V3.1',
+  //   description: 'DeepSeek第三代增强模型，深度思考'
+  // },
+  // {
+  //   key: 'claude-3-7-sonnet-20250219-thinking',
+  //   name: 'Claude 3.7 克劳德 ',
+  //   description: 'Claude第三代增强模型，深度思考'
+  // },
+  // {
+  //   key: 'qwen3-235b-a22b-think',
+  //   name: '通义千问',
+  //   description: 'Qwen第三代超大规模模型，深度思考'
+  // }
 ])
 
 // 响应式布局检测
@@ -1672,6 +1829,10 @@ const toggleModelSelection = (key: string) => {
     }
   }
 }
+
+
+
+
 // 获取模型名称
 const getModelName = (key: string) => {
   const model = availableModels.value.find(m => m.key === key)
@@ -1679,6 +1840,11 @@ const getModelName = (key: string) => {
 }
 
 const getAIAnalysis = async () => {
+  // 添加口令验证检查
+  if (!isPasscodeVerified.value) {
+    alert('请先输入正确的口令')
+    return
+  }
   if (selectedModelKeys.value.length === 0 || !resStatus.value || cardResult.value.length === 0) {
     console.error('缺少必要参数进行AI分析');
     return;
@@ -2104,6 +2270,15 @@ const copyAllResults = async () => {
     alert('浏览器不支持复制API')
   }
 }
+
+
+// 处理二维码图片加载错误
+const handleQRCodeError = (event: Event) => {
+  const img = event.target as HTMLImageElement
+  img.src = `${base}xhsm.jpg` // 备用图片
+  console.warn('二维码图片加载失败，请检查图片路径')
+}
+
 // 生成完整内容
 const generateFullContent = (): string => {
   let content = ''
@@ -2505,7 +2680,8 @@ const resetFn = () => {
   // 重置抽牌详情模态框状态
   showDrawnCardDetailModal.value = false
 
-
+  clearPasscodeVerification()
+  showPasscodeModal.value = false
 
 
   firstDivinationResult.value = '' // 添加这一行
@@ -2528,7 +2704,9 @@ onMounted(() => {
   // 新增：为整个文档添加键盘事件监听
   // document.addEventListener('keydown', handleKeyDown);
   // document.addEventListener('keyup', handleKeyUp);
-
+  if (availableModels.value.length) {
+    selectedModelKeys.value = [availableModels.value[0].key]
+  }
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updatezsCardsPerView);
@@ -3800,6 +3978,7 @@ label {
   display: inline-flex;
 
   align-items: center;
+
 
   margin-right: 16px;
 
@@ -5363,7 +5542,7 @@ label {
   font-size: 1rem;
   font-weight: bold;
   color: #2c3e50;
-  margin: 0 0 12px 0;
+  margin: 0 0 0px 0;
   padding-bottom: 6px;
   border-bottom: 2px solid #ecf0f1;
 }
@@ -6432,6 +6611,7 @@ label {
   text-align: center;
 }
 .ai-analysis-btn {
+  margin-top: 30px;
   background: linear-gradient(135deg, #f59e0b, #d97706);
   color: white;
   border: none;
@@ -7017,6 +7197,462 @@ label {
   overflow-x: auto;
 
 }
+/* 口令验证区域样式 */
+.passcode-verification-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.passcode-input-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+}
+
+.view-passcode-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.view-passcode-btn:hover {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+.passcode-input-wrapper {
+  flex: 1;
+  position: relative;
+  max-width: 200px;
+}
+
+.passcode-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.passcode-input:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.passcode-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.passcode-input.success {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.passcode-error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.passcode-success {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  color: #10b981;
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: center;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.clear-passcode-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-passcode-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.ai-analysis-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 口令查看模态框样式 */
+.passcode-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(2px);
+}
+
+.passcode-modal-content {
+  background: white !important;
+  border-radius: 16px !important;
+  width: 90vw !important;
+  max-width: 450px !important;
+  max-height: 80vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.passcode-modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 20px 24px !important;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: white !important;
+}
+
+.passcode-modal-header h3 {
+  margin: 0 !important;
+  font-size: 1.3rem !important;
+  font-weight: bold !important;
+}
+
+.passcode-modal-header .close-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 1.3rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.passcode-modal-header .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.passcode-modal-body {
+  flex: 1 !important;
+  padding: 32px 24px !important;
+  text-align: center !important;
+  overflow-y: auto !important;
+}
+
+.passcode-guide-text {
+  margin-bottom: 24px !important;
+}
+
+.passcode-guide-text p {
+  font-size: 1.1rem !important;
+  color: #374151 !important;
+  margin: 0 !important;
+  font-weight: 500 !important;
+}
+
+.qr-code-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+.qr-code-image {
+  width: auto; /* 保持原有宽度 */
+  height: auto; /* 保持原有高度 */
+  max-width: 100%; /* 最大宽度为100% */
+  max-height: 300px; /* 最大高度限制 */
+  border-radius: 12px; /* 圆角 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 阴影效果 */
+}
+
+.qr-code-tip {
+  font-size: 0.9rem !important;
+  color: #6b7280 !important;
+  margin: 0 !important;
+}
+
+.passcode-modal-footer {
+  padding: 20px 24px !important;
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  text-align: center !important;
+}
+
+/* 深色模式适配 */
+.dark-mode .passcode-input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark-mode .passcode-input:focus {
+  border-color: #f59e0b;
+}
+
+.dark-mode .passcode-input.error {
+  border-color: #ef4444;
+}
+
+.dark-mode .passcode-input.success {
+  border-color: #10b981;
+}
+
+.dark-mode .clear-passcode-btn:hover {
+  background: #4b5563;
+  color: #f9fafb;
+}
+
+.dark-mode .passcode-modal-content {
+  background: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+.dark-mode .passcode-modal-footer {
+  background: #111827 !important;
+  border-top-color: #374151 !important;
+}
+
+.dark-mode .passcode-guide-text p {
+  color: #f9fafb !important;
+}
+
+.dark-mode .qr-code-tip {
+  color: #d1d5db !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .passcode-input-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .passcode-input-wrapper {
+    max-width: none;
+  }
+
+  .view-passcode-btn {
+    width: 100%;
+  }
+
+  .passcode-modal-content {
+    width: 95vw !important;
+    max-width: none !important;
+  }
+
+  .qr-code-image {
+    width: 180px !important;
+    height: 180px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .passcode-modal-body {
+    padding: 24px 20px !important;
+  }
+
+  .qr-code-image {
+    width: 160px !important;
+    height: 160px !important;
+  }
+}
+.guide-link {
+  color: #1677ff;          /* 蓝色，微信官方蓝 */
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color .2s;
+}
+.guide-link:hover {
+  color: #0958d9;          /* hover 时更深一点 */
+}
+
+/* 添加以下样式 */
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.question-guide-btn {
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
+  white-space: nowrap;
+  margin-left: 16px;
+}
+
+.question-guide-btn:hover {
+  background: linear-gradient(135deg, #553C9A 0%, #7C3AED 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.4);
+}
+
+.question-icon {
+  font-weight: 600;
+}
+
+/* 深色模式适配 */
+.dark-mode .question-guide-btn {
+  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+}
+
+.dark-mode .question-guide-btn:hover {
+  background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .question-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .question-guide-btn {
+    margin-left: 0;
+    align-self: flex-end;
+    margin-top: -8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-guide-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+
+
+
+.question-guide-btn {
+  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%);
+  color: white;
+  border: none;
+  padding: 4px 10px; /* 减小内边距 */
+  border-radius: 4px; /* 减小圆角 */
+  cursor: pointer;
+  font-size: 12px; /* 减小字体大小 */
+  font-weight: 500;
+  transition: all 0.2s ease; /* 缩短动画时间 */
+  box-shadow: 0 1px 4px rgba(107, 70, 193, 0.3); /* 减小阴影 */
+  white-space: nowrap;
+  margin-left: 12px; /* 减小外边距 */
+  line-height: 1.2; /* 调整行高 */
+}
+
+.question-icon {
+  font-weight: 600;
+  font-size: 11px; /* 进一步减小字体大小 */
+  letter-spacing: -0.2px; /* 略微收紧字母间距 */
+  padding: 0; /* 移除内边距 */
+  margin: 0; /* 移除外边距 */
+}
+
+/* 深色模式适配 */
+.dark-mode .question-guide-btn {
+  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  box-shadow: 0 1px 4px rgba(139, 92, 246, 0.4);
+}
+
+.dark-mode .question-guide-btn:hover {
+  background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .question-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px; /* 减小间隙 */
+  }
+
+  .question-guide-btn {
+    margin-left: 0;
+    margin-top: -4px; /* 减小上边距 */
+    align-self: flex-end;
+    padding: 3px 8px; /* 移动端进一步减小内边距 */
+  }
+}
+
+@media (max-width: 480px) {
+  .question-guide-btn {
+    padding: 2px 6px; /* 超小屏幕进一步减小内边距 */
+    font-size: 10px; /* 超小屏幕进一步减小字体 */
+  }
+
+  .question-icon {
+    font-size: 10px; /* 超小屏幕进一步减小字体 */
+  }
+}
+
+
 
 
 </style>
