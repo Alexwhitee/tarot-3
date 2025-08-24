@@ -1866,38 +1866,71 @@ const zsStartDrag = (event: MouseEvent) => {
 // };
 
 // 简化后的键盘事件处理
+// const handleKeyboardNavigation = (event: KeyboardEvent) => {
+//   if (!hasAIAnalysis.value) return;
+//
+//   const container = zsSliderContainer.value;
+//   if (!container) return;
+//
+//   // 只在左右箭头键时处理
+//   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+//     event.preventDefault(); // 阻止默认滚动行为
+//
+//     const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
+//     const currentScroll = container.scrollLeft;
+//     const maxScroll = container.scrollWidth - container.clientWidth;
+//
+//     let targetScroll: number;
+//
+//     if (event.key === 'ArrowLeft') {
+//       // 向左滚动一张卡片
+//       targetScroll = Math.max(0, currentScroll - cardWidthWithGap);
+//     } else {
+//       // 向右滚动一张卡片
+//       targetScroll = Math.min(maxScroll, currentScroll + cardWidthWithGap);
+//     }
+//
+//     // 使用平滑滚动
+//     container.scrollTo({
+//       left: targetScroll,
+//       behavior: 'smooth'
+//     });
+//   }
+// };
 const handleKeyboardNavigation = (event: KeyboardEvent) => {
   if (!hasAIAnalysis.value) return;
 
   const container = zsSliderContainer.value;
-  if (!container) return;
+  if (!container || !(container instanceof HTMLElement)) return;
 
-  // 只在左右箭头键时处理
+  // 添加类型断言
+  const scrollElement = container as HTMLElement & {
+    scrollLeft: number;
+    scrollTo: (options: ScrollToOptions) => void;
+  };
+
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-    event.preventDefault(); // 阻止默认滚动行为
+    event.preventDefault();
 
-    const cardWidthWithGap = 400 + 16; // 卡片宽度 + 间隙
-    const currentScroll = container.scrollLeft;
-    const maxScroll = container.scrollWidth - container.clientWidth;
+    const cardWidthWithGap = 400 + 16;
+    const currentScroll = scrollElement.scrollLeft;
+    const maxScroll = scrollElement.scrollWidth - scrollElement.clientWidth;
 
     let targetScroll: number;
 
     if (event.key === 'ArrowLeft') {
-      // 向左滚动一张卡片
       targetScroll = Math.max(0, currentScroll - cardWidthWithGap);
     } else {
-      // 向右滚动一张卡片
       targetScroll = Math.min(maxScroll, currentScroll + cardWidthWithGap);
     }
 
-    // 使用平滑滚动
-    container.scrollTo({
+    // 现在 TypeScript 能识别 scrollTo 方法
+    scrollElement.scrollTo({
       left: targetScroll,
       behavior: 'smooth'
     });
   }
 };
-
 
 
 // 关键修正1：拖动滑轨时，直接修改容器的 scrollLeft
